@@ -13,17 +13,13 @@ export function checkStartAction(state, action) {
   if (state.started) {
     throw new Error("Game already started");
   }
-  if (!action.players || action.players.length != 2) {
-    throw new Error("action.players should be an array of length 2");
-  }
 }
 
 export function doStartAction(state, action) {
   state.started = true;
-  state.playerList = action.players;
   state.activePlayerIndex = 0;
   state.players = {};
-  for (const p in action.players) {
-    initialisePlayerState(state, p);
+  for (let ii = 0; ii < state.playerList.length; ii++) {
+    initialisePlayerState(state, state.playerList[ii]);
   }
 }

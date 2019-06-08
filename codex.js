@@ -2,6 +2,26 @@ import Game from "board-state";
 import { checkStartAction, doStartAction } from "./actions";
 
 class CodexGame extends Game {
+  static getFilters(state) {
+    return Object.assign(
+      {},
+      ...state.playerList.map(k => ({
+        [k]: s => {
+          if (!s.started) {
+            return;
+          }
+          for (const p in s.players) {
+            s.players[p].handCount = s.players[p].hand.length;
+            s.players[p].deckCount = s.players[p].deck.length;
+            delete s.players[p].deck;
+            if (p != k) {
+              delete s.players[p].hand;
+            }
+          }
+        }
+      }))
+    );
+  }
   static updateState(state, action) {
     state.updateHidden = t => {
       this.applyUpdate.bind(this)(state, t);
@@ -27,7 +47,7 @@ class CodexGame extends Game {
   }
   static suggestActions(state) {
     if (!state.started) {
-      return [{ type: "start", players: ["alf", "bob"] }];
+      return [{ type: "start" }];
     }
     return [];
   }
