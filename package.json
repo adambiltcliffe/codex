@@ -1,0 +1,22 @@
+{
+  "name": "codex",
+  "version": "0.0.1",
+  "description": "Game rules engine for Codex by Sirlin Games",
+  "main": "codex.js",
+  "scripts": {
+    "playground": "board-state-playground --entry ./playground.jsx",
+    "test": "jest"
+  },
+  "keywords": [
+    "boardgames"
+  ],
+  "author": "Adam Biltcliffe",
+  "license": "ISC",
+  "dependencies": {
+    "board-state": "^0.1.1",
+    "knuth-shuffle": "^1.0.8"
+  },
+  "devDependencies": {
+    "@adam.biltcliffe/board-state-playground": "^0.0.2"
+  }
+}
