@@ -1,13 +1,11 @@
-Game features implemented:
-==========================
+# Game features implemented:
 
 Shuffling initial hands for players
+Decks and draw phase
 
-Game features not implemented:
-==============================
+# Game features not implemented:
 
 Turn structure
-Decks and draw phase
 One reshuffle per main phase limit
 
 Workers and gold
@@ -32,7 +30,6 @@ Ultimate spell requirements
 
 Codex and tech phase
 
-Other stuff to do
-=================
+# Other stuff to do
 
 Use a schema validation library to simplify action checking

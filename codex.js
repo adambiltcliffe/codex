@@ -1,5 +1,5 @@
 import Game from "board-state";
-import { checkStartAction, doStartAction } from "./actions";
+import * as actions from "./actions";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -13,9 +13,11 @@ class CodexGame extends Game {
           for (const p in s.players) {
             s.players[p].handCount = s.players[p].hand.length;
             s.players[p].deckCount = s.players[p].deck.length;
+            s.players[p].discardCount = s.players[p].discard.length;
             delete s.players[p].deck;
             if (p != k) {
               delete s.players[p].hand;
+              delete s.players[p].discard;
             }
           }
         }
@@ -26,8 +28,13 @@ class CodexGame extends Game {
     state.updateHidden = t => {
       this.applyUpdate.bind(this)(state, t);
     };
-    if (action.type == "start") {
-      doStartAction(state, action);
+    switch (action.type) {
+      case "start":
+        actions.doStartAction(state, action);
+        break;
+      case "endTurn":
+        actions.doEndTurnAction(state, action);
+        break;
     }
     delete state.updateHidden;
   }
@@ -40,7 +47,9 @@ class CodexGame extends Game {
     }
     switch (action.type) {
       case "start":
-        return checkStartAction(state, action);
+        return actions.checkStartAction(state, action);
+      case "endTurn":
+        return actions.checkEndTurnAction(state, action);
       default:
         throw new Error("Unrecognised action type");
     }
@@ -49,7 +58,7 @@ class CodexGame extends Game {
     if (!state.started) {
       return [{ type: "start" }];
     }
-    return [];
+    return [{ type: "endTurn" }];
   }
 }
 
