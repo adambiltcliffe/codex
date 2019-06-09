@@ -1,12 +1,15 @@
 import { knuthShuffle } from "knuth-shuffle";
+import { upkeep, ready } from "../phases";
+import { getAP } from "../util";
 
 export function checkEndTurnAction(state, action) {
   // nothing to check until we have patrollers to lock in
 }
 
 export function doEndTurnAction(state, action) {
+  // draw phase
   state.updateHidden(fs => {
-    const ap = fs.players[fs.playerList[fs.activePlayerIndex]];
+    const ap = getAP(fs);
     const cardsToDraw = ap.hand.length >= 3 ? 5 : ap.hand.length + 2;
     ap.discard.push(...ap.hand);
     ap.hand = [];
@@ -23,7 +26,11 @@ export function doEndTurnAction(state, action) {
     }
   });
 
+  // advance turn
   state.turn++;
   state.activePlayerIndex += 1;
   state.activePlayerIndex %= state.playerList.length;
+
+  ready(state);
+  upkeep(state);
 }

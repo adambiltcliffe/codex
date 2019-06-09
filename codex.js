@@ -32,6 +32,9 @@ class CodexGame extends Game {
       case "start":
         actions.doStartAction(state, action);
         break;
+      case "worker":
+        actions.doWorkerAction(state, action);
+        break;
       case "endTurn":
         actions.doEndTurnAction(state, action);
         break;
@@ -48,6 +51,8 @@ class CodexGame extends Game {
     switch (action.type) {
       case "start":
         return actions.checkStartAction(state, action);
+      case "worker":
+        return actions.checkWorkerAction(state, action);
       case "endTurn":
         return actions.checkEndTurnAction(state, action);
       default:
@@ -58,7 +63,7 @@ class CodexGame extends Game {
     if (!state.started) {
       return [{ type: "start" }];
     }
-    return [{ type: "endTurn" }];
+    return [{ type: "worker" }, { type: "endTurn" }];
   }
 }
 
