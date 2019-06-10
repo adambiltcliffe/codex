@@ -4,13 +4,14 @@ import { upkeep, ready } from "../phases";
 function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
   state.updateHidden(fs => {
-    const deck = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const deck = ["tf", "tf", "tf", "tf", "ob", "ob", "ob", "im", "im", "rr"];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);
     fs.players[player] = { hand, deck, discard: [] };
   });
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
+  state.players[player].units = [];
 }
 
 export function checkStartAction(state, action) {
@@ -21,6 +22,7 @@ export function checkStartAction(state, action) {
 
 export function doStartAction(state, action) {
   state.started = true;
+  state.nextUnitId = 1;
   state.activePlayerIndex = 0;
   state.players = {};
   for (let ii = 0; ii < state.playerList.length; ii++) {

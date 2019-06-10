@@ -1,3 +1,6 @@
+export function getAPid(state) {
+  return state.playerList[state.activePlayerIndex];
+}
 export function getAP(state) {
-  return state.players[state.playerList[state.activePlayerIndex]];
+  return state.players[getAPid(state)];
 }

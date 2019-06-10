@@ -1,5 +1,6 @@
 import Game from "board-state";
 import * as actions from "./actions";
+import { getAP } from "./util";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -35,6 +36,9 @@ class CodexGame extends Game {
       case "worker":
         actions.doWorkerAction(state, action);
         break;
+      case "play":
+        actions.doPlayAction(state, action);
+        break;
       case "endTurn":
         actions.doEndTurnAction(state, action);
         break;
@@ -53,6 +57,8 @@ class CodexGame extends Game {
         return actions.checkStartAction(state, action);
       case "worker":
         return actions.checkWorkerAction(state, action);
+      case "play":
+        return actions.checkPlayAction(state, action);
       case "endTurn":
         return actions.checkEndTurnAction(state, action);
       default:
@@ -63,7 +69,14 @@ class CodexGame extends Game {
     if (!state.started) {
       return [{ type: "start" }];
     }
-    return [{ type: "worker" }, { type: "endTurn" }];
+    const ap = getAP(state);
+    const base = [{ type: "endTurn" }];
+    const workerActions = Array.from(Array(ap.hand.length).keys()).map(n => ({
+      type: "worker",
+      handIndex: n
+    }));
+    const playActions = ap.hand.map(c => ({ type: "play", card: c }));
+    return base.concat(workerActions).concat(playActions);
   }
 }
 
