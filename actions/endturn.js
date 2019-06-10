@@ -1,6 +1,7 @@
 import { knuthShuffle } from "knuth-shuffle";
 import { upkeep, ready } from "../phases";
 import { getAP } from "../util";
+import log from "../log";
 
 export function checkEndTurnAction(state, action) {
   // nothing to check until we have patrollers to lock in
@@ -25,6 +26,8 @@ export function doEndTurnAction(state, action) {
       ap.hand.push(ap.deck.shift());
     }
   });
+
+  log.add(state, log.fmt`${getAP(state)} ends their main phase.`);
 
   // advance turn
   state.turn++;

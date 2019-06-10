@@ -1,5 +1,6 @@
 import { getAP, getAPid } from "../util";
 import cardInfo from "../cardinfo";
+import log from "../log";
 
 export function checkPlayAction(state, action) {
   const ap = getAP(state);
@@ -18,7 +19,6 @@ export function doPlayAction(state, action) {
     fs.playedCard = ap.hand.splice(handIndex, 1)[0];
   });
   const ap = getAP(state);
-  console.log(cardInfo[state.playedCard]);
   ap.gold -= cardInfo[state.playedCard].cost;
 
   const newUnit = {
@@ -30,4 +30,5 @@ export function doPlayAction(state, action) {
   ap.units.push(newUnit);
   delete state.playedCard;
   state.nextUnitId++;
+  log.add(state, log.fmt`${ap} plays ${cardInfo[newUnit.card].name}.`);
 }

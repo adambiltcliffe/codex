@@ -1,6 +1,7 @@
 import Game from "board-state";
 import * as actions from "./actions";
 import { getAP } from "./util";
+import log from "./log";
 
 import fromPairs from "lodash/fromPairs";
 import range from "lodash/range";
@@ -33,6 +34,7 @@ class CodexGame extends Game {
     state.updateHidden = t => {
       this.applyUpdate.bind(this)(state, t);
     };
+    log.clear(state);
     switch (action.type) {
       case "start":
         actions.doStartAction(state, action);

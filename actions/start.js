@@ -1,5 +1,6 @@
 import { knuthShuffle } from "knuth-shuffle";
 import { upkeep, ready } from "../phases";
+import log from "../log";
 
 function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
@@ -9,6 +10,7 @@ function initialisePlayerState(state, playerIndex) {
     const hand = deck.splice(0, 5);
     fs.players[player] = { hand, deck, discard: [] };
   });
+  state.players[player].id = player;
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
   state.players[player].units = [];
@@ -29,6 +31,7 @@ export function doStartAction(state, action) {
     initialisePlayerState(state, ii);
   }
   state.turn = 0;
+  log.add(state, "Game started.");
 
   ready(state);
   upkeep(state);

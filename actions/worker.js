@@ -1,3 +1,4 @@
+import log from "../log";
 import { getAP } from "../util";
 
 export function checkWorkerAction(state, action) {
@@ -25,4 +26,5 @@ export function doWorkerAction(state, action) {
   ap.workers += 1;
   ap.gold -= 1;
   state.madeWorkerThisTurn = true;
+  log.add(state, log.fmt`${ap} buys a worker.`);
 }
