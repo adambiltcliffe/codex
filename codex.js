@@ -2,15 +2,16 @@ import Game from "board-state";
 import * as actions from "./actions";
 import { getAP } from "./util";
 
+import fromPairs from "lodash/fromPairs";
 import range from "lodash/range";
 import uniq from "lodash/uniq";
 
 class CodexGame extends Game {
   static getFilters(state) {
-    return Object.assign(
-      {},
-      ...state.playerList.map(k => ({
-        [k]: s => {
+    return fromPairs(
+      state.playerList.map(k => [
+        k,
+        s => {
           if (!s.started) {
             return;
           }
@@ -25,7 +26,7 @@ class CodexGame extends Game {
             }
           }
         }
-      }))
+      ])
     );
   }
   static updateState(state, action) {
