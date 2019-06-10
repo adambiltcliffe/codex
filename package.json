@@ -14,7 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "board-state": "^0.1.1",
-    "knuth-shuffle": "^1.0.8"
+    "knuth-shuffle": "^1.0.8",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@adam.biltcliffe/board-state-playground": "^0.0.2"

@@ -2,6 +2,9 @@ import Game from "board-state";
 import * as actions from "./actions";
 import { getAP } from "./util";
 
+import range from "lodash/range";
+import uniq from "lodash/uniq";
+
 class CodexGame extends Game {
   static getFilters(state) {
     return Object.assign(
@@ -71,11 +74,11 @@ class CodexGame extends Game {
     }
     const ap = getAP(state);
     const base = [{ type: "endTurn" }];
-    const workerActions = Array.from(Array(ap.hand.length).keys()).map(n => ({
+    const workerActions = range(ap.hand.length).map(n => ({
       type: "worker",
       handIndex: n
     }));
-    const playActions = ap.hand.map(c => ({ type: "play", card: c }));
+    const playActions = uniq(ap.hand).map(c => ({ type: "play", card: c }));
     return base.concat(workerActions).concat(playActions);
   }
 }
