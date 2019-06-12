@@ -13,7 +13,6 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].id = player;
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
-  state.players[player].units = [];
 }
 
 export function checkStartAction(state, action) {
@@ -30,6 +29,7 @@ export function doStartAction(state, action) {
   for (let ii = 0; ii < state.playerList.length; ii++) {
     initialisePlayerState(state, ii);
   }
+  state.units = {};
   state.turn = 0;
   log.add(state, "Game started.");
 

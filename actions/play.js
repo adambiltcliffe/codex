@@ -1,4 +1,4 @@
-import { getAP, getAPid } from "../util";
+import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
 
@@ -24,10 +24,14 @@ export function doPlayAction(state, action) {
   const newUnit = {
     id: state.nextUnitId,
     card: state.playedCard,
-    controller: getAPid(state)
+    owner: getAP(state).id,
+    controller: getAP(state).id,
+    controlledSince: state.turn,
+    ready: true,
+    damage: 0
   };
 
-  ap.units.push(newUnit);
+  state.units[newUnit.id] = newUnit;
   delete state.playedCard;
   state.nextUnitId++;
   log.add(state, log.fmt`${ap} plays ${cardInfo[newUnit.card].name}.`);

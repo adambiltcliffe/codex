@@ -3,7 +3,9 @@ import * as actions from "./actions";
 import { getAP } from "./util";
 import log from "./log";
 
+import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
+import partition from "lodash/partition";
 import range from "lodash/range";
 import uniq from "lodash/uniq";
 
@@ -45,6 +47,9 @@ class CodexGame extends Game {
       case "play":
         actions.doPlayAction(state, action);
         break;
+      case "attack":
+        actions.doAttackAction(state, action);
+        break;
       case "endTurn":
         actions.doEndTurnAction(state, action);
         break;
@@ -65,6 +70,8 @@ class CodexGame extends Game {
         return actions.checkWorkerAction(state, action);
       case "play":
         return actions.checkPlayAction(state, action);
+      case "attack":
+        return actions.checkAttackAction(state, action);
       case "endTurn":
         return actions.checkEndTurnAction(state, action);
       default:
@@ -82,7 +89,17 @@ class CodexGame extends Game {
       handIndex: n
     }));
     const playActions = uniq(ap.hand).map(c => ({ type: "play", card: c }));
-    return base.concat(workerActions).concat(playActions);
+    const [apUnits, napUnits] = partition(
+      state.units,
+      u => u.controller == ap.id
+    );
+    const attackActions = flatten(
+      apUnits.map(a => napUnits.map(b => [a.id, b.id]))
+    ).map(([a, b]) => ({ type: "attack", attacker: a, target: b }));
+    return base
+      .concat(workerActions)
+      .concat(playActions)
+      .concat(attackActions);
   }
 }
 
