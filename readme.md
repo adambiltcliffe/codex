@@ -4,14 +4,16 @@ Shuffling initial hands for players
 Decks and draw phase
 Workers generating gold (limit 20)
 Making new workers
+Units
+Combat
 
 # Game features not implemented:
 
 (Most of the) turn structure
 One reshuffle per main phase limit
 
-Units
-Combat
+Combat abilities
+
 Patrol zone
 
 Tech buildings
