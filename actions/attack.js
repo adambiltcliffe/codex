@@ -1,6 +1,7 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
+import { killUnits } from "../entities";
 
 export function checkAttackAction(state, action) {
   const ap = getAP(state);
@@ -36,22 +37,8 @@ export function doAttackAction(state, action) {
       cardInfo[attacker.card].name
     }.`
   );
+  attacker.ready = false;
   attacker.damage += cardInfo[target.card].attack;
   target.damage += cardInfo[attacker.card].attack;
-  if (target.damage >= cardInfo[target.card].hp) {
-    log.add(state, log.fmt`${cardInfo[target.card].name} dies.`);
-    delete state.units[target.id];
-    state.updateHidden(fs => {
-      fs.players[target.owner].discard.push(target.card);
-    });
-  }
-  if (attacker.damage >= cardInfo[attacker.card].hp) {
-    log.add(state, log.fmt`${cardInfo[attacker.card].name} dies.`);
-    delete state.units[attacker.id];
-    state.updateHidden(fs => {
-      fs.players[attacker.owner].discard.push(attacker.card);
-    });
-  } else {
-    attacker.ready = false;
-  }
+  killUnits(state);
 }

@@ -5,7 +5,18 @@ import log from "../log";
 function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
   state.updateHidden(fs => {
-    const deck = ["tf", "tf", "tf", "tf", "ob", "ob", "ob", "im", "im", "rr"];
+    const deck = [
+      "tf",
+      "helpful_turtle",
+      "helpful_turtle",
+      "helpful_turtle",
+      "ob",
+      "scs",
+      "scs",
+      "scs",
+      "im",
+      "rr"
+    ];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);
     fs.players[player] = { hand, deck, discard: [] };

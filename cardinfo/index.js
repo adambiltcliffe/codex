@@ -1,3 +1,8 @@
+import log from "../log";
+import { killUnits } from "../entities";
+import forEach from "lodash/forEach";
+import { andJoin } from "../util";
+
 export const types = {
   unit: "UNIT",
   spell: "SPELL",
@@ -19,6 +24,31 @@ export const specs = {
   bashing: "BASHING",
   finesse: "FINESSE"
 };
+
+function healing(n) {
+  return {
+    upkeepTrigger: ({ state, thisUnit }) => {
+      const healed = [];
+      forEach(state.units, u => {
+        if (u.controller == thisUnit.controller && u.damage > 0) {
+          healed.push(cardInfo[u.card].name);
+          u.damage -= n;
+          if (u.damage < 0) {
+            u.damage = 0;
+          }
+        }
+      });
+      if (healed.length > 0) {
+        log.add(
+          state,
+          `${cardInfo[thisUnit.card].name} heals ${1} damage from ${andJoin(
+            healed
+          )}.`
+        );
+      }
+    }
+  };
+}
 
 const cardInfo = {
   tf: {
@@ -62,6 +92,37 @@ const cardInfo = {
     cost: 4,
     attack: 5,
     hp: 6
+  },
+  scs: {
+    color: colors.neutral,
+    tech: 1,
+    spec: specs.finesse,
+    name: "Star-Crossed Starlet",
+    type: types.unit,
+    subtypes: ["Virtuoso"],
+    cost: 2,
+    attack: 3,
+    hp: 2,
+    abilities: [
+      {
+        upkeepTrigger: ({ state, thisUnit }) => {
+          thisUnit.damage++;
+          log.add(state, `${cardInfo[thisUnit.card].name} takes 1 damage.`);
+          killUnits(state);
+        }
+      }
+    ]
+  },
+  helpful_turtle: {
+    color: colors.neutral,
+    tech: 0,
+    name: "Helpful Turtle",
+    type: types.unit,
+    subtypes: ["Cute Animal"],
+    cost: 2,
+    attack: 1,
+    hp: 2,
+    abilities: [healing(1)]
   }
 };
 
