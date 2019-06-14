@@ -52,4 +52,6 @@ Codex and tech phase
 
 # Other stuff to do
 
+Move code into a /src/ folder
+Rename "actions" to "commands"
 Use a schema validation library to simplify action checking
