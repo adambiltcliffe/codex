@@ -14,7 +14,7 @@ function initialisePlayerState(state, playerIndex) {
       "scs",
       "scs",
       "scs",
-      "im",
+      "iron_man",
       "rr"
     ];
     knuthShuffle(deck);

@@ -71,7 +71,7 @@ const cardInfo = {
     attack: 2,
     hp: 2
   },
-  im: {
+  iron_man: {
     color: colors.neutral,
     tech: 1,
     spec: specs.bashing,

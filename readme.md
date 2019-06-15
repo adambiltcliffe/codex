@@ -11,9 +11,6 @@ Upkeep triggers (with no choices required)
 
 # Tests to write
 
-Starting the game
-Ending turn, gaining gold in upkeep
-Put units into play
 Attack with a unit, check does die, doesn't die, etc.
 Arrival fatigue
 Units readying during upkeep (and reported)
@@ -55,3 +52,4 @@ Codex and tech phase
 Move code into a /src/ folder
 Rename "actions" to "commands"
 Use a schema validation library to simplify action checking
+Make sure it works out of the box, i.e. without npm linking playground
