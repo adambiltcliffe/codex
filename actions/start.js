@@ -6,7 +6,7 @@ function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
   state.updateHidden(fs => {
     const deck = [
-      "tf",
+      "tenderfoot",
       "helpful_turtle",
       "helpful_turtle",
       "helpful_turtle",

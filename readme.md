@@ -11,10 +11,8 @@ Upkeep triggers (with no choices required)
 
 # Tests to write
 
-Attack with a unit, check does die, doesn't die, etc.
-Arrival fatigue
+Arrival fatigue (easiest to add when attacking base is implemented)
 Units readying during upkeep (and reported)
-Make a worker, get more gold in upkeep
 Healing from helpful turtle, correct reporting of who healed
 Star-Crossed Starlet dying after 2 turns
 When implemented: choice of trigger ordering from SCS and HT
@@ -51,5 +49,6 @@ Codex and tech phase
 
 Move code into a /src/ folder
 Rename "actions" to "commands"
+Make action.type field use constants
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground

@@ -51,7 +51,7 @@ function healing(n) {
 }
 
 const cardInfo = {
-  tf: {
+  tenderfoot: {
     color: colors.neutral,
     tech: 0,
     name: "Tenderfoot",
