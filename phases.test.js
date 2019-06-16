@@ -1,4 +1,11 @@
-import { getNewGame, testp1Id, testp2Id } from "./testutil";
+import {
+  getNewGame,
+  putCardInHand,
+  testp1Id,
+  testp2Id,
+  playActions,
+  findUnitIds
+} from "./testutil";
 import CodexGame from "./codex";
 
 test("Workers generate gold during upkeep", () => {
@@ -18,4 +25,25 @@ test("Workers generate gold during upkeep", () => {
   expect(s2.activePlayerIndex).toEqual(0);
   expect(s2.players[testp1Id].gold).toEqual(8);
   expect(s2.players[testp2Id].gold).toEqual(5);
+});
+
+test("Units become exhausted when attacking and ready next turn", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "iron_man");
+  putCardInHand(s0, testp2Id, "tenderfoot");
+  const s1 = playActions(s0, [
+    { type: "play", card: "iron_man" },
+    { type: "endTurn" },
+    { type: "play", card: "tenderfoot" },
+    { type: "endTurn" }
+  ]);
+  const attackerId = findUnitIds(s1, u => u.card == "iron_man")[0];
+  const targetId = findUnitIds(s1, u => u.card == "tenderfoot")[0];
+  const s2 = playActions(s1, [
+    { type: "attack", attacker: attackerId, target: targetId }
+  ]);
+  expect(s2.units[attackerId].ready).toBeFalsy();
+  const s3 = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(s3.units[attackerId].ready).toBeTruthy();
+  expect(s3.log).toContain(`\${${testp1Id}} readies Iron Man.`);
 });
