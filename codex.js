@@ -2,6 +2,12 @@ import Game from "board-state";
 import * as actions from "./actions";
 import { getAP } from "./util";
 import log from "./log";
+import {
+  phases,
+  enterReadyPhase,
+  enterUpkeepPhase,
+  enterMainPhase
+} from "./phases";
 
 import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
@@ -54,6 +60,12 @@ class CodexGame extends Game {
         actions.doEndTurnAction(state, action);
         break;
     }
+    if (state.phase == phases.ready) {
+      enterUpkeepPhase(state);
+    }
+    if (state.phase == phases.upkeep) {
+      enterMainPhase(state);
+    }
     delete state.updateHidden;
   }
   static checkAction(state, action) {
@@ -82,6 +94,9 @@ class CodexGame extends Game {
     if (!state.started) {
       return [{ type: "start" }];
     }
+    return this.suggestMainPhaseActions(state);
+  }
+  static suggestMainPhaseActions(state) {
     const ap = getAP(state);
     const base = [{ type: "endTurn" }];
     const workerActions = range(ap.hand.length).map(n => ({

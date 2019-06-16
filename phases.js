@@ -3,7 +3,22 @@ import log from "./log";
 import cardInfo from "./cardinfo";
 import forEach from "lodash/forEach";
 
-export function ready(state) {
+export const phases = {
+  ready: "P_READY",
+  upkeep: "P_UPKEEP",
+  main: "P_MAIN",
+  draw: "P_DRAW"
+};
+
+export function advanceTurn(state) {
+  state.turn++;
+  state.activePlayerIndex += 1;
+  state.activePlayerIndex %= state.playerList.length;
+  enterReadyPhase(state);
+}
+
+export function enterReadyPhase(state) {
+  state.phase = phases.ready;
   state.madeWorkerThisTurn = false;
   const ap = getAP(state);
   const readied = [];
@@ -18,7 +33,8 @@ export function ready(state) {
   }
 }
 
-export function upkeep(state) {
+export function enterUpkeepPhase(state) {
+  state.phase = phases.upkeep;
   const ap = getAP(state);
   const oldGold = ap.gold;
   ap.gold += ap.workers;
@@ -35,4 +51,8 @@ export function upkeep(state) {
       });
     }
   });
+}
+
+export function enterMainPhase(state) {
+  state.phase = phases.main;
 }

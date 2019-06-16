@@ -1,5 +1,5 @@
 import { knuthShuffle } from "knuth-shuffle";
-import { upkeep, ready } from "../phases";
+import { phases, advanceTurn } from "../phases";
 import { getAP } from "../util";
 import log from "../log";
 
@@ -8,6 +8,7 @@ export function checkEndTurnAction(state, action) {
 }
 
 export function doEndTurnAction(state, action) {
+  state.phase = phases.draw;
   // draw phase
   state.updateHidden(fs => {
     const ap = getAP(fs);
@@ -26,14 +27,6 @@ export function doEndTurnAction(state, action) {
       ap.hand.push(ap.deck.shift());
     }
   });
-
   log.add(state, log.fmt`${getAP(state)} ends their main phase.`);
-
-  // advance turn
-  state.turn++;
-  state.activePlayerIndex += 1;
-  state.activePlayerIndex %= state.playerList.length;
-
-  ready(state);
-  upkeep(state);
+  advanceTurn(state);
 }

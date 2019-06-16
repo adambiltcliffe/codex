@@ -1,5 +1,5 @@
 import { knuthShuffle } from "knuth-shuffle";
-import { upkeep, ready } from "../phases";
+import { enterReadyPhase } from "../phases";
 import log from "../log";
 
 function initialisePlayerState(state, playerIndex) {
@@ -44,6 +44,5 @@ export function doStartAction(state, action) {
   state.turn = 0;
   log.add(state, "Game started.");
 
-  ready(state);
-  upkeep(state);
+  enterReadyPhase(state);
 }
