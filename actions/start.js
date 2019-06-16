@@ -42,6 +42,7 @@ export function doStartAction(state, action) {
   }
   state.units = {};
   state.turn = 0;
+  state.queue = [];
   log.add(state, "Game started.");
 
   enterReadyPhase(state);

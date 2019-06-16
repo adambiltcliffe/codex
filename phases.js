@@ -44,9 +44,9 @@ export function enterUpkeepPhase(state) {
   log.add(state, log.fmt`${ap} gains ${ap.gold - oldGold} gold from workers.`);
   forEach(state.units, u => {
     if (u.controller == ap.id) {
-      forEach(cardInfo[u.card].abilities, a => {
-        if (a.upkeepTrigger) {
-          a.upkeepTrigger({ state, thisUnit: u });
+      forEach(cardInfo[u.card].abilities, (a, index) => {
+        if (a.triggerOnUpkeep) {
+          state.queue.push({ card: u.card, index, sourceId: u.id });
         }
       });
     }

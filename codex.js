@@ -2,18 +2,15 @@ import Game from "board-state";
 import * as actions from "./actions";
 import { getAP } from "./util";
 import log from "./log";
-import {
-  phases,
-  enterReadyPhase,
-  enterUpkeepPhase,
-  enterMainPhase
-} from "./phases";
+import { phases, enterUpkeepPhase, enterMainPhase } from "./phases";
+import cardInfo from "./cardinfo";
 
 import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
 import partition from "lodash/partition";
 import range from "lodash/range";
 import uniq from "lodash/uniq";
+import { killUnits } from "./entities";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -64,6 +61,14 @@ class CodexGame extends Game {
       enterUpkeepPhase(state);
     }
     if (state.phase == phases.upkeep) {
+      while (state.queue.length > 0) {
+        const nextAction = state.queue.shift();
+        cardInfo[nextAction.card].abilities[nextAction.index].triggerAction({
+          state,
+          source: state.units[nextAction.sourceId]
+        });
+        killUnits(state);
+      }
       enterMainPhase(state);
     }
     delete state.updateHidden;

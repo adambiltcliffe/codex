@@ -1,5 +1,4 @@
 import log from "../log";
-import { killUnits } from "../entities";
 import forEach from "lodash/forEach";
 import { andJoin } from "../util";
 
@@ -27,10 +26,11 @@ export const specs = {
 
 function healing(n) {
   return {
-    upkeepTrigger: ({ state, thisUnit }) => {
+    triggerOnUpkeep: true,
+    triggerAction: ({ state, source }) => {
       const healed = [];
       forEach(state.units, u => {
-        if (u.controller == thisUnit.controller && u.damage > 0) {
+        if (u.controller == source.controller && u.damage > 0) {
           healed.push(cardInfo[u.card].name);
           u.damage -= n;
           if (u.damage < 0) {
@@ -41,7 +41,7 @@ function healing(n) {
       if (healed.length > 0) {
         log.add(
           state,
-          `${cardInfo[thisUnit.card].name} heals ${1} damage from ${andJoin(
+          `${cardInfo[source.card].name} heals ${1} damage from ${andJoin(
             healed
           )}.`
         );
@@ -105,10 +105,10 @@ const cardInfo = {
     hp: 2,
     abilities: [
       {
-        upkeepTrigger: ({ state, thisUnit }) => {
-          thisUnit.damage++;
-          log.add(state, `${cardInfo[thisUnit.card].name} takes 1 damage.`);
-          killUnits(state);
+        triggerOnUpkeep: true,
+        triggerAction: ({ state, source }) => {
+          source.damage++;
+          log.add(state, `${cardInfo[source.card].name} takes 1 damage.`);
         }
       }
     ]
