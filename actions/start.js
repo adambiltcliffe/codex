@@ -10,12 +10,12 @@ function initialisePlayerState(state, playerIndex) {
       "helpful_turtle",
       "helpful_turtle",
       "helpful_turtle",
-      "ob",
-      "scs",
-      "scs",
-      "scs",
+      "older_brother",
+      "starcrossed_starlet",
+      "starcrossed_starlet",
+      "starcrossed_starlet",
       "iron_man",
-      "rr"
+      "regularsized_rhinoceros"
     ];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);

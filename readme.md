@@ -12,8 +12,6 @@ Upkeep triggers (with no choices required)
 # Tests to write
 
 Arrival fatigue (easiest to add when attacking base is implemented)
-Healing from helpful turtle, correct reporting of who healed
-Star-Crossed Starlet dying after 2 turns
 When implemented: choice of trigger ordering from SCS and HT
 
 # Game features not implemented:

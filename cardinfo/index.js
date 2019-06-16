@@ -61,7 +61,7 @@ const cardInfo = {
     attack: 1,
     hp: 2
   },
-  ob: {
+  older_brother: {
     color: colors.neutral,
     tech: 0,
     name: "Older Brother",
@@ -82,7 +82,7 @@ const cardInfo = {
     attack: 3,
     hp: 4
   },
-  rr: {
+  regularsized_rhinoceros: {
     color: colors.neutral,
     tech: 2,
     spec: specs.bashing,
@@ -93,7 +93,7 @@ const cardInfo = {
     attack: 5,
     hp: 6
   },
-  scs: {
+  starcrossed_starlet: {
     color: colors.neutral,
     tech: 1,
     spec: specs.finesse,
