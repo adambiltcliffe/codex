@@ -46,7 +46,7 @@ export function enterUpkeepPhase(state) {
     if (u.controller == ap.id) {
       forEach(cardInfo[u.card].abilities, (a, index) => {
         if (a.triggerOnUpkeep) {
-          state.queue.push({ card: u.card, index, sourceId: u.id });
+          state.newTriggers.push({ card: u.card, index, sourceId: u.id });
         }
       });
     }

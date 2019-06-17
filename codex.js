@@ -4,6 +4,7 @@ import { getAP } from "./util";
 import log from "./log";
 import { phases, enterUpkeepPhase, enterMainPhase } from "./phases";
 import cardInfo from "./cardinfo";
+import { addTriggerToQueue } from "./triggers";
 
 import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
@@ -44,6 +45,9 @@ class CodexGame extends Game {
       case "start":
         actions.doStartAction(state, action);
         break;
+      case "queue":
+        actions.doQueueAction(state, action);
+        break;
       case "worker":
         actions.doWorkerAction(state, action);
         break;
@@ -57,19 +61,25 @@ class CodexGame extends Game {
         actions.doEndTurnAction(state, action);
         break;
     }
+    // Currently nothing triggers during the ready phase
     if (state.phase == phases.ready) {
       enterUpkeepPhase(state);
     }
     if (state.phase == phases.upkeep) {
-      while (state.queue.length > 0) {
-        const nextAction = state.queue.shift();
-        cardInfo[nextAction.card].abilities[nextAction.index].triggerAction({
-          state,
-          source: state.units[nextAction.sourceId]
-        });
-        killUnits(state);
+      if (state.newTriggers.length == 1) {
+        addTriggerToQueue(state, state.newTriggers.shift());
       }
-      enterMainPhase(state);
+      if (state.newTriggers.length == 0) {
+        while (state.queue.length > 0) {
+          const nextAction = state.queue.shift();
+          cardInfo[nextAction.card].abilities[nextAction.index].triggerAction({
+            state,
+            source: state.units[nextAction.sourceId]
+          });
+          killUnits(state);
+        }
+        enterMainPhase(state);
+      }
     }
     delete state.updateHidden;
   }
@@ -80,9 +90,18 @@ class CodexGame extends Game {
     if (!state.started && action.type != "start") {
       throw new Error("Game not started");
     }
+    if (
+      state.newTriggers &&
+      state.newTriggers.length > 0 &&
+      action.type != "queue"
+    ) {
+      throw new Error("Must add new triggers to the queue first");
+    }
     switch (action.type) {
       case "start":
         return actions.checkStartAction(state, action);
+      case "queue":
+        return actions.checkQueueAction(state, action);
       case "worker":
         return actions.checkWorkerAction(state, action);
       case "play":
@@ -98,6 +117,12 @@ class CodexGame extends Game {
   static suggestActions(state) {
     if (!state.started) {
       return [{ type: "start" }];
+    }
+    if (state.newTriggers.length > 0) {
+      return range(state.newTriggers.length).map(n => ({
+        type: "queue",
+        index: n
+      }));
     }
     return this.suggestMainPhaseActions(state);
   }

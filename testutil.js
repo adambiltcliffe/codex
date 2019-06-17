@@ -26,3 +26,7 @@ export function playActions(initialState, actionList) {
 export function findUnitIds(state, predicate) {
   return Object.keys(pickBy(state.units, predicate));
 }
+
+export function findTriggerIndices(state, predicate) {
+  return Object.keys(pickBy(state.newTriggers, predicate)).map(Number);
+}

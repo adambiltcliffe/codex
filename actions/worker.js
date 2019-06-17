@@ -7,7 +7,7 @@ export function checkWorkerAction(state, action) {
     throw new Error("No gold to make a worker");
   }
   if (
-    typeof action.handIndex != "number" ||
+    !Number.isInteger(action.handIndex) ||
     action.handIndex >= ap.hand.length
   ) {
     throw new Error("Invalid index for card to use");

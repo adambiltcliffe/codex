@@ -7,18 +7,17 @@ Making new workers
 Units
 Combat
 Upkeep triggers (with no choices required)
+Choice of order when adding triggers to queue
 "Healing" keyword
 
 # Tests to write
 
 Arrival fatigue (easiest to add when attacking base is implemented)
-When implemented: choice of trigger ordering from SCS and HT
 
 # Game features not implemented:
 
 Choices during triggers
-Queue ordering of triggers
-(Most of the) turn structure
+(Some of the) turn structure
 One reshuffle per main phase limit
 
 Interaction of continuous effects
@@ -45,7 +44,5 @@ Codex and tech phase
 # Other stuff to do
 
 Move code into a /src/ folder
-Rename "actions" to "commands"
-Make action.type field use constants
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
