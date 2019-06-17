@@ -13,6 +13,7 @@ Choice of order when adding triggers to queue
 # Tests to write
 
 Arrival fatigue (easiest to add when attacking base is implemented)
+Haste on Timely Messenger (ditto)
 
 # Game features not implemented:
 

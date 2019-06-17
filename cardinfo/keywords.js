@@ -3,6 +3,16 @@ import forEach from "lodash/forEach";
 import { andJoin } from "../util";
 import cardInfo from ".";
 
+function keyword(k) {
+  return { keyword: k };
+}
+
+export function hasKeyword(u, kwAbility) {
+  return cardInfo[u.card].abilities.some(a => a.keyword == kwAbility.keyword);
+}
+
+export const haste = keyword("K_HASTE");
+
 export function healing(n) {
   return {
     triggerOnUpkeep: true,

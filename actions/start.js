@@ -9,10 +9,10 @@ function initialisePlayerState(state, playerIndex) {
       "tenderfoot",
       "helpful_turtle",
       "helpful_turtle",
-      "helpful_turtle",
+      "timely_messenger",
+      "timely_messenger",
+      "timely_messenger",
       "older_brother",
-      "starcrossed_starlet",
-      "starcrossed_starlet",
       "starcrossed_starlet",
       "iron_man",
       "regularsized_rhinoceros"

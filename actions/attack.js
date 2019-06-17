@@ -2,6 +2,7 @@ import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
 import { killUnits } from "../entities";
+import { hasKeyword, haste } from "../cardinfo/keywords";
 
 export function checkAttackAction(state, action) {
   const ap = getAP(state);
@@ -12,7 +13,7 @@ export function checkAttackAction(state, action) {
   if (attacker.controller != ap.id) {
     throw new Error("You don't control the attacker.");
   }
-  if (attacker.controlledSince == state.turn) {
+  if (attacker.controlledSince == state.turn && !hasKeyword(attacker, haste)) {
     throw new Error("Attacker has arrival fatigue.");
   }
   if (!attacker.ready) {

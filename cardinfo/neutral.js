@@ -1,7 +1,18 @@
 import { types, colors } from "./constants";
-import { healing } from "./keywords";
+import { haste, healing } from "./keywords";
 
 const neutralCardInfo = {
+  timely_messenger: {
+    color: colors.neutral,
+    tech: 0,
+    name: "Timely Messenger",
+    type: types.unit,
+    subtypes: ["Mercenary"],
+    cost: 1,
+    attack: 1,
+    hp: 1,
+    abilities: [haste]
+  },
   tenderfoot: {
     color: colors.neutral,
     tech: 0,
