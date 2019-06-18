@@ -2,7 +2,7 @@
   "name": "codex",
   "version": "0.0.1",
   "description": "Game rules engine for Codex by Sirlin Games",
-  "main": "codex.js",
+  "main": "src/codex.js",
   "scripts": {
     "playground": "board-state-playground --entry ./playground.jsx",
     "test": "jest"
