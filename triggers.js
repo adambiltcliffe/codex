@@ -6,7 +6,7 @@ export function addTriggerToQueue(state, trigger) {
   log.add(
     state,
     `Triggered action from ${
-      cardInfo[state.units[trigger.sourceId].card].name
+      cardInfo[state.entities[trigger.sourceId].card].name
     } was added to the queue.`
   );
 }

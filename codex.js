@@ -74,7 +74,7 @@ class CodexGame extends Game {
           const nextAction = state.queue.shift();
           cardInfo[nextAction.card].abilities[nextAction.index].triggerAction({
             state,
-            source: state.units[nextAction.sourceId]
+            source: state.entities[nextAction.sourceId]
           });
           killUnits(state);
         }
@@ -135,7 +135,7 @@ class CodexGame extends Game {
     }));
     const playActions = uniq(ap.hand).map(c => ({ type: "play", card: c }));
     const [apUnits, napUnits] = partition(
-      state.units,
+      state.entities,
       u => u.controller == ap.id
     );
     const attackActions = flatten(

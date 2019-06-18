@@ -18,7 +18,7 @@ export function healing(n) {
     triggerOnUpkeep: true,
     triggerAction: ({ state, source }) => {
       const healed = [];
-      forEach(state.units, u => {
+      forEach(state.entities, u => {
         if (u.controller == source.controller && u.damage > 0) {
           healed.push(cardInfo[u.card].name);
           u.damage -= n;

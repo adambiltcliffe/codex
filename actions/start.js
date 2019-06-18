@@ -34,13 +34,13 @@ export function checkStartAction(state, action) {
 
 export function doStartAction(state, action) {
   state.started = true;
-  state.nextUnitId = 1;
+  state.nextId = 1;
   state.activePlayerIndex = 0;
   state.players = {};
   for (let ii = 0; ii < state.playerList.length; ii++) {
     initialisePlayerState(state, ii);
   }
-  state.units = {};
+  state.entities = {};
   state.turn = 0;
   state.queue = [];
   state.newTriggers = [];

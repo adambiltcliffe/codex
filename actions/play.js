@@ -22,7 +22,7 @@ export function doPlayAction(state, action) {
   ap.gold -= cardInfo[state.playedCard].cost;
 
   const newUnit = {
-    id: state.nextUnitId,
+    id: state.nextId,
     card: state.playedCard,
     owner: getAP(state).id,
     controller: getAP(state).id,
@@ -31,8 +31,8 @@ export function doPlayAction(state, action) {
     damage: 0
   };
 
-  state.units[newUnit.id] = newUnit;
+  state.entities[newUnit.id] = newUnit;
   delete state.playedCard;
-  state.nextUnitId++;
+  state.nextId++;
   log.add(state, log.fmt`${ap} plays ${cardInfo[newUnit.card].name}.`);
 }

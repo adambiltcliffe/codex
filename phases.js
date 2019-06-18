@@ -22,7 +22,7 @@ export function enterReadyPhase(state) {
   state.madeWorkerThisTurn = false;
   const ap = getAP(state);
   const readied = [];
-  forEach(state.units, u => {
+  forEach(state.entities, u => {
     if (u.controller == ap.id && !u.ready) {
       readied.push(cardInfo[u.card].name);
       u.ready = true;
@@ -42,7 +42,7 @@ export function enterUpkeepPhase(state) {
     ap.gold = 20;
   }
   log.add(state, log.fmt`${ap} gains ${ap.gold - oldGold} gold from workers.`);
-  forEach(state.units, u => {
+  forEach(state.entities, u => {
     if (u.controller == ap.id) {
       forEach(cardInfo[u.card].abilities, (a, index) => {
         if (a.triggerOnUpkeep) {

@@ -23,8 +23,8 @@ export function playActions(initialState, actionList) {
   return state;
 }
 
-export function findUnitIds(state, predicate) {
-  return Object.keys(pickBy(state.units, predicate));
+export function findEntityIds(state, predicate) {
+  return Object.keys(pickBy(state.entities, predicate));
 }
 
 export function findTriggerIndices(state, predicate) {

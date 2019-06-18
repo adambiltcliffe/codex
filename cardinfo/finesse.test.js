@@ -3,7 +3,7 @@ import {
   playActions,
   putCardInHand,
   testp1Id,
-  findUnitIds
+  findEntityIds
 } from "../testutil";
 
 test("Star-Crossed Starlet kills herself after 2 turns", () => {
@@ -14,10 +14,10 @@ test("Star-Crossed Starlet kills herself after 2 turns", () => {
     { type: "endTurn" },
     { type: "endTurn" }
   ]);
-  const scs = findUnitIds(s1, u => u.card == "starcrossed_starlet")[0];
-  expect(s1.units[scs].damage).toEqual(1);
+  const scs = findEntityIds(s1, u => u.card == "starcrossed_starlet")[0];
+  expect(s1.entities[scs].damage).toEqual(1);
   expect(s1.log).toContain("Star-Crossed Starlet takes 1 damage.");
   const s2 = playActions(s1, [{ type: "endTurn" }, { type: "endTurn" }]);
-  expect(s2.units[scs]).toBeUndefined();
+  expect(s2.entities[scs]).toBeUndefined();
   expect(s2.log).toContain("Star-Crossed Starlet dies.");
 });

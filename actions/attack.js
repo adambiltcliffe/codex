@@ -6,7 +6,7 @@ import { hasKeyword, haste } from "../cardinfo/keywords";
 
 export function checkAttackAction(state, action) {
   const ap = getAP(state);
-  const attacker = state.units[action.attacker];
+  const attacker = state.entities[action.attacker];
   if (typeof attacker != "object") {
     throw new Error("Invalid attacker ID.");
   }
@@ -19,7 +19,7 @@ export function checkAttackAction(state, action) {
   if (!attacker.ready) {
     throw new Error("Attacker is exhausted.");
   }
-  const target = state.units[action.target];
+  const target = state.entities[action.target];
   if (typeof target != "object") {
     throw new Error("Invalid target ID.");
   }
@@ -30,8 +30,8 @@ export function checkAttackAction(state, action) {
 }
 
 export function doAttackAction(state, action) {
-  const attacker = state.units[action.attacker];
-  const target = state.units[action.target];
+  const attacker = state.entities[action.attacker];
+  const target = state.entities[action.target];
   log.add(
     state,
     log.fmt`${getAP(state)} attacks ${cardInfo[target.card].name} with ${

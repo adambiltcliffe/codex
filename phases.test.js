@@ -4,7 +4,7 @@ import {
   testp1Id,
   testp2Id,
   playActions,
-  findUnitIds
+  findEntityIds
 } from "./testutil";
 import CodexGame from "./codex";
 
@@ -37,13 +37,13 @@ test("Units become exhausted when attacking and ready next turn", () => {
     { type: "play", card: "tenderfoot" },
     { type: "endTurn" }
   ]);
-  const attackerId = findUnitIds(s1, u => u.card == "iron_man")[0];
-  const targetId = findUnitIds(s1, u => u.card == "tenderfoot")[0];
+  const attackerId = findEntityIds(s1, u => u.card == "iron_man")[0];
+  const targetId = findEntityIds(s1, u => u.card == "tenderfoot")[0];
   const s2 = playActions(s1, [
     { type: "attack", attacker: attackerId, target: targetId }
   ]);
-  expect(s2.units[attackerId].ready).toBeFalsy();
+  expect(s2.entities[attackerId].ready).toBeFalsy();
   const s3 = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
-  expect(s3.units[attackerId].ready).toBeTruthy();
+  expect(s3.entities[attackerId].ready).toBeTruthy();
   expect(s3.log).toContain(`\${${testp1Id}} readies Iron Man.`);
 });

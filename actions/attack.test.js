@@ -1,6 +1,6 @@
 import CodexGame from "../codex";
 import {
-  findUnitIds,
+  findEntityIds,
   getNewGame,
   playActions,
   putCardInHand,
@@ -27,12 +27,12 @@ test("Attacking 1/2s with other 1/2s", () => {
     { type: "play", card: "tenderfoot" },
     { type: "endTurn" }
   ]);
-  const attackerIds = findUnitIds(
+  const attackerIds = findEntityIds(
     s1,
     u => u.controller == testp1Id && u.card == "tenderfoot"
   );
   expect(attackerIds).toHaveLength(2);
-  const targetIds = findUnitIds(
+  const targetIds = findEntityIds(
     s1,
     u => u.controller == testp2Id && u.card == "tenderfoot"
   );
@@ -41,13 +41,13 @@ test("Attacking 1/2s with other 1/2s", () => {
   const s2 = playActions(s1, [
     { type: "attack", attacker: attackerIds[0], target: targetIds[0] }
   ]);
-  expect(s2.units[attackerIds[0]].damage).toEqual(1);
-  expect(s2.units[targetIds[0]].damage).toEqual(1);
+  expect(s2.entities[attackerIds[0]].damage).toEqual(1);
+  expect(s2.entities[targetIds[0]].damage).toEqual(1);
   expect(s2.players[testp2Id].discard.length).toEqual(oldDiscardSize);
   const s3 = playActions(s2, [
     { type: "attack", attacker: attackerIds[1], target: targetIds[0] }
   ]);
-  expect(s3.units[attackerIds[1]].damage).toEqual(1);
-  expect(s3.units[targetIds[0]]).toBeUndefined();
+  expect(s3.entities[attackerIds[1]].damage).toEqual(1);
+  expect(s3.entities[targetIds[0]]).toBeUndefined();
   expect(s3.players[testp2Id].discard.length).toEqual(oldDiscardSize + 1);
 });
