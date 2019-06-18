@@ -44,6 +44,5 @@ Codex and tech phase
 
 # Other stuff to do
 
-Move code into a /src/ folder
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
