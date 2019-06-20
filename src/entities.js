@@ -26,14 +26,30 @@ export function getCurrentValues(state, unitIds) {
   // because of the future case where we need to check all copy effects to see if
   // they have added or removed a global effect from a unit
   forEach(state.entities, (u, id) => {
-    const currentValues = produce(cardInfo[u.card], draft => {
-      forEach(draft.abilities, a => {
-        if (a.modifyOwnValues) {
-          a.modifyOwnValues({ state, self: u, values: draft });
-        }
+    if (unitIds.includes(id)) {
+      const currentValues = produce(cardInfo[u.card], draft => {
+        // at present we don't pay attention to the order (because it doesn't matter)
+        forEach(draft.abilities, a => {
+          if (a.modifyOwnValues) {
+            a.modifyOwnValues({ state, self: u, values: draft });
+          }
+        });
+        forEach(state.entities, other => {
+          // also at the moment we can just use the printed values here
+          forEach(cardInfo[other.card].abilities, a => {
+            if (a.modifyGlobalValues) {
+              a.modifyGlobalValues({
+                state,
+                source: other,
+                subject: u,
+                values: draft
+              });
+            }
+          });
+        });
       });
-    });
-    result[id] = currentValues;
+      result[id] = currentValues;
+    }
   });
   return shouldReturnSingleton ? result[unitIds] : result;
 }

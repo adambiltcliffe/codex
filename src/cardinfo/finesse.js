@@ -27,6 +27,31 @@ const finesseCardInfo = {
         }
       }
     ]
+  },
+  grounded_guide: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.finesse,
+    name: "Grounded Guide",
+    type: types.unit,
+    subtypes: ["Thespian"],
+    cost: 5,
+    attack: 4,
+    hp: 4,
+    abilities: [
+      {
+        modifyGlobalValues: ({ state, source, subject, values }) => {
+          if (source.id != subject.id) {
+            if (values.subtypes.includes("Virtuoso")) {
+              values.attack += 2;
+              values.hp += 1;
+            } else {
+              values.attack += 1;
+            }
+          }
+        }
+      }
+    ]
   }
 };
 
