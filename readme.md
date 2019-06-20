@@ -18,21 +18,26 @@ Haste on Timely Messenger (ditto)
 
 # Game features not implemented:
 
-Choices during triggers
+Choices/targets during triggers
 (Some of the) turn structure
 One reshuffle per main phase limit
 
-Interaction of continuous effects
-
-Combat abilities
-
-Patrol zone
-
+Base
 Tech buildings
 Building hp
 Base damage from building destruction
 Add-ons
+Patrol zone
+(More of) interaction of continuous effects
+Frenzy
+Swift strike, overpower, sparkshot (requires choosing targets)
+Stealth, unstoppable (requires patrol zone)
+Invisible, detector (requires targets and patrol zone)
+Tower (requires add-ons and detector)
+
 Multicolour tax
+
+Building cards and upgrade cards
 
 Hero(es)
 Spell casting
