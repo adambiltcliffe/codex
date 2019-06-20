@@ -9,6 +9,7 @@ Combat
 Upkeep triggers (with no choices required)
 Choice of order when adding triggers to queue
 "Healing" keyword
+Passive effects on units that modify their own stats
 
 # Tests to write
 

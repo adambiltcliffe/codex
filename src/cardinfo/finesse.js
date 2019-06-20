@@ -20,6 +20,11 @@ const finesseCardInfo = {
           source.damage++;
           log.add(state, `${cardInfo[source.card].name} takes 1 damage.`);
         }
+      },
+      {
+        modifyOwnValues: ({ state, self, values }) => {
+          values.attack += state.entities[self.id].damage;
+        }
       }
     ]
   }

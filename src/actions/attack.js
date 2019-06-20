@@ -1,7 +1,7 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import { killUnits } from "../entities";
+import { killUnits, getCurrentValues } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/keywords";
 
 export function checkAttackAction(state, action) {
@@ -30,16 +30,19 @@ export function checkAttackAction(state, action) {
 }
 
 export function doAttackAction(state, action) {
+  const values = getCurrentValues(state, [action.attacker, action.target]);
   const attacker = state.entities[action.attacker];
+  const attackerValues = values[action.attacker];
   const target = state.entities[action.target];
+  const targetValues = values[action.target];
   log.add(
     state,
-    log.fmt`${getAP(state)} attacks ${cardInfo[target.card].name} with ${
-      cardInfo[attacker.card].name
+    log.fmt`${getAP(state)} attacks ${targetValues.name} with ${
+      attackerValues.name
     }.`
   );
   attacker.ready = false;
-  attacker.damage += cardInfo[target.card].attack;
-  target.damage += cardInfo[attacker.card].attack;
+  attacker.damage += targetValues.attack;
+  target.damage += attackerValues.attack;
   killUnits(state);
 }
