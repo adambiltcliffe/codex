@@ -15,7 +15,7 @@ export function killUnits(state) {
   });
 }
 
-export function getCurrentValues(state, unitIds) {
+export function getCurrentValues(state, unitIds, attackTargetId) {
   let shouldReturnSingleton = false;
   if (!Array.isArray(unitIds)) {
     unitIds = [unitIds];
@@ -31,7 +31,12 @@ export function getCurrentValues(state, unitIds) {
         // at present we don't pay attention to the order (because it doesn't matter)
         forEach(draft.abilities, a => {
           if (a.modifyOwnValues) {
-            a.modifyOwnValues({ state, self: u, values: draft });
+            a.modifyOwnValues({
+              state,
+              self: u,
+              values: draft,
+              attackTargetId
+            });
           }
         });
         forEach(state.entities, other => {
@@ -42,7 +47,8 @@ export function getCurrentValues(state, unitIds) {
                 state,
                 source: other,
                 subject: u,
-                values: draft
+                values: draft,
+                attackTargetId
               });
             }
           });

@@ -1,5 +1,5 @@
 import { types, colors } from "./constants";
-import { haste, healing } from "./keywords";
+import { frenzy, haste, healing } from "./keywords";
 
 const neutralCardInfo = {
   timely_messenger: {
@@ -43,6 +43,17 @@ const neutralCardInfo = {
     attack: 1,
     hp: 2,
     abilities: [healing(1)]
+  },
+  fruit_ninja: {
+    color: colors.neutral,
+    tech: 0,
+    name: "Fruit Ninja",
+    type: types.unit,
+    subtypes: ["Ninja"],
+    cost: 3,
+    attack: 2,
+    hp: 2,
+    abilities: [frenzy(1)]
   }
 };
 

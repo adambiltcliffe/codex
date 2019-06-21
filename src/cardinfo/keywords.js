@@ -1,6 +1,6 @@
 import log from "../log";
 import forEach from "lodash/forEach";
-import { andJoin } from "../util";
+import { andJoin, getAP } from "../util";
 import cardInfo from ".";
 
 function keyword(k) {
@@ -12,6 +12,16 @@ export function hasKeyword(u, kwAbility) {
 }
 
 export const haste = keyword("K_HASTE");
+
+export function frenzy(n) {
+  return {
+    modifyOwnValues: ({ state, self, values }) => {
+      if (self.controller == getAP(state).id) {
+        values.attack += n;
+      }
+    }
+  };
+}
 
 export function healing(n) {
   return {

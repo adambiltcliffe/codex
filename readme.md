@@ -10,6 +10,7 @@ Upkeep triggers (with no choices required)
 Choice of order when adding triggers to queue
 "Healing" keyword
 Passive effects on units that modify their own stats
+Frenzy
 
 # Tests to write
 
@@ -29,7 +30,6 @@ Base damage from building destruction
 Add-ons
 Patrol zone
 (More of) interaction of continuous effects
-Frenzy
 Swift strike, overpower, sparkshot (requires choosing targets)
 Stealth, unstoppable (requires patrol zone)
 Invisible, detector (requires targets and patrol zone)
