@@ -22,11 +22,11 @@ test("Helpful Turtle heals your units but not the enemy's", () => {
   ]);
   const attacker = findEntityIds(
     s1,
-    u => u.controller == testp1Id && u.card == "tenderfoot"
+    u => u.owner == testp1Id && u.card == "tenderfoot"
   )[0];
   const target = findEntityIds(
     s1,
-    u => u.controller == testp2Id && u.card == "tenderfoot"
+    u => u.owner == testp2Id && u.card == "tenderfoot"
   )[0];
   const s2 = playActions(s1, [{ type: "attack", attacker, target }]);
   expect(s2.entities[attacker].damage).toEqual(1);

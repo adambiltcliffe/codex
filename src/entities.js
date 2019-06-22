@@ -1,18 +1,28 @@
 import produce from "immer";
 import forEach from "lodash/forEach";
 import cardInfo from "./cardinfo";
+import fixtures from "./fixtures";
 import log from "./log";
 
 export function killUnits(state) {
   forEach(state.entities, u => {
-    if (u.damage >= cardInfo[u.card].hp) {
-      log.add(state, log.fmt`${cardInfo[u.card].name} dies.`);
+    if (u.damage >= getCurrentValues(state, u.id).hp) {
+      log.add(state, log.fmt`${getName(state, u.id)} dies.`);
       delete state.entities[u.id];
       state.updateHidden(fs => {
         fs.players[u.owner].discard.push(u.card);
       });
     }
   });
+}
+
+export function getName(state, entityId) {
+  const entity = state.entities[entityId];
+  if (entity.card) {
+    return cardInfo[entity.card].name;
+  } else {
+    return fixtures[entity.fixture].name;
+  }
 }
 
 export function getCurrentValues(state, unitIds, attackTargetId) {
@@ -27,8 +37,11 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
   // they have added or removed a global effect from a unit
   forEach(state.entities, (u, id) => {
     if (unitIds.includes(id)) {
-      const currentValues = produce(cardInfo[u.card], draft => {
-        // at present we don't pay attention to the order (because it doesn't matter)
+      const printedValues =
+        u.card == undefined ? fixtures[u.fixture] : cardInfo[u.card];
+      const currentValues = produce(printedValues, draft => {
+        draft.controller = u.owner;
+        // at present we don't pay attention to effect order (because it doesn't matter)
         forEach(draft.abilities, a => {
           if (a.modifyOwnValues) {
             a.modifyOwnValues({
@@ -41,19 +54,26 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
         });
         forEach(state.entities, other => {
           // also at the moment we can just use the printed values here
-          forEach(cardInfo[other.card].abilities, a => {
-            if (a.modifyGlobalValues) {
-              a.modifyGlobalValues({
-                state,
-                source: other,
-                subject: u,
-                values: draft,
-                attackTargetId
-              });
-            }
-          });
+          if (other.card) {
+            // fixtures don't have global passives
+            forEach(cardInfo[other.card].abilities, a => {
+              if (a.modifyGlobalValues) {
+                a.modifyGlobalValues({
+                  state,
+                  source: other,
+                  subject: u,
+                  values: draft,
+                  attackTargetId
+                });
+              }
+            });
+          }
         });
       });
+      if (currentValues.controller != u.lastControlledBy) {
+        u.controlledSince = state.turn;
+        u.lastControlledBy = currentValues.controller;
+      }
       result[id] = currentValues;
     }
   });

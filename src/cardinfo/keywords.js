@@ -2,6 +2,7 @@ import log from "../log";
 import forEach from "lodash/forEach";
 import { andJoin, getAP } from "../util";
 import cardInfo from ".";
+import { getName, getCurrentValues } from "../entities";
 
 function keyword(k) {
   return { keyword: k };
@@ -15,8 +16,8 @@ export const haste = keyword("K_HASTE");
 
 export function frenzy(n) {
   return {
-    modifyOwnValues: ({ state, self, values }) => {
-      if (self.controller == getAP(state).id) {
+    modifyOwnValues: ({ state, values }) => {
+      if (values.controller == getAP(state).id) {
         values.attack += n;
       }
     }
@@ -28,9 +29,13 @@ export function healing(n) {
     triggerOnUpkeep: true,
     triggerAction: ({ state, source }) => {
       const healed = [];
+      const allVals = getCurrentValues(state, Object.keys(state.entities));
       forEach(state.entities, u => {
-        if (u.controller == source.controller && u.damage > 0) {
-          healed.push(cardInfo[u.card].name);
+        if (
+          allVals[u.id].controller == allVals[source.id].controller &&
+          u.damage > 0
+        ) {
+          healed.push(getName(state, u.id));
           u.damage -= n;
           if (u.damage < 0) {
             u.damage = 0;
@@ -40,7 +45,7 @@ export function healing(n) {
       if (healed.length > 0) {
         log.add(
           state,
-          `${cardInfo[source.card].name} heals ${1} damage from ${andJoin(
+          `${getName(state, source.id)} heals ${1} damage from ${andJoin(
             healed
           )}.`
         );

@@ -14,8 +14,8 @@ Frenzy
 
 # Tests to write
 
-Arrival fatigue (easiest to add when attacking base is implemented)
-Haste on Timely Messenger (ditto)
+Haste on Timely Messenger
+Can attack base, can't attack with base
 
 # Game features not implemented:
 
@@ -50,5 +50,6 @@ Codex and tech phase
 
 # Other stuff to do
 
+Figure out how to make triggers track their source when the ability isn't printed on the card
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground

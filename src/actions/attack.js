@@ -10,10 +10,14 @@ export function checkAttackAction(state, action) {
   if (typeof attacker != "object") {
     throw new Error("Invalid attacker ID.");
   }
-  if (attacker.controller != ap.id) {
+  const attackerVals = getCurrentValues(state, action.attacker);
+  if (attackerVals.controller != ap.id) {
     throw new Error("You don't control the attacker.");
   }
-  if (attacker.controlledSince == state.turn && !hasKeyword(attacker, haste)) {
+  if (
+    attacker.controlledSince == state.turn &&
+    !hasKeyword(attackerVals, haste)
+  ) {
     throw new Error("Attacker has arrival fatigue.");
   }
   if (!attacker.ready) {
@@ -23,7 +27,8 @@ export function checkAttackAction(state, action) {
   if (typeof target != "object") {
     throw new Error("Invalid target ID.");
   }
-  if (target.controller == ap.id) {
+  const targetVals = getCurrentValues(state, action.target);
+  if (targetVals.controller == ap.id) {
     throw new Error("Can't attack your own unit.");
   }
   return true;

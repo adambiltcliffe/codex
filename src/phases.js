@@ -2,6 +2,7 @@ import { andJoin, getAP } from "./util";
 import log from "./log";
 import cardInfo from "./cardinfo";
 import forEach from "lodash/forEach";
+import { getName, getCurrentValues } from "./entities";
 
 export const phases = {
   ready: "P_READY",
@@ -23,8 +24,8 @@ export function enterReadyPhase(state) {
   const ap = getAP(state);
   const readied = [];
   forEach(state.entities, u => {
-    if (u.controller == ap.id && !u.ready) {
-      readied.push(cardInfo[u.card].name);
+    if (getCurrentValues(state, u.id).controller == ap.id && !u.ready) {
+      readied.push(getName(state, u.id));
       u.ready = true;
     }
   });
@@ -43,8 +44,9 @@ export function enterUpkeepPhase(state) {
   }
   log.add(state, log.fmt`${ap} gains ${ap.gold - oldGold} gold from workers.`);
   forEach(state.entities, u => {
-    if (u.controller == ap.id) {
-      forEach(cardInfo[u.card].abilities, (a, index) => {
+    const vals = getCurrentValues(state, u.id);
+    if (vals.controller == ap.id) {
+      forEach(vals.abilities, (a, index) => {
         if (a.triggerOnUpkeep) {
           state.newTriggers.push({ card: u.card, index, sourceId: u.id });
         }
