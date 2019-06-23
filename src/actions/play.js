@@ -1,6 +1,8 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
+import { getCurrentValues } from "../entities";
+import forEach from "lodash/forEach";
 
 export function checkPlayAction(state, action) {
   const ap = getAP(state);
@@ -35,4 +37,15 @@ export function doPlayAction(state, action) {
   delete state.playedCard;
   state.nextId++;
   log.add(state, log.fmt`${ap} plays ${cardInfo[newUnit.card].name}.`);
+
+  const vals = getCurrentValues(state, newUnit.id);
+  forEach(vals.abilities, (a, index) => {
+    if (a.triggerOnOwnArrival) {
+      state.newTriggers.push({
+        card: newUnit.card,
+        index,
+        sourceId: newUnit.id
+      });
+    }
+  });
 }

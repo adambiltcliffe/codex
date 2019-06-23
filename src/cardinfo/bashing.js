@@ -12,6 +12,25 @@ const bashingCardInfo = {
     attack: 3,
     hp: 4
   },
+  hired_stomper: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.bashing,
+    name: "Hired Stomper",
+    type: types.unit,
+    subtypes: ["Lizardman"],
+    cost: 4,
+    attack: 4,
+    hp: 3,
+    abilities: [
+      {
+        triggerOnOwnArrival: true,
+        triggerAction: ({ state, source }) => {
+          log.add(state, `${cardInfo[source.card].name} goes BAM!`);
+        }
+      }
+    ]
+  },
   regularsized_rhinoceros: {
     color: colors.neutral,
     tech: 2,
