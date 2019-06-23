@@ -3,15 +3,15 @@ import * as actions from "./actions";
 import { getAP } from "./util";
 import log from "./log";
 import { phases, enterUpkeepPhase, enterMainPhase } from "./phases";
-import cardInfo from "./cardinfo";
 import { addTriggerToQueue } from "./triggers";
+import { killUnits } from "./entities";
+import cardInfo from "./cardinfo";
 
 import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
 import partition from "lodash/partition";
 import range from "lodash/range";
 import uniq from "lodash/uniq";
-import { killUnits } from "./entities";
 
 class CodexGame extends Game {
   static getFilters(state) {

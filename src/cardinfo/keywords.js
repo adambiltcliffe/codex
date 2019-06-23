@@ -8,8 +8,8 @@ function keyword(k) {
   return { keyword: k };
 }
 
-export function hasKeyword(u, kwAbility) {
-  return cardInfo[u.card].abilities.some(a => a.keyword == kwAbility.keyword);
+export function hasKeyword(entityVals, kwAbility) {
+  return entityVals.abilities.some(a => a.keyword == kwAbility.keyword);
 }
 
 export const haste = keyword("K_HASTE");

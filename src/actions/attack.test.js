@@ -33,6 +33,33 @@ test("Arrival fatigue and attacking base", () => {
   expect(s2.log).toContain(`\${${testp1Id}} attacks base with Iron Man.`);
 });
 
+test("Base can't attack", () => {
+  const s0 = getNewGame();
+  const p1base = findEntityIds(
+    s0,
+    e => e.owner == testp1Id && e.fixture == fixtureNames.base
+  )[0];
+  const p2base = findEntityIds(
+    s0,
+    e => e.owner == testp2Id && e.fixture == fixtureNames.base
+  )[0];
+  expect(() =>
+    CodexGame.checkAction(s0, {
+      type: "attack",
+      attacker: p1base,
+      target: p2base
+    })
+  ).toThrow();
+  const s1 = playActions(s0, [{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(() =>
+    CodexGame.checkAction(s1, {
+      type: "attack",
+      attacker: p1base,
+      target: p2base
+    })
+  ).toThrow();
+});
+
 test("Attacking 1/2s with other 1/2s", () => {
   const s0 = getNewGame();
   putCardInHand(s0, testp1Id, "tenderfoot");

@@ -1,3 +1,4 @@
+import { fixtureNames } from "../fixtures";
 import {
   getNewGame,
   playActions,
@@ -7,6 +8,21 @@ import {
   findEntityIds
 } from "../testutil";
 import { getCurrentValues } from "../entities";
+import CodexGame from "../codex";
+
+test("Timely Messenger can attack with haste", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "timely_messenger");
+  const s1 = playActions(s0, [{ type: "play", card: "timely_messenger" }]);
+  const tm = findEntityIds(s1, e => e.card == "timely_messenger")[0];
+  const p2base = findEntityIds(
+    s1,
+    e => e.owner == testp2Id && e.fixture == fixtureNames.base
+  )[0];
+  expect(() => {
+    CodexGame.checkAction(s1, { type: "attack", attacker: tm, target: p2base });
+  }).not.toThrow();
+});
 
 test("Helpful Turtle heals your units but not the enemy's", () => {
   const s0 = getNewGame();

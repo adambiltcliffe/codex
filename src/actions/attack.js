@@ -1,5 +1,5 @@
 import { getAP } from "../util";
-import cardInfo from "../cardinfo";
+import cardInfo, { types } from "../cardinfo";
 import log from "../log";
 import { killUnits, getCurrentValues } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/keywords";
@@ -13,6 +13,9 @@ export function checkAttackAction(state, action) {
   const attackerVals = getCurrentValues(state, action.attacker);
   if (attackerVals.controller != ap.id) {
     throw new Error("You don't control the attacker.");
+  }
+  if (attackerVals.type != types.unit) {
+    throw new Error("Only units can attack.");
   }
   if (
     attacker.controlledSince == state.turn &&

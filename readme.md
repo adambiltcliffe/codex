@@ -5,6 +5,7 @@ Decks and draw phase
 Workers generating gold (limit 20)
 Making new workers
 Units
+Base
 Combat
 Upkeep triggers (with no choices required)
 Choice of order when adding triggers to queue
@@ -12,18 +13,12 @@ Choice of order when adding triggers to queue
 Passive effects on units that modify their own stats
 Frenzy
 
-# Tests to write
-
-Haste on Timely Messenger
-Can attack base, can't attack with base
-
 # Game features not implemented:
 
 Choices/targets during triggers
 (Some of the) turn structure
 One reshuffle per main phase limit
 
-Base
 Tech buildings
 Building hp
 Base damage from building destruction
