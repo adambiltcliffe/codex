@@ -18,6 +18,14 @@ export function advanceTurn(state) {
   enterReadyPhase(state);
 }
 
+export function advancePhase(state) {
+  if (state.phase == phases.ready) {
+    enterUpkeepPhase(state);
+  } else if (state.phase == phases.upkeep) {
+    enterMainPhase(state);
+  }
+}
+
 export function enterReadyPhase(state) {
   state.phase = phases.ready;
   state.madeWorkerThisTurn = false;

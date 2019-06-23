@@ -18,7 +18,7 @@ const finesseCardInfo = {
         triggerOnUpkeep: true,
         triggerAction: ({ state, source }) => {
           source.damage++;
-          log.add(state, `${cardInfo[source.card].name} takes 1 damage.`);
+          log.add(state, `${getName(state, source.id)} takes 1 damage.`);
         }
       },
       {

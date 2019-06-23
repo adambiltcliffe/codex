@@ -8,6 +8,7 @@ Units
 Base
 Combat
 Upkeep triggers (with no choices required)
+Arrival triggers (with no choices required)
 Choice of order when adding triggers to queue
 "Healing" keyword
 Passive effects on units that modify their own stats
@@ -45,6 +46,8 @@ Codex and tech phase
 
 # Other stuff to do
 
+Get rid of "\${player1} readies base" on first turn
+Find out why suggestActions isn't suggesting attacks any more
 Figure out how to make triggers track their source when the ability isn't printed on the card
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground

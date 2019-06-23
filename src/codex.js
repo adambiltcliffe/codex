@@ -2,7 +2,7 @@ import Game from "board-state";
 import * as actions from "./actions";
 import { getAP } from "./util";
 import log from "./log";
-import { phases, enterUpkeepPhase, enterMainPhase } from "./phases";
+import { phases, advancePhase } from "./phases";
 import { addTriggerToQueue } from "./triggers";
 import { killUnits } from "./entities";
 import cardInfo from "./cardinfo";
@@ -61,15 +61,15 @@ class CodexGame extends Game {
         actions.doEndTurnAction(state, action);
         break;
     }
-    // Currently nothing triggers during the ready phase
-    if (state.phase == phases.ready) {
-      enterUpkeepPhase(state);
-    }
-    if (state.phase == phases.upkeep) {
+
+    let needAction = false;
+    while (needAction == false) {
       if (state.newTriggers.length == 1) {
         addTriggerToQueue(state, state.newTriggers.shift());
       }
-      if (state.newTriggers.length == 0) {
+      if (state.newTriggers.length > 0) {
+        needAction = true;
+      } else {
         while (state.queue.length > 0) {
           const nextAction = state.queue.shift();
           cardInfo[nextAction.card].abilities[nextAction.index].triggerAction({
@@ -78,7 +78,11 @@ class CodexGame extends Game {
           });
           killUnits(state);
         }
-        enterMainPhase(state);
+        if (state.phase == phases.main) {
+          needAction = true;
+        } else {
+          advancePhase(state);
+        }
       }
     }
     delete state.updateHidden;

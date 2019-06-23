@@ -1,4 +1,6 @@
 import { types, colors, specs } from "./constants";
+import log from "../log";
+import { getName } from "../entities";
 
 const bashingCardInfo = {
   iron_man: {
@@ -26,7 +28,7 @@ const bashingCardInfo = {
       {
         triggerOnOwnArrival: true,
         triggerAction: ({ state, source }) => {
-          log.add(state, `${cardInfo[source.card].name} goes BAM!`);
+          log.add(state, `${getName(state, source.id)} goes BAM!`);
         }
       }
     ]
