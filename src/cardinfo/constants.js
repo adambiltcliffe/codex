@@ -19,3 +19,7 @@ export const specs = {
   bashing: "BASHING",
   finesse: "FINESSE"
 };
+
+export const targetMode = {
+  single: 1
+};

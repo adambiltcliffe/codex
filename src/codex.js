@@ -3,12 +3,17 @@ import * as actions from "./actions";
 import { getAP } from "./util";
 import log from "./log";
 import { phases, advancePhase } from "./phases";
-import { addTriggerToQueue } from "./triggers";
+import {
+  addTriggerToQueue,
+  canResolveCurrentTrigger,
+  currentTriggerDefinition
+} from "./triggers";
 import { killUnits } from "./entities";
-import cardInfo from "./cardinfo";
+import { targetMode } from "./cardinfo/constants";
 
 import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
+import mapValues from "lodash/mapValues";
 import partition from "lodash/partition";
 import range from "lodash/range";
 import uniq from "lodash/uniq";
@@ -48,6 +53,9 @@ class CodexGame extends Game {
       case "queue":
         actions.doQueueAction(state, action);
         break;
+      case "choice":
+        actions.doChoiceAction(state, action);
+        break;
       case "worker":
         actions.doWorkerAction(state, action);
         break;
@@ -62,6 +70,7 @@ class CodexGame extends Game {
         break;
     }
 
+    // We stop the simulation when we can't continue without a player acting
     let needAction = false;
     while (needAction == false) {
       if (state.newTriggers.length == 1) {
@@ -69,15 +78,29 @@ class CodexGame extends Game {
       }
       if (state.newTriggers.length > 0) {
         needAction = true;
-      } else {
-        while (state.queue.length > 0) {
-          const nextAction = state.queue.shift();
-          cardInfo[nextAction.card].abilities[nextAction.index].triggerAction({
+        break;
+      }
+      if (state.currentTrigger == null && state.queue.length > 0) {
+        state.currentTrigger = state.queue.shift();
+        state.currentTrigger.choices = {};
+      }
+      if (state.currentTrigger) {
+        if (canResolveCurrentTrigger(state)) {
+          currentTriggerDefinition(state).triggerAction({
             state,
-            source: state.entities[nextAction.sourceId]
+            source: state.entities[state.currentTrigger.sourceId],
+            choices: state.currentTrigger.choices
           });
+          state.currentTrigger = null;
           killUnits(state);
+        } else {
+          // Can't resolve trigger without further choices
+          needAction = true;
+          break;
         }
+      }
+      // If we get this far, we dealt with the current trigger if there was one
+      if (state.queue.length == 0) {
         if (state.phase == phases.main) {
           needAction = true;
         } else {
@@ -101,11 +124,18 @@ class CodexGame extends Game {
     ) {
       throw new Error("Must add new triggers to the queue first");
     }
+    if (state.currentTrigger && action.type != "choice") {
+      throw new Error(
+        "Must finish making choices for the current trigger first"
+      );
+    }
     switch (action.type) {
       case "start":
         return actions.checkStartAction(state, action);
       case "queue":
         return actions.checkQueueAction(state, action);
+      case "choice":
+        return actions.checkChoiceAction(state, action);
       case "worker":
         return actions.checkWorkerAction(state, action);
       case "play":
@@ -126,6 +156,15 @@ class CodexGame extends Game {
       return range(state.newTriggers.length).map(n => ({
         type: "queue",
         index: n
+      }));
+    }
+    if (
+      state.currentTrigger &&
+      currentTriggerDefinition(state).targetMode == targetMode.single
+    ) {
+      return Object.keys(state.entities).map(id => ({
+        type: "choice",
+        targetId: id
       }));
     }
     return this.suggestMainPhaseActions(state);

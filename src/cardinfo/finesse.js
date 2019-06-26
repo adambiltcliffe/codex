@@ -1,6 +1,6 @@
 import log from "../log";
 import { types, colors, specs } from "./constants";
-import cardInfo from ".";
+import { getName } from "../entities";
 
 const finesseCardInfo = {
   starcrossed_starlet: {

@@ -1,4 +1,4 @@
-import { types, colors, specs } from "./constants";
+import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { getName } from "../entities";
 
@@ -27,8 +27,17 @@ const bashingCardInfo = {
     abilities: [
       {
         triggerOnOwnArrival: true,
-        triggerAction: ({ state, source }) => {
-          log.add(state, `${getName(state, source.id)} goes BAM!`);
+        targetMode: targetMode.single,
+        targetTypes: [types.unit],
+        triggerAction: ({ state, source, choices }) => {
+          state.entities[choices.targetId].damage += 3;
+          log.add(
+            state,
+            `${getName(state, source.id)} deals 3 damage to ${getName(
+              state,
+              choices.targetId
+            )}.`
+          );
         }
       }
     ]
