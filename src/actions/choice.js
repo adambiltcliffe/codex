@@ -9,11 +9,11 @@ export function checkChoiceAction(state, action) {
   if (currentTriggerDefinition(state).targetMode != targetMode.single) {
     throw new Error("Can't choose a target for a trigger without a target");
   }
-  const chosenTarget = state.entities[action.targetId];
+  const chosenTarget = state.entities[action.target];
   if (typeof chosenTarget != "object") {
     throw new Error("Invalid target ID");
   }
-  const chosenTargetVals = getCurrentValues(state, action.targetId);
+  const chosenTargetVals = getCurrentValues(state, action.target);
   if (
     !currentTriggerDefinition(state).targetTypes.includes(chosenTargetVals.type)
   ) {
@@ -23,5 +23,5 @@ export function checkChoiceAction(state, action) {
 }
 
 export function doChoiceAction(state, action) {
-  state.currentTrigger.choices.targetId = action.targetId;
+  state.currentTrigger.choices.targetId = action.target;
 }

@@ -3,6 +3,7 @@ import {
   playActions,
   putCardInHand,
   testp1Id,
+  testp2Id,
   findEntityIds
 } from "../testutil";
 
@@ -13,7 +14,37 @@ test("Hired Stomper can kill itself with own trigger", () => {
   const s1 = playActions(s0, [{ type: "play", card: "hired_stomper" }]);
   expect(s1.currentTrigger).not.toBeNull();
   const hs = findEntityIds(s1, e => e.card == "hired_stomper")[0];
-  const s2 = playActions(s1, [{ type: "choice", targetId: hs }]);
+  const s2 = playActions(s1, [{ type: "choice", target: hs }]);
   expect(s2.entities[hs]).toBeUndefined();
   expect(s2.log).toContain("Hired Stomper deals 3 damage to Hired Stomper.");
+});
+
+test("Hired Stomper can target your own units or the opponent's", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "regularsized_rhinoceros");
+  putCardInHand(s0, testp2Id, "regularsized_rhinoceros");
+  putCardInHand(s0, testp2Id, "hired_stomper");
+  putCardInHand(s0, testp2Id, "hired_stomper");
+  s0.players[testp2Id].gold = 20;
+  const s1 = playActions(s0, [
+    { type: "play", card: "regularsized_rhinoceros" },
+    { type: "endTurn" },
+    { type: "play", card: "regularsized_rhinoceros" }
+  ]);
+  const p1rhino = findEntityIds(
+    s1,
+    e => e.card == "regularsized_rhinoceros" && e.owner == testp1Id
+  )[0];
+  const p2rhino = findEntityIds(
+    s1,
+    e => e.card == "regularsized_rhinoceros" && e.owner == testp2Id
+  )[0];
+  const s2 = playActions(s1, [
+    { type: "play", card: "hired_stomper" },
+    { type: "choice", target: p1rhino },
+    { type: "play", card: "hired_stomper" },
+    { type: "choice", target: p2rhino }
+  ]);
+  expect(s2.entities[p1rhino].damage).toEqual(3);
+  expect(s2.entities[p2rhino].damage).toEqual(3);
 });

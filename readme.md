@@ -7,8 +7,8 @@ Making new workers
 Units
 Base
 Combat
-Upkeep triggers (with no choices required)
-Arrival triggers (with no choices required)
+Upkeep triggers (with up to one target)
+Arrival triggers (with up to one target)
 Choice of order when adding triggers to queue
 "Healing" keyword
 Passive effects on units that modify their own stats
@@ -16,12 +16,12 @@ Frenzy
 
 # Game features not implemented:
 
-Choices/targets during triggers
+More sophisticated choices/targets during triggers
 (Some of the) turn structure
 One reshuffle per main phase limit
 
 Tech buildings
-Building hp
+Building hp (other than base?)
 Base damage from building destruction
 Add-ons
 Patrol zone
