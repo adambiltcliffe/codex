@@ -24,7 +24,7 @@ export function doPlayAction(state, action) {
   ap.gold -= cardInfo[state.playedCard].cost;
 
   const newUnit = {
-    id: state.nextId.toString(),
+    id: `e${state.nextId}`,
     card: state.playedCard,
     owner: getAP(state).id,
     lastControlledBy: getAP(state).id,

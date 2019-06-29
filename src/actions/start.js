@@ -26,7 +26,7 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
   const newBase = {
-    id: state.nextId.toString(),
+    id: `e${state.nextId}`,
     fixture: fixtureNames.base,
     owner: player,
     damage: 0

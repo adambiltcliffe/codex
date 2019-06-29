@@ -10,7 +10,7 @@ export function checkAttackAction(state, action) {
   if (typeof attacker != "object") {
     throw new Error("Invalid attacker ID.");
   }
-  const attackerVals = getCurrentValues(state, action.attacker);
+  const attackerVals = getCurrentValues(state, attacker.id);
   if (attackerVals.controller != ap.id) {
     throw new Error("You don't control the attacker.");
   }
@@ -30,7 +30,7 @@ export function checkAttackAction(state, action) {
   if (typeof target != "object") {
     throw new Error("Invalid target ID.");
   }
-  const targetVals = getCurrentValues(state, action.target);
+  const targetVals = getCurrentValues(state, target.id);
   if (targetVals.controller == ap.id) {
     throw new Error("Can't attack your own unit.");
   }
@@ -38,11 +38,11 @@ export function checkAttackAction(state, action) {
 }
 
 export function doAttackAction(state, action) {
-  const values = getCurrentValues(state, [action.attacker, action.target]);
   const attacker = state.entities[action.attacker];
-  const attackerValues = values[action.attacker];
   const target = state.entities[action.target];
-  const targetValues = values[action.target];
+  const values = getCurrentValues(state, [attacker.id, target.id]);
+  const attackerValues = values[attacker.id];
+  const targetValues = values[target.id];
   log.add(
     state,
     log.fmt`${getAP(state)} attacks ${targetValues.name} with ${

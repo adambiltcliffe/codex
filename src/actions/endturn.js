@@ -1,13 +1,65 @@
 import { knuthShuffle } from "knuth-shuffle";
 import { phases, advanceTurn } from "../phases";
-import { getAP } from "../util";
+import { getCurrentValues } from "../entities";
+import { andJoin, getAP } from "../util";
+import { types } from "../cardinfo/constants";
 import log from "../log";
+import { patrolSlotNames } from "../patrolzone";
 
 export function checkEndTurnAction(state, action) {
-  // nothing to check until we have patrollers to lock in
+  if (action.patrollers === undefined) {
+    return true;
+  }
+  if (!Array.isArray(action.patrollers) || action.patrollers.length != 5) {
+    throw new Error("Patrollers must be an array of length 5.");
+  }
+  const ap = getAP(state);
+  action.patrollers.forEach((id, index) => {
+    if (id !== null) {
+      for (let n = 0; n < index; n++) {
+        if (action.patrollers[n] == id) {
+          throw new Error("Patrollers array contains non-null duplicates.");
+        }
+      }
+      const patroller = state.entities[id];
+      if (typeof patroller != "object") {
+        throw new Error("Invalid patroller ID.");
+      }
+      const patrollerVals = getCurrentValues(state, patroller.id);
+      if (patrollerVals.controller != ap.id) {
+        throw new Error("You don't control one of the patrollers.");
+      }
+      if (patrollerVals.type != types.unit) {
+        throw new Error("Only units can patrol.");
+      }
+      if (!patroller.ready) {
+        throw new Error("One of the patrollers is exhausted.");
+      }
+    }
+  });
 }
 
+const emptyPatrolZone = [null, null, null, null, null];
+
 export function doEndTurnAction(state, action) {
+  state.patrollerIds = action.patrollers || emptyPatrolZone;
+  const patrolling = state.patrollerIds
+    .map((id, slotIndex) => ({ id, slotIndex }))
+    .filter(({ id }) => id !== null)
+    .map(
+      ({ id, slotIndex }) =>
+        `${getCurrentValues(state, id).name} (${patrolSlotNames[slotIndex]})`
+    );
+  if (patrolling.length == 0) {
+    log.add(state, log.fmt`${getAP(state)} ends their main phase.`);
+  } else {
+    log.add(
+      state,
+      log.fmt`${getAP(state)} ends their main phase, patrolling with ${andJoin(
+        patrolling
+      )}.`
+    );
+  }
   state.phase = phases.draw;
   // draw phase
   state.updateHidden(fs => {
@@ -27,6 +79,5 @@ export function doEndTurnAction(state, action) {
       ap.hand.push(ap.deck.shift());
     }
   });
-  log.add(state, log.fmt`${getAP(state)} ends their main phase.`);
   advanceTurn(state);
 }
