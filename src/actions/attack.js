@@ -1,8 +1,9 @@
 import { getAP } from "../util";
-import cardInfo, { types } from "../cardinfo";
+import { types } from "../cardinfo";
 import log from "../log";
 import { killUnits, getCurrentValues } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/keywords";
+import { patrolSlots } from "../patrolzone";
 
 export function checkAttackAction(state, action) {
   const ap = getAP(state);
@@ -33,6 +34,25 @@ export function checkAttackAction(state, action) {
   const targetVals = getCurrentValues(state, target.id);
   if (targetVals.controller == ap.id) {
     throw new Error("Can't attack your own unit.");
+  }
+  // Now check all of the patrol zone rules are satisfied
+  const squadLeaderId = state.patrollerIds[patrolSlots.squadLeader];
+  if (squadLeaderId != null) {
+    if (target.id == squadLeaderId) {
+      return true; // this is fine until the squad leader can have flying
+    }
+    const canIgnoreSquadLeader = false; // will be more complex eventually
+    if (!canIgnoreSquadLeader) {
+      throw new Error("You must attack the Squad Leader first.");
+    }
+  }
+  const patrollerIds = state.patrollerIds.filter(id => id !== null);
+  if (patrollerIds.length > 0) {
+    if (patrollerIds.includes(target.id)) {
+      return true;
+    }
+    // do some more canIgnorePatrollers logic here eventually
+    throw new Error("You must attack a patroller.");
   }
   return true;
 }

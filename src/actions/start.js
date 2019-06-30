@@ -54,6 +54,7 @@ export function doStartAction(state, action) {
   state.queue = [];
   state.currentTrigger = null;
   state.newTriggers = [];
+  state.patrollerIds = [null, null, null, null, null];
   log.add(state, "Game started.");
 
   enterReadyPhase(state);
