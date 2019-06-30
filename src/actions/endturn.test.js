@@ -41,7 +41,13 @@ test("Acceptable patrollers", () => {
   const s2 = playActions(s1, [
     { type: "endTurn", patrollers: [null, null, null, ims[0], ims[1]] }
   ]);
-  expect(s2.patrollerIds).toEqual([null, null, null, ims[0], ims[1]]);
+  expect(s2.players[testp1Id].patrollerIds).toEqual([
+    null,
+    null,
+    null,
+    ims[0],
+    ims[1]
+  ]);
   expect(s2.log).toContain(
     "${test_player1} ends their main phase, patrolling with Iron Man (Technician) and Iron Man (Lookout)."
   );

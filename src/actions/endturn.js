@@ -4,7 +4,7 @@ import { getCurrentValues } from "../entities";
 import { andJoin, getAP } from "../util";
 import { types } from "../cardinfo/constants";
 import log from "../log";
-import { patrolSlotNames } from "../patrolzone";
+import { emptyPatrolZone, patrolSlotNames } from "../patrolzone";
 
 export function checkEndTurnAction(state, action) {
   if (action.patrollers === undefined) {
@@ -39,11 +39,10 @@ export function checkEndTurnAction(state, action) {
   });
 }
 
-const emptyPatrolZone = [null, null, null, null, null];
-
 export function doEndTurnAction(state, action) {
-  state.patrollerIds = action.patrollers || emptyPatrolZone;
-  const patrolling = state.patrollerIds
+  const ap = getAP(state);
+  ap.patrollerIds = action.patrollers || emptyPatrolZone;
+  const patrolling = ap.patrollerIds
     .map((id, slotIndex) => ({ id, slotIndex }))
     .filter(({ id }) => id !== null)
     .map(

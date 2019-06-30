@@ -12,3 +12,4 @@ export const patrolSlotNames = [
   "Technician",
   "Lookout"
 ];
+export const emptyPatrolZone = [null, null, null, null, null];

@@ -2,6 +2,7 @@ import { knuthShuffle } from "knuth-shuffle";
 import { enterReadyPhase } from "../phases";
 import log from "../log";
 import { fixtureNames } from "../fixtures";
+import { emptyPatrolZone } from "../patrolzone";
 
 function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
@@ -25,6 +26,7 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].id = player;
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
+  state.players[player].patrollerIds = emptyPatrolZone;
   const newBase = {
     id: `e${state.nextId}`,
     fixture: fixtureNames.base,
@@ -54,7 +56,6 @@ export function doStartAction(state, action) {
   state.queue = [];
   state.currentTrigger = null;
   state.newTriggers = [];
-  state.patrollerIds = [null, null, null, null, null];
   log.add(state, "Game started.");
 
   enterReadyPhase(state);

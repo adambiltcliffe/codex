@@ -1,8 +1,8 @@
 import { andJoin, getAP } from "./util";
 import log from "./log";
-import cardInfo from "./cardinfo";
 import forEach from "lodash/forEach";
 import { getName, getCurrentValues } from "./entities";
+import { emptyPatrolZone } from "./patrolzone";
 
 export const phases = {
   ready: "P_READY",
@@ -30,6 +30,7 @@ export function enterReadyPhase(state) {
   state.phase = phases.ready;
   state.madeWorkerThisTurn = false;
   const ap = getAP(state);
+  ap.patrollerIds = emptyPatrolZone;
   const readied = [];
   forEach(state.entities, u => {
     if (getCurrentValues(state, u.id).controller == ap.id && !u.ready) {

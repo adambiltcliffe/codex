@@ -36,7 +36,8 @@ export function checkAttackAction(state, action) {
     throw new Error("Can't attack your own unit.");
   }
   // Now check all of the patrol zone rules are satisfied
-  const squadLeaderId = state.patrollerIds[patrolSlots.squadLeader];
+  const squadLeaderId =
+    state.players[targetVals.controller].patrollerIds[patrolSlots.squadLeader];
   if (squadLeaderId != null) {
     if (target.id == squadLeaderId) {
       return true; // this is fine until the squad leader can have flying
@@ -46,7 +47,9 @@ export function checkAttackAction(state, action) {
       throw new Error("You must attack the Squad Leader first.");
     }
   }
-  const patrollerIds = state.patrollerIds.filter(id => id !== null);
+  const patrollerIds = state.players[targetVals.controller].patrollerIds.filter(
+    id => id !== null
+  );
   if (patrollerIds.length > 0) {
     if (patrollerIds.includes(target.id)) {
       return true;
