@@ -5,6 +5,10 @@ import { killUnits, getCurrentValues } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/keywords";
 import { patrolSlots } from "../patrolzone";
 
+function isAttackableType(t) {
+  return t == types.unit || t == types.building;
+}
+
 export function checkAttackAction(state, action) {
   const ap = getAP(state);
   const attacker = state.entities[action.attacker];
@@ -27,37 +31,50 @@ export function checkAttackAction(state, action) {
   if (!attacker.ready) {
     throw new Error("Attacker is exhausted.");
   }
-  const target = state.entities[action.target];
-  if (typeof target != "object") {
-    throw new Error("Invalid target ID.");
-  }
-  const targetVals = getCurrentValues(state, target.id);
-  if (targetVals.controller == ap.id) {
-    throw new Error("Can't attack your own unit.");
-  }
-  // Now check all of the patrol zone rules are satisfied
-  const squadLeaderId =
-    state.players[targetVals.controller].patrollerIds[patrolSlots.squadLeader];
-  if (squadLeaderId != null) {
-    if (target.id == squadLeaderId) {
-      return true; // this is fine until the squad leader can have flying
-    }
-    const canIgnoreSquadLeader = false; // will be more complex eventually
-    if (!canIgnoreSquadLeader) {
-      throw new Error("You must attack the Squad Leader first.");
-    }
-  }
-  const patrollerIds = state.players[targetVals.controller].patrollerIds.filter(
-    id => id !== null
-  );
-  if (patrollerIds.length > 0) {
-    if (patrollerIds.includes(target.id)) {
-      return true;
-    }
-    // do some more canIgnorePatrollers logic here eventually
-    throw new Error("You must attack a patroller.");
+  const attackable = getAttackableEntityIds(state, attackerVals);
+  if (!attackable.includes(action.target)) {
+    throw new Error(`Target must be one of: ${JSON.stringify(attackable)}`);
   }
   return true;
+}
+
+export function getAttackableEntityIds(state, attackerVals) {
+  let result = [];
+  state.playerList.forEach(playerId => {
+    if (playerId != attackerVals.controller) {
+      result = result.concat(
+        getAttackableEntityIdsControlledBy(state, attackerVals, playerId)
+      );
+    }
+  });
+  return result;
+}
+
+export function getAttackableEntityIdsControlledBy(
+  state,
+  attackerVals,
+  playerId
+) {
+  const player = state.players[playerId];
+  const squadLeaderId = player.patrollerIds[patrolSlots.squadLeader];
+  if (squadLeaderId != null) {
+    const canIgnoreSquadLeader = false; // will be more complex eventually
+    if (!canIgnoreSquadLeader) {
+      return [squadLeaderId];
+    }
+  }
+  // There was no squad leader, so other patrollers are valid targets
+  const patrollerIds = player.patrollerIds.filter(id => id !== null);
+  if (patrollerIds.length > 0) {
+    return patrollerIds;
+  }
+  // There are no patrollers, so all attackable entities are valid targets
+  const allVals = getCurrentValues(state, Object.keys(state.entities));
+  return Object.entries(allVals)
+    .filter(
+      ([ek, ev]) => ev.controller == playerId && isAttackableType(ev.type)
+    )
+    .map(([ek, ev]) => ek);
 }
 
 export function doAttackAction(state, action) {
