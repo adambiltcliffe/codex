@@ -72,9 +72,9 @@ export function getAttackableEntityIdsControlledBy(
   const allVals = getCurrentValues(state, Object.keys(state.entities));
   return Object.entries(allVals)
     .filter(
-      ([ek, ev]) => ev.controller == playerId && isAttackableType(ev.type)
+      ([_ek, ev]) => ev.controller == playerId && isAttackableType(ev.type)
     )
-    .map(([ek, ev]) => ek);
+    .map(([ek, _ev]) => ek);
 }
 
 export function doAttackAction(state, action) {
