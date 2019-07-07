@@ -1,6 +1,7 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { getName } from "../entities";
+import { flying } from "./keywords";
 
 const bashingCardInfo = {
   iron_man: {
@@ -52,6 +53,18 @@ const bashingCardInfo = {
     cost: 4,
     attack: 5,
     hp: 6
+  },
+  eggship: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.bashing,
+    name: "Eggship",
+    type: types.unit,
+    subtypes: ["Contraption"],
+    cost: 4,
+    attack: 4,
+    hp: 3,
+    abilities: [flying]
   }
 };
 

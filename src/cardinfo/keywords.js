@@ -13,6 +13,7 @@ export function hasKeyword(entityVals, kwAbility) {
 }
 
 export const haste = keyword("K_HASTE");
+export const flying = keyword("K_FLYING");
 
 export function frenzy(n) {
   return {

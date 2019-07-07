@@ -1,7 +1,7 @@
 import log from "../log";
 import { types, colors, specs } from "./constants";
 import { getName, getCurrentController } from "../entities";
-import { haste } from "./keywords";
+import { haste, flying } from "./keywords";
 
 const finesseCardInfo = {
   nimble_fencer: {
@@ -76,6 +76,18 @@ const finesseCardInfo = {
         }
       }
     ]
+  },
+  cloud_sprite: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.finesse,
+    name: "Cloud Sprite",
+    type: types.unit,
+    subtypes: ["Fairy"],
+    cost: 2,
+    attack: 3,
+    hp: 2,
+    abilities: [flying]
   }
 };
 
