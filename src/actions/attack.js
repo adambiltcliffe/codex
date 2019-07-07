@@ -4,6 +4,7 @@ import log from "../log";
 import { killUnits, getCurrentValues } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/keywords";
 import { patrolSlots } from "../patrolzone";
+import { andJoin } from "../util";
 
 function isAttackableType(t) {
   return t == types.unit || t == types.building;
@@ -11,6 +12,9 @@ function isAttackableType(t) {
 
 export function checkAttackAction(state, action) {
   const ap = getAP(state);
+  if (typeof action.attacker != "string") {
+    throw new Error("Attacker ID must be a string");
+  }
   const attacker = state.entities[action.attacker];
   if (typeof attacker != "object") {
     throw new Error("Invalid attacker ID.");
@@ -33,7 +37,9 @@ export function checkAttackAction(state, action) {
   }
   const attackable = getAttackableEntityIds(state, attackerVals);
   if (!attackable.includes(action.target)) {
-    throw new Error(`Target must be one of: ${JSON.stringify(attackable)}`);
+    throw new Error(
+      `Not a legal target, legal target IDs are: ${andJoin(attackable)}`
+    );
   }
   return true;
 }

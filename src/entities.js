@@ -25,6 +25,12 @@ export function getName(state, entityId) {
   }
 }
 
+export function getCurrentController(state, unitId) {
+  // Nothing can change a unit's controller yet, but we will need this
+  // a bunch in future
+  return state.entities[unitId].owner;
+}
+
 export function getCurrentValues(state, unitIds, attackTargetId) {
   let shouldReturnSingleton = false;
   if (!Array.isArray(unitIds)) {
@@ -41,6 +47,8 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
         u.card == undefined ? fixtures[u.fixture] : cardInfo[u.card];
       const currentValues = produce(printedValues, draft => {
         draft.controller = u.owner;
+        draft.abilities = draft.abilities || [];
+        draft.subtypes = draft.subtypes || [];
         // at present we don't pay attention to effect order (because it doesn't matter)
         forEach(draft.abilities, a => {
           if (a.modifyOwnValues) {

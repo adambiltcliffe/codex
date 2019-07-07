@@ -11,8 +11,14 @@ Upkeep triggers (with up to one target)
 Arrival triggers (with up to one target)
 Choice of order when adding triggers to queue
 "Healing" keyword
-Passive effects on units that modify their own stats
+Passive effects on units that modify their own/others' stats
 Frenzy
+Patrol zone
+
+# Write tests for:
+
+Nimble fencer not buffing opponent's units
+Grounded Guide not buffing opponent's units
 
 # Game features not implemented:
 
@@ -24,7 +30,7 @@ Tech buildings
 Building hp (other than base?)
 Base damage from building destruction
 Add-ons
-Patrol zone
+Patroller bonuses
 (More of) interaction of continuous effects
 Swift strike, overpower, sparkshot (requires choosing targets)
 Stealth, unstoppable (requires patrol zone)
@@ -48,6 +54,7 @@ Codex and tech phase
 
 Get rid of "\${player1} readies base" on first turn
 Find out why suggestActions isn't suggesting attacks any more
+Make suggestActions do something sensible for patrollers
 Figure out how to make triggers track their source when the ability isn't printed on the card
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground

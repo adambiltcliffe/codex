@@ -1,8 +1,32 @@
 import log from "../log";
 import { types, colors, specs } from "./constants";
-import { getName } from "../entities";
+import { getName, getCurrentController } from "../entities";
+import { haste } from "./keywords";
 
 const finesseCardInfo = {
+  nimble_fencer: {
+    color: colors.neutral,
+    tech: 1,
+    spec: specs.finesse,
+    name: "Nimble Fencer",
+    type: types.unit,
+    subtypes: ["Virtuoso"],
+    cost: 2,
+    attack: 2,
+    hp: 3,
+    abilities: [
+      {
+        modifyGlobalValues: ({ state, source, values }) => {
+          if (getCurrentController(state, source.id) == values.controller) {
+            if (values.subtypes.includes("Virtuoso")) {
+              values.abilities.push(haste);
+            }
+          }
+        }
+      }
+    ]
+  },
+
   starcrossed_starlet: {
     color: colors.neutral,
     tech: 1,

@@ -3,9 +3,39 @@ import {
   playActions,
   putCardInHand,
   testp1Id,
-  findEntityIds
+  findEntityIds,
+  testp2Id
 } from "../testutil";
 import { getCurrentValues } from "../entities";
+import { fixtureNames } from "../fixtures";
+import CodexGame from "../codex";
+import { hasKeyword, haste } from "./keywords";
+
+test("Nimble Fencer gives herself and other Virtuosos haste", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "tenderfoot");
+  putCardInHand(s0, testp1Id, "nimble_fencer");
+  const s1 = playActions(s0, [{ type: "play", card: "tenderfoot" }]);
+  const tf = findEntityIds(s1, e => e.card == "tenderfoot")[0];
+  const p2base = findEntityIds(
+    s1,
+    e => e.fixture == fixtureNames.base && e.owner == testp2Id
+  )[0];
+  expect(hasKeyword(getCurrentValues(s1, tf), haste)).toBeFalsy();
+  expect(() =>
+    CodexGame.checkAction(s1, { type: "attack", attacker: tf, target: p2base })
+  ).toThrow();
+  const s2 = playActions(s1, [{ type: "play", card: "nimble_fencer" }]);
+  expect(hasKeyword(getCurrentValues(s2, tf), haste)).toBeTruthy();
+  expect(() =>
+    CodexGame.checkAction(s2, { type: "attack", attacker: tf, target: p2base })
+  ).not.toThrow();
+  const nf = findEntityIds(s2, e => e.card == "nimble_fencer")[0];
+  expect(hasKeyword(getCurrentValues(s2, nf), haste)).toBeTruthy();
+  expect(() =>
+    CodexGame.checkAction(s2, { type: "attack", attacker: nf, target: p2base })
+  ).not.toThrow();
+});
 
 test("Star-Crossed Starlet buffs her attack with damage and kills herself after 2 turns", () => {
   const s0 = getNewGame();

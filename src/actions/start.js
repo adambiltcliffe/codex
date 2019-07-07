@@ -12,7 +12,7 @@ function initialisePlayerState(state, playerIndex) {
       "helpful_turtle",
       "helpful_turtle",
       "hired_stomper",
-      "hired_stomper",
+      "nimble_fencer",
       "timely_messenger",
       "older_brother",
       "starcrossed_starlet",
