@@ -8,12 +8,11 @@ import {
   canResolveCurrentTrigger,
   currentTriggerDefinition
 } from "./triggers";
-import { killUnits } from "./entities";
+import { killUnits, getCurrentController } from "./entities";
 import { targetMode } from "./cardinfo/constants";
 
 import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
-import mapValues from "lodash/mapValues";
 import partition from "lodash/partition";
 import range from "lodash/range";
 import uniq from "lodash/uniq";
@@ -177,9 +176,13 @@ class CodexGame extends Game {
       handIndex: n
     }));
     const playActions = uniq(ap.hand).map(c => ({ type: "play", card: c }));
+    const entityControllers = getCurrentController(
+      state,
+      Object.keys(state.entities)
+    );
     const [apUnits, napUnits] = partition(
       state.entities,
-      u => u.controller == ap.id
+      u => entityControllers[u.id] == ap.id
     );
     const attackActions = flatten(
       apUnits.map(a => napUnits.map(b => [a.id, b.id]))

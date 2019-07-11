@@ -59,7 +59,6 @@ Codex and tech phase
 
 # Other stuff to do
 
-Find out why suggestActions isn't suggesting attacks any more
 Make suggestActions do something sensible for patrollers
 Figure out how to make triggers track their source when the ability isn't printed on the card
 Use a schema validation library to simplify action checking

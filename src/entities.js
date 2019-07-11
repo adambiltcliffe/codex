@@ -25,10 +25,24 @@ export function getName(state, entityId) {
   }
 }
 
-export function getCurrentController(state, unitId) {
+export function getCurrentController(state, unitIds) {
   // Nothing can change a unit's controller yet, but we will need this
   // a bunch in future
-  return state.entities[unitId].owner;
+  let shouldReturnSingleton = false;
+  if (!Array.isArray(unitIds)) {
+    unitIds = [unitIds];
+    shouldReturnSingleton = true;
+  }
+  const result = {};
+  // currently we do each unit separately but we handle requesting several at once
+  // because of the future case where we need to check all copy effects to see if
+  // they have added or removed a global effect from a unit
+  forEach(state.entities, (u, id) => {
+    if (unitIds.includes(id)) {
+      result[id] = u.owner;
+    }
+  });
+  return shouldReturnSingleton ? result[unitIds] : result;
 }
 
 export function getCurrentValues(state, unitIds, attackTargetId) {
