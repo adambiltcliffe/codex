@@ -31,7 +31,8 @@ function initialisePlayerState(state, playerIndex) {
     id: `e${state.nextId}`,
     fixture: fixtureNames.base,
     owner: player,
-    damage: 0
+    damage: 0,
+    ready: true
   };
   state.entities[newBase.id] = newBase;
   state.nextId++;
