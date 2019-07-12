@@ -57,12 +57,22 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
   // they have added or removed a global effect from a unit
   forEach(state.entities, (u, id) => {
     if (unitIds.includes(id)) {
+      // 1. Start with the printed values
       const printedValues =
         u.card == undefined ? fixtures[u.fixture] : cardInfo[u.card];
+      // 1a. tokens 1b. dancers 1c. heroes
       const currentValues = produce(printedValues, draft => {
         draft.controller = u.owner;
         draft.abilities = draft.abilities || [];
         draft.subtypes = draft.subtypes || [];
+        // 2. chaos mirror, polymorph: squirrel and copy effects
+        // 3. effects that set ATK and DEF to specific values (i.e. faerie dragon)
+        // 4. ability-gaining effects that don't depend on ATK or HP
+        // 5. apply bonuses or penalties to ATK or HP from runes, entities and effects
+        // (note: order does not matter in this step)
+        // 6. reset negative ATK and HP to 0
+        // 6a. pestering haunt
+        // 7. conditional ability-gaining effects
         // at present we don't pay attention to effect order (because it doesn't matter)
         forEach(draft.abilities, a => {
           if (a.modifyOwnValues) {

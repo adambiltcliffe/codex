@@ -15,7 +15,9 @@ import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
 import partition from "lodash/partition";
 import range from "lodash/range";
+import take from "lodash/take";
 import uniq from "lodash/uniq";
+import { emptyPatrolZone } from "./patrolzone";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -187,7 +189,15 @@ class CodexGame extends Game {
     const attackActions = flatten(
       apUnits.map(a => napUnits.map(b => [a.id, b.id]))
     ).map(([a, b]) => ({ type: "attack", attacker: a, target: b }));
+    const examplePatrollers = take(
+      apUnits.map(u => u.id).concat(emptyPatrolZone),
+      5
+    );
+    const examplePatrolAction = [
+      { type: "endTurn", patrollers: examplePatrollers }
+    ];
     return base
+      .concat(examplePatrolAction)
       .concat(workerActions)
       .concat(playActions)
       .concat(attackActions);
