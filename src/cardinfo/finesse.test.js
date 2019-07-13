@@ -4,7 +4,8 @@ import {
   putCardInHand,
   testp1Id,
   findEntityIds,
-  testp2Id
+  testp2Id,
+  getGameWithUnits
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
@@ -85,4 +86,16 @@ test("Grounded Guide buffs Virtuosos and non-Virtuosos by appropriate amounts", 
   expect(getCurrentValues(s3, ob).hp).toEqual(2);
   expect(getCurrentValues(s3, gg1).attack).toEqual(5);
   expect(getCurrentValues(s3, gg1).hp).toEqual(4);
+});
+
+test("Nimble Fencer and Grounded Guide don't buff opposing units", () => {
+  const s0 = getGameWithUnits(
+    ["nimble_fencer", "grounded_guide"],
+    ["tenderfoot"]
+  );
+  const tf = findEntityIds(s0, e => e.card == "tenderfoot")[0];
+  const tfv = getCurrentValues(s0, tf);
+  expect(tfv.attack).toEqual(1);
+  expect(tfv.hp).toEqual(2);
+  expect(hasKeyword(tfv, haste)).toBeFalsy();
 });

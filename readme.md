@@ -18,14 +18,11 @@ Patrol zone
 
 # Write tests for:
 
-Nimble fencer not buffing opponent's units
-Grounded Guide not buffing opponent's units
 Flyer can attack past non-flying squad leader and other patrollers
 Flyer can attack past non-flying squad leader but not flying patrollers
 Flyer can attack non-flying squad leader even when other patrollers have flying
 Non-flying units can attack past flying patrollers
 Non-flying units can't attack flying ones whatever slot they're in
-Flying unit attacking non-flying unit does not take damage
 
 # Game features not implemented:
 

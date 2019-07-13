@@ -65,7 +65,10 @@ const finesseCardInfo = {
     abilities: [
       {
         modifyGlobalValues: ({ state, source, subject, values }) => {
-          if (source.id != subject.id) {
+          if (
+            getCurrentController(state, source.id) == values.controller &&
+            source.id != subject.id
+          ) {
             if (values.subtypes.includes("Virtuoso")) {
               values.attack += 2;
               values.hp += 1;
