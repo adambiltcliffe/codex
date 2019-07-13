@@ -1,4 +1,12 @@
-import { getGameWithUnits, findEntityIds, playActions } from "../testutil";
+import {
+  getGameWithUnits,
+  findEntityIds,
+  playActions,
+  testp1Id
+} from "../testutil";
+import { fixtureNames } from "../fixtures";
+import { getCurrentValues } from "../entities";
+import { getAttackableEntityIds } from "../actions/attack";
 
 test("Flying unit attacking non-flying unit takes no damage", () => {
   const s0 = getGameWithUnits(["eggship"], ["regularsized_rhinoceros"]);
@@ -7,4 +15,40 @@ test("Flying unit attacking non-flying unit takes no damage", () => {
   const s1 = playActions(s0, [{ type: "attack", attacker: es, target: rr }]);
   expect(s1.entities[es].damage).toEqual(0);
   expect(s1.entities[rr].damage).toEqual(4);
+});
+
+test("Non-flying unit can't attack flyers even if patrolling, but can get past", () => {
+  const s0 = getGameWithUnits(["eggship", "eggship", "eggship"], ["iron_man"]);
+  const im = findEntityIds(s0, e => e.card == "iron_man")[0];
+  const [es1, es2, es3] = findEntityIds(s0, e => e.card == "eggship");
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const s1 = playActions(s0, [
+    {
+      type: "endTurn",
+      patrollers: [es1, es2, null, null, null]
+    }
+  ]);
+  const imv = getCurrentValues(s1, im);
+  expect(getAttackableEntityIds(s1, imv)).toEqual([p1base]);
+});
+
+test("Non-flying unit can't attack patrolling flyers but is blocked by ground unit", () => {
+  const s0 = getGameWithUnits(
+    ["eggship", "eggship", "older_brother"],
+    ["iron_man"]
+  );
+  const im = findEntityIds(s0, e => e.card == "iron_man")[0];
+  const [es1, es2] = findEntityIds(s0, e => e.card == "eggship");
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const s1 = playActions(s0, [
+    {
+      type: "endTurn",
+      patrollers: [es1, es2, ob, null, null]
+    }
+  ]);
+  const imv = getCurrentValues(s1, im);
+  expect(getAttackableEntityIds(s1, imv)).toEqual([ob]);
 });

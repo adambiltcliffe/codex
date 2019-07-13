@@ -21,8 +21,6 @@ Patrol zone
 Flyer can attack past non-flying squad leader and other patrollers
 Flyer can attack past non-flying squad leader but not flying patrollers
 Flyer can attack non-flying squad leader even when other patrollers have flying
-Non-flying units can attack past flying patrollers
-Non-flying units can't attack flying ones whatever slot they're in
 
 # Game features not implemented:
 
