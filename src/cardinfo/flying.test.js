@@ -52,3 +52,41 @@ test("Non-flying unit can't attack patrolling flyers but is blocked by ground un
   const imv = getCurrentValues(s1, im);
   expect(getAttackableEntityIds(s1, imv)).toEqual([ob]);
 });
+
+test("Flying attacker can attack past non-flying patrollers", () => {
+  const s0 = getGameWithUnits(
+    ["iron_man", "iron_man", "iron_man"],
+    ["eggship"]
+  );
+  const es = findEntityIds(s0, e => e.card == "eggship")[0];
+  const [im1, im2, im3] = findEntityIds(s0, e => e.card == "iron_man");
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const s1 = playActions(s0, [
+    {
+      type: "endTurn",
+      patrollers: [im1, im2, null, null, null]
+    }
+  ]);
+  const esv = getCurrentValues(s1, es);
+  expect(getAttackableEntityIds(s1, esv).sort()).toEqual(
+    [p1base, im1, im2, im3].sort()
+  );
+});
+
+test("Flying attacker can attack past non-flying squad leader but not flying patrollers", () => {
+  const s0 = getGameWithUnits(["iron_man", "cloud_sprite"], ["eggship"]);
+  const es = findEntityIds(s0, e => e.card == "eggship")[0];
+  const im = findEntityIds(s0, e => e.card == "iron_man")[0];
+  const cs = findEntityIds(s0, e => e.card == "cloud_sprite")[0];
+  const s1 = playActions(s0, [
+    {
+      type: "endTurn",
+      patrollers: [im, cs, null, null, null]
+    }
+  ]);
+  const esv = getCurrentValues(s1, es);
+  expect(getAttackableEntityIds(s1, esv).sort()).toEqual([im, cs].sort());
+});

@@ -16,12 +16,6 @@ Frenzy
 Flying
 Patrol zone
 
-# Write tests for:
-
-Flyer can attack past non-flying squad leader and other patrollers
-Flyer can attack past non-flying squad leader but not flying patrollers
-Flyer can attack non-flying squad leader even when other patrollers have flying
-
 # Game features not implemented:
 
 More sophisticated choices/targets during triggers
