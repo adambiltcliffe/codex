@@ -13,15 +13,8 @@ Choice of order when adding triggers to queue
 "Healing" keyword
 Passive effects on units that modify their own/others' stats
 Frenzy
-Flying
-Patrol zone
-
-# Tests to write
-
-Flyer takes damage from flying over AA squad leader to attack patroller
-Flyer takes damage from flying over multiple AA patrollers
-Flyer doesn't take damage from flying over non-AA patroller
-Flyer doesn't take damage from flying over one AA patroller to attack another
+Flying, anti-air
+Patrol zone with taunt for squad leader and bonus for elite
 
 # Game features not implemented:
 
@@ -33,7 +26,8 @@ Tech buildings
 Building hp (other than base?)
 Base damage from building destruction
 Add-ons
-Patroller bonuses
+Armor for squad leader
+Patroller bonuses for technician, scavenger, lookout
 (More of) interaction of continuous effects
 Swift strike, overpower, sparkshot (requires choosing targets)
 Stealth, unstoppable (requires patrol zone)

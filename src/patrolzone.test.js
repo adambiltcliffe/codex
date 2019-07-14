@@ -6,6 +6,7 @@ import {
 } from "./testutil";
 import CodexGame from "./codex";
 import { fixtureNames } from "./fixtures";
+import { getCurrentValues } from "./entities";
 
 test("Attacking various combinations of patrollers", () => {
   const s0 = getGameWithUnits(
@@ -49,4 +50,16 @@ test("Attacking various combinations of patrollers", () => {
   expect(() =>
     CodexGame.checkAction(s1b, { type: "attack", attacker: ob, target: p1base })
   ).toThrow();
+});
+
+test("Elite patroller gets +1 ATK", () => {
+  const s0 = getGameWithUnits(["older_brother"], []);
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  expect(getCurrentValues(s0, ob).attack).toEqual(2);
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [null, ob, null, null, null] }
+  ]);
+  expect(getCurrentValues(s1, ob).attack).toEqual(3);
+  const s2 = playActions(s1, [{ type: "endTurn" }]);
+  expect(getCurrentValues(s2, ob).attack).toEqual(2);
 });

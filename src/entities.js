@@ -3,6 +3,7 @@ import forEach from "lodash/forEach";
 import cardInfo from "./cardinfo";
 import fixtures from "./fixtures";
 import log from "./log";
+import { patrolSlots } from "./patrolzone";
 
 export function killUnits(state) {
   forEach(state.entities, u => {
@@ -101,6 +102,11 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
             });
           }
         });
+        if (
+          state.players[draft.controller].patrollerIds[patrolSlots.elite] == id
+        ) {
+          draft.attack += 1;
+        }
       });
       if (currentValues.controller != u.lastControlledBy) {
         u.controlledSince = state.turn;

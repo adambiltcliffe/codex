@@ -72,7 +72,7 @@ test("Flyer takes damage when flying over patrollers with anti-air", () => {
     e => e.fixture == fixtureNames.base && e.owner == testp1Id
   )[0];
   const s1 = playActions(s0, [
-    { type: "endTurn", patrollers: [fp1, fp2, null, null, null] },
+    { type: "endTurn", patrollers: [fp1, null, fp2, null, null] },
     { type: "attack", attacker: sr, target: p1base }
   ]);
   expect(s1.entities[sr].damage).toEqual(4);
