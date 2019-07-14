@@ -2,7 +2,7 @@ import { getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
 import { killUnits, getCurrentValues } from "../entities";
-import { hasKeyword, flying, haste } from "../cardinfo/keywords";
+import { hasKeyword, flying, haste, antiAir } from "../cardinfo/keywords";
 import { patrolSlots } from "../patrolzone";
 import { andJoin } from "../util";
 
@@ -45,11 +45,18 @@ export function checkAttackAction(state, action) {
 }
 
 function canAttack(attackerVals, targetVals) {
-  return hasKeyword(attackerVals, flying) || !hasKeyword(targetVals, flying);
+  return (
+    hasKeyword(attackerVals, flying) ||
+    hasKeyword(attackerVals, antiAir) ||
+    !hasKeyword(targetVals, flying)
+  );
 }
 
 function canIgnorePatroller(attackerVals, patrollerVals) {
   if (!canAttack(attackerVals, patrollerVals)) {
+    return true;
+  }
+  if (hasKeyword(attackerVals, antiAir) && hasKeyword(patrollerVals, flying)) {
     return true;
   }
   return hasKeyword(attackerVals, flying) && !hasKeyword(patrollerVals, flying);
@@ -122,7 +129,9 @@ export function doAttackAction(state, action) {
   );
   attacker.ready = false;
   const attackerReceivesDamage =
-    !hasKeyword(attackerValues, flying) || hasKeyword(targetValues, flying);
+    !hasKeyword(attackerValues, flying) ||
+    hasKeyword(targetValues, flying) ||
+    hasKeyword(targetValues, antiAir);
   if (attackerReceivesDamage) {
     attacker.damage += targetValues.attack;
   }

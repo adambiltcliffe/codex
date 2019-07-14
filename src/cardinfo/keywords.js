@@ -1,7 +1,6 @@
 import log from "../log";
 import forEach from "lodash/forEach";
 import { andJoin, getAP } from "../util";
-import cardInfo from ".";
 import { getName, getCurrentValues } from "../entities";
 
 function keyword(k) {
@@ -14,6 +13,7 @@ export function hasKeyword(entityVals, kwAbility) {
 
 export const haste = keyword("K_HASTE");
 export const flying = keyword("K_FLYING");
+export const antiAir = keyword("K_ANTIAIR");
 
 export function frenzy(n) {
   return {

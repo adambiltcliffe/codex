@@ -16,6 +16,13 @@ Frenzy
 Flying
 Patrol zone
 
+# Tests to write
+
+Flyer takes damage from flying over AA squad leader to attack patroller
+Flyer takes damage from flying over multiple AA patrollers
+Flyer doesn't take damage from flying over non-AA patroller
+Flyer doesn't take damage from flying over one AA patroller to attack another
+
 # Game features not implemented:
 
 More sophisticated choices/targets during triggers
