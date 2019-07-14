@@ -115,17 +115,45 @@ export function getAttackableEntityIdsControlledBy(
     .map(([ek, _ev]) => ek);
 }
 
+function getFlownOverVals(state, playerId, targetId) {
+  const patrollerIds = state.players[playerId].patrollerIds;
+  if (targetId == patrollerIds[patrolSlots.squadLeader]) {
+    // Attacking squad leader, don't need to fly over anything
+    return [];
+  }
+  if (patrollerIds.includes(targetId)) {
+    // Attacking a patroller, only squad leader flown over
+    return [patrollerIds[patrolSlots.squadLeader]]
+      .filter(id => id != null)
+      .map(id => getCurrentValues(state, id))
+      .filter(v => hasKeyword(v, antiAir));
+  }
+  // Otherwise we are potentially flying over all patrollers
+  const vals = getCurrentValues(state, patrollerIds);
+  return patrollerIds
+    .filter(id => id != null)
+    .map(id => vals[id])
+    .filter(v => hasKeyword(v, antiAir));
+}
+
 export function doAttackAction(state, action) {
   const attacker = state.entities[action.attacker];
   const target = state.entities[action.target];
   const values = getCurrentValues(state, [attacker.id, target.id]);
   const attackerValues = values[attacker.id];
   const targetValues = values[target.id];
+  const flownOverVals = hasKeyword(attackerValues, flying)
+    ? getFlownOverVals(state, targetValues.controller, target.id)
+    : [];
+  const flownOverText =
+    flownOverVals.length == 0
+      ? ""
+      : `, flying over ${andJoin(flownOverVals.map(v => v.name))}`;
   log.add(
     state,
     log.fmt`${getAP(state)} attacks ${targetValues.name} with ${
       attackerValues.name
-    }.`
+    }${flownOverText}.`
   );
   attacker.ready = false;
   const attackerReceivesDamage =
@@ -135,6 +163,9 @@ export function doAttackAction(state, action) {
   if (attackerReceivesDamage) {
     attacker.damage += targetValues.attack;
   }
+  flownOverVals.forEach(v => {
+    attacker.damage += v.attack;
+  });
   target.damage += attackerValues.attack;
   killUnits(state);
 }

@@ -62,3 +62,70 @@ test("Anti-air unit deals damage back to flyers when attacked", () => {
   const s1 = playActions(s0, [{ type: "attack", attacker: sr, target: fp }]);
   expect(s1.entities[sr].damage).toEqual(2);
 });
+
+test("Flyer takes damage when flying over patrollers with anti-air", () => {
+  const s0 = getGameWithUnits(["fox_primus", "fox_primus"], ["spectral_roc"]);
+  const [fp1, fp2] = findEntityIds(s0, e => e.card == "fox_primus");
+  const sr = findEntityIds(s0, e => e.card == "spectral_roc")[0];
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [fp1, fp2, null, null, null] },
+    { type: "attack", attacker: sr, target: p1base }
+  ]);
+  expect(s1.entities[sr].damage).toEqual(4);
+  expect(s1.log).toContain(
+    `\${${testp2Id}} attacks base with Spectral Roc, flying over Fox Primus and Fox Primus.`
+  );
+});
+
+test("Flyer takes damage when flying over anti-air squad leader to attack another patroller", () => {
+  const s0 = getGameWithUnits(
+    ["fox_primus", "older_brother"],
+    ["spectral_roc"]
+  );
+  const fp = findEntityIds(s0, e => e.card == "fox_primus")[0];
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const sr = findEntityIds(s0, e => e.card == "spectral_roc")[0];
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [fp, ob, null, null, null] },
+    { type: "attack", attacker: sr, target: ob }
+  ]);
+  expect(s1.entities[sr].damage).toEqual(2);
+  expect(s1.log).toContain(
+    `\${${testp2Id}} attacks Older Brother with Spectral Roc, flying over Fox Primus.`
+  );
+});
+
+test("Flyer doesn't take damage when flying over patroller without anti-air", () => {
+  const s0 = getGameWithUnits(
+    ["older_brother", "older_brother"],
+    ["spectral_roc"]
+  );
+  const [ob1, ob2] = findEntityIds(s0, e => e.card == "older_brother");
+  const sr = findEntityIds(s0, e => e.card == "spectral_roc")[0];
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [ob1, ob2, null, null, null] },
+    { type: "attack", attacker: sr, target: ob2 }
+  ]);
+  expect(s1.entities[sr].damage).toEqual(0);
+  expect(s1.log).toContain(
+    `\${${testp2Id}} attacks Older Brother with Spectral Roc.`
+  );
+});
+
+test("Flyer doesn't take damage from anti-air patroller when attacking another patroller", () => {
+  const s0 = getGameWithUnits(["fox_primus", "fox_primus"], ["spectral_roc"]);
+  const [fp1, fp2] = findEntityIds(s0, e => e.card == "fox_primus");
+  const sr = findEntityIds(s0, e => e.card == "spectral_roc")[0];
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [null, fp1, fp2, null, null] },
+    { type: "attack", attacker: sr, target: fp2 }
+  ]);
+  expect(s1.entities[sr].damage).toEqual(2);
+  expect(s1.log).toContain(
+    `\${${testp2Id}} attacks Fox Primus with Spectral Roc.`
+  );
+});
