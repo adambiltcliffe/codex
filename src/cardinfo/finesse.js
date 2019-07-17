@@ -1,7 +1,7 @@
 import log from "../log";
 import { types, colors, specs } from "./constants";
 import { getName, getCurrentController } from "../entities";
-import { haste, flying } from "./keywords";
+import { haste, flying, invisible } from "./keywords";
 
 const finesseCardInfo = {
   nimble_fencer: {
@@ -79,6 +79,18 @@ const finesseCardInfo = {
         }
       }
     ]
+  },
+  backstabber: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.finesse,
+    name: "Backstabber",
+    type: types.unit,
+    subtypes: ["Rogue"],
+    cost: 3,
+    attack: 3,
+    hp: 3,
+    abilities: [invisible]
   },
   cloud_sprite: {
     color: colors.neutral,

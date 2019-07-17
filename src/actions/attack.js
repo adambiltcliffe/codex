@@ -2,9 +2,16 @@ import { getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
 import { killUnits, getCurrentValues } from "../entities";
-import { hasKeyword, flying, haste, antiAir } from "../cardinfo/keywords";
+import {
+  hasKeyword,
+  flying,
+  haste,
+  antiAir,
+  invisible
+} from "../cardinfo/keywords";
 import { patrolSlots } from "../patrolzone";
 import { andJoin } from "../util";
+import invert from "lodash/invert";
 
 function isAttackableType(t) {
   return t == types.unit || t == types.building;
@@ -44,7 +51,10 @@ export function checkAttackAction(state, action) {
   return true;
 }
 
-function canAttack(attackerVals, targetVals) {
+function canAttack(attackerVals, targetVals, patrolSlot) {
+  if (hasKeyword(targetVals, invisible) && patrolSlot == null) {
+    return false;
+  }
   return (
     hasKeyword(attackerVals, flying) ||
     hasKeyword(attackerVals, antiAir) ||
@@ -52,8 +62,11 @@ function canAttack(attackerVals, targetVals) {
   );
 }
 
-function canIgnorePatroller(attackerVals, patrollerVals) {
-  if (!canAttack(attackerVals, patrollerVals)) {
+function canIgnorePatroller(attackerVals, patrollerVals, patrolSlot) {
+  if (!canAttack(attackerVals, patrollerVals, patrolSlot)) {
+    return true;
+  }
+  if (hasKeyword(attackerVals, invisible)) {
     return true;
   }
   if (hasKeyword(attackerVals, antiAir) && hasKeyword(patrollerVals, flying)) {
@@ -84,7 +97,8 @@ export function getAttackableEntityIdsControlledBy(
   if (squadLeaderId != null) {
     const canIgnoreSquadLeader = canIgnorePatroller(
       attackerVals,
-      getCurrentValues(state, squadLeaderId)
+      getCurrentValues(state, squadLeaderId),
+      patrolSlots.squadLeader
     );
     if (!canIgnoreSquadLeader) {
       return [squadLeaderId];
@@ -92,13 +106,14 @@ export function getAttackableEntityIdsControlledBy(
   }
   // There was no squad leader, so other patrollers are valid targets
   // Squad leader will still be included if it was present but ignorable
+  const slots = invert(player.patrollerIds);
   const patrollerIds = player.patrollerIds.filter(id => id !== null);
   const patrollerVals = getCurrentValues(state, patrollerIds);
   const attackablePatrollerIds = patrollerIds.filter(id =>
-    canAttack(attackerVals, patrollerVals[id])
+    canAttack(attackerVals, patrollerVals[id], slots[id])
   );
   const blockingPatrollerIds = patrollerIds.filter(
-    id => !canIgnorePatroller(attackerVals, patrollerVals[id])
+    id => !canIgnorePatroller(attackerVals, patrollerVals[id], slots[id])
   );
   if (blockingPatrollerIds.length > 0) {
     return attackablePatrollerIds;
@@ -110,7 +125,7 @@ export function getAttackableEntityIdsControlledBy(
       ([_ek, ev]) =>
         ev.controller == playerId &&
         isAttackableType(ev.type) &&
-        canAttack(attackerVals, ev)
+        canAttack(attackerVals, ev, null)
     )
     .map(([ek, _ev]) => ek);
 }

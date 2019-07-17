@@ -16,6 +16,12 @@ Frenzy
 Flying, anti-air
 Patrol zone with taunt for squad leader and bonus for elite
 
+# Tests to write
+
+Invisible unit can't be targetted by opponent
+Invisible unit can be targetted by controller
+Trigger fizzles if the only available target is invisible
+
 # Game features not implemented:
 
 More sophisticated choices/targets during triggers

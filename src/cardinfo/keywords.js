@@ -14,6 +14,7 @@ export function hasKeyword(entityVals, kwAbility) {
 export const haste = keyword("K_HASTE");
 export const flying = keyword("K_FLYING");
 export const antiAir = keyword("K_ANTIAIR");
+export const invisible = keyword("K_INVISIBLE");
 
 export function frenzy(n) {
   return {
