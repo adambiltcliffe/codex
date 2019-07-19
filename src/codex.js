@@ -8,7 +8,7 @@ import {
   canResolveCurrentTrigger,
   currentTriggerDefinition
 } from "./triggers";
-import { killUnits, getCurrentController } from "./entities";
+import { checkState, getCurrentController } from "./entities";
 import { targetMode } from "./cardinfo/constants";
 
 import flatten from "lodash/flatten";
@@ -93,7 +93,7 @@ class CodexGame extends Game {
             choices: state.currentTrigger.choices
           });
           state.currentTrigger = null;
-          killUnits(state);
+          checkState(state);
         } else {
           // Can't resolve trigger without further choices
           needAction = true;

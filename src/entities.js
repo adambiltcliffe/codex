@@ -5,22 +5,28 @@ import fixtures from "./fixtures";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
 
-export function killUnits(state) {
+export function checkState(state) {
   forEach(state.entities, u => {
     const vals = getCurrentValues(state, u.id);
     if (u.damage >= vals.hp) {
-      log.add(state, log.fmt`${getName(state, u.id)} dies.`);
-      delete state.entities[u.id];
-      const pz = state.players[vals.controller].patrollerIds;
-      pz.forEach((id, index) => {
-        if (id == u.id) {
-          pz[index] = null;
-        }
-      });
-      state.updateHidden(fs => {
-        fs.players[u.owner].discard.push(u.card);
-      });
+      killEntity(state, u.id);
     }
+  });
+}
+
+export function killEntity(state, entityId) {
+  const e = state.entities[entityId];
+  const vals = getCurrentValues(state, entityId);
+  log.add(state, log.fmt`${getName(state, entityId)} dies.`);
+  delete state.entities[entityId];
+  const pz = state.players[vals.controller].patrollerIds;
+  pz.forEach((id, index) => {
+    if (id == entityId) {
+      pz[index] = null;
+    }
+  });
+  state.updateHidden(fs => {
+    fs.players[e.owner].discard.push(e.card);
   });
 }
 

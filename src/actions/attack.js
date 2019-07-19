@@ -1,7 +1,7 @@
 import { getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
-import { killUnits, getCurrentValues } from "../entities";
+import { checkState, getCurrentValues } from "../entities";
 import {
   hasKeyword,
   flying,
@@ -182,5 +182,5 @@ export function doAttackAction(state, action) {
     attacker.damage += v.attack;
   });
   target.damage += attackerValues.attack;
-  killUnits(state);
+  checkState(state);
 }
