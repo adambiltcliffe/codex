@@ -7,9 +7,16 @@ import { patrolSlots } from "./patrolzone";
 
 export function killUnits(state) {
   forEach(state.entities, u => {
-    if (u.damage >= getCurrentValues(state, u.id).hp) {
+    const vals = getCurrentValues(state, u.id);
+    if (u.damage >= vals.hp) {
       log.add(state, log.fmt`${getName(state, u.id)} dies.`);
       delete state.entities[u.id];
+      const pz = state.players[vals.controller].patrollerIds;
+      pz.forEach((id, index) => {
+        if (id == u.id) {
+          pz[index] = null;
+        }
+      });
       state.updateHidden(fs => {
         fs.players[u.owner].discard.push(u.card);
       });

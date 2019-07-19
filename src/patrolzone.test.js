@@ -63,3 +63,20 @@ test("Elite patroller gets +1 ATK", () => {
   const s2 = playActions(s1, [{ type: "endTurn" }]);
   expect(getCurrentValues(s2, ob).attack).toEqual(2);
 });
+
+test("Killing a patroller stops it blocking attacks", () => {
+  const s0 = getGameWithUnits(["older_brother"], ["iron_man", "iron_man"]);
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const [im1, im2] = findEntityIds(s0, e => e.card == "iron_man");
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [null, null, null, null, ob] }
+  ]);
+  const atk = { type: "attack", attacker: im2, target: p1base };
+  expect(() => CodexGame.checkAction(s1, atk)).toThrow();
+  const s2 = playActions(s1, [{ type: "attack", attacker: im1, target: ob }]);
+  expect(() => CodexGame.checkAction(s2, atk)).not.toThrow();
+});

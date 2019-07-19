@@ -15,6 +15,7 @@ Passive effects on units that modify their own/others' stats
 Frenzy
 Flying, anti-air
 Patrol zone with taunt for squad leader and bonus for elite
+Invisible (effects on attacking and patrolling)
 
 # Tests to write
 
@@ -37,7 +38,8 @@ Patroller bonuses for technician, scavenger, lookout
 (More of) interaction of continuous effects
 Swift strike, overpower, sparkshot (requires choosing targets)
 Stealth, unstoppable (requires patrol zone)
-Invisible, detector (requires targets and patrol zone)
+Invisible (effects on targetting)
+Detector (requires invisible to be finished)
 Tower (requires add-ons and detector)
 
 Multicolour tax
