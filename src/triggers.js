@@ -1,14 +1,16 @@
 import log from "./log";
 import cardInfo from "./cardinfo";
 import { targetMode } from "./cardinfo/constants";
+import { getName } from "./entities";
 
 export function addTriggerToQueue(state, trigger) {
   state.queue.push(trigger);
   log.add(
     state,
-    `Triggered action from ${
-      cardInfo[state.entities[trigger.sourceId].card].name
-    } was added to the queue.`
+    `Triggered action from ${getName(
+      state,
+      trigger.sourceId
+    )} was added to the queue.`
   );
 }
 

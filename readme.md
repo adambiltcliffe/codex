@@ -19,22 +19,27 @@ Invisible (effects on attacking and patrolling)
 
 # Tests to write
 
+Resist subtracts appropriate gold from targeting player
+Resist doesn't apply when targetting your own units
+Resist prevents choice being made when player has no gold left
 Invisible unit can't be targetted by opponent
 Invisible unit can be targetted by controller
 Trigger fizzles if the only available target is invisible
 
 # Game features not implemented:
 
+Resist (keyworded but does nothing)
 More sophisticated choices/targets during triggers
 (Some of the) turn structure
 One reshuffle per main phase limit
 
+Patroller bonuses for technician, scavenger, lookout
 Tech buildings
 Building hp (other than base?)
 Base damage from building destruction
 Add-ons
+Armor (requires effects)
 Armor for squad leader
-Patroller bonuses for technician, scavenger, lookout
 (More of) interaction of continuous effects
 Swift strike, overpower, sparkshot (requires choosing targets)
 Stealth, unstoppable (requires patrol zone)

@@ -1,6 +1,8 @@
 import { targetMode } from "../cardinfo/constants";
 import { currentTriggerDefinition } from "../triggers";
 import { getCurrentValues } from "../entities";
+import { sumKeyword, resist } from "../cardinfo/keywords";
+import { getAP } from "../util";
 
 export function checkChoiceAction(state, action) {
   if (state.currentTrigger === undefined) {
@@ -19,9 +21,16 @@ export function checkChoiceAction(state, action) {
   ) {
     throw new Error("Target entity is the wrong type");
   }
+  const resistCost = sumKeyword(chosenTargetVals, resist);
+  if (resistCost > getAP(state).gold) {
+    throw new Error("Not enough gold to pay for resist");
+  }
   return true;
 }
 
 export function doChoiceAction(state, action) {
   state.currentTrigger.choices.targetId = action.target;
+  const chosenTargetVals = getCurrentValues(state, action.target);
+  const resistCost = sumKeyword(chosenTargetVals, resist);
+  getAP(state).gold -= resistCost;
 }

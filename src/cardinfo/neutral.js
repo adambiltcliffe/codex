@@ -1,5 +1,5 @@
 import { types, colors } from "./constants";
-import { frenzy, haste, healing } from "./keywords";
+import { frenzy, haste, healing, resist } from "./keywords";
 
 const neutralCardInfo = {
   timely_messenger: {
@@ -32,6 +32,17 @@ const neutralCardInfo = {
     cost: 2,
     attack: 2,
     hp: 2
+  },
+  brick_thief: {
+    color: colors.neutral,
+    tech: 0,
+    name: "Brick Thief",
+    type: types.unit,
+    subtypes: ["Mercenary"],
+    cost: 2,
+    attack: 2,
+    hp: 1,
+    abilities: [{}, resist(1)]
   },
   helpful_turtle: {
     color: colors.neutral,

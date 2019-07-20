@@ -1,20 +1,37 @@
 import log from "../log";
-import forEach from "lodash/forEach";
 import { andJoin, getAP } from "../util";
 import { getName, getCurrentValues } from "../entities";
 
+import forEach from "lodash/forEach";
+import sum from "lodash/sum";
+
 function keyword(k) {
   return { keyword: k };
+}
+
+function numericKeyword(k) {
+  return v => ({ keyword: k, value: v });
 }
 
 export function hasKeyword(entityVals, kwAbility) {
   return entityVals.abilities.some(a => a.keyword == kwAbility.keyword);
 }
 
+export function sumKeyword(entityVals, kwAbilityCreator) {
+  const kwAbility = kwAbilityCreator(null);
+  return sum(
+    entityVals.abilities
+      .filter(a => a.keyword == kwAbility.keyword)
+      .map(ka => ka.value)
+  );
+}
+
 export const haste = keyword("K_HASTE");
 export const flying = keyword("K_FLYING");
 export const antiAir = keyword("K_ANTIAIR");
 export const invisible = keyword("K_INVISIBLE");
+
+export const resist = numericKeyword("KV_RESIST");
 
 export function frenzy(n) {
   return {

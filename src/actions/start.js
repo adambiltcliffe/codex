@@ -16,8 +16,8 @@ function initialisePlayerState(state, playerIndex) {
       "timely_messenger",
       "older_brother",
       "starcrossed_starlet",
-      "iron_man",
-      "regularsized_rhinoceros"
+      "brick_thief",
+      "brick_thief"
     ];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);
