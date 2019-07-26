@@ -7,8 +7,8 @@ Making new workers
 Units
 Base
 Combat
-Upkeep triggers (with up to one target)
-Arrival triggers (with up to one target)
+Upkeep triggers
+Arrival triggers
 Choice of order when adding triggers to queue
 "Healing" keyword
 Passive effects on units that modify their own/others' stats
@@ -26,11 +26,11 @@ Invisible unit can be targetted by controller
 Trigger fizzles if the only available target is invisible
 Brick Thief doesn't report repairing damage if none was repaired
 Brick Thief does its trigger when it attacks
+Brick Thief can't target the same building with both triggers
 
 # Game features not implemented:
 
-Resist (keyworded but does nothing)
-More sophisticated choices/targets during triggers
+Other targetting modes for triggers
 (Some of the) turn structure
 One reshuffle per main phase limit
 
