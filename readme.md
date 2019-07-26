@@ -25,6 +25,9 @@ Bonus resist from lookout disappears when no longer patrolling
 Invisible unit can't be targetted by opponent
 Invisible unit can be targetted by controller
 Trigger fizzles if the only available target is invisible
+Spells/abilities must target flagbearer
+Not required to target flagbearer if not a legal type
+Not required to target flagbearer if can't pay for resist
 
 # Game features not implemented:
 

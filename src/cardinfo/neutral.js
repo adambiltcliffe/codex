@@ -1,6 +1,6 @@
 import log from "../log";
 import { types, colors, targetMode } from "./constants";
-import { frenzy, haste, healing, resist } from "./keywords";
+import { frenzy, haste, healing, resist, flagbearer } from "./keywords";
 import { getName } from "../entities";
 
 const neutralCardInfo = {
@@ -97,6 +97,17 @@ const neutralCardInfo = {
     attack: 1,
     hp: 2,
     abilities: [healing(1)]
+  },
+  granfalloon_flagbearer: {
+    color: colors.neutral,
+    tech: 0,
+    name: "Granfalloon Flagbearer",
+    type: types.unit,
+    subtypes: ["Flagbearer"],
+    cost: 3,
+    attack: 2,
+    hp: 2,
+    abilities: [flagbearer]
   },
   fruit_ninja: {
     color: colors.neutral,
