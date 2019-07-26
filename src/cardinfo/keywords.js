@@ -46,7 +46,7 @@ export function frenzy(n) {
 export function healing(n) {
   return {
     triggerOnUpkeep: true,
-    triggerAction: ({ state, source }) => {
+    action: ({ state, source }) => {
       const healed = [];
       const allVals = getCurrentValues(state, Object.keys(state.entities));
       forEach(state.entities, u => {

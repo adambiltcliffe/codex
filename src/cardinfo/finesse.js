@@ -40,7 +40,7 @@ const finesseCardInfo = {
     abilities: [
       {
         triggerOnUpkeep: true,
-        triggerAction: ({ state, source }) => {
+        action: ({ state, source }) => {
           source.damage++;
           log.add(state, `${getName(state, source.id)} takes 1 damage.`);
         }

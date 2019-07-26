@@ -1,5 +1,7 @@
-import { types, colors } from "./constants";
+import log from "../log";
+import { types, colors, targetMode } from "./constants";
 import { frenzy, haste, healing, resist } from "./keywords";
+import { getName } from "../entities";
 
 const neutralCardInfo = {
   timely_messenger: {
@@ -42,7 +44,42 @@ const neutralCardInfo = {
     cost: 2,
     attack: 2,
     hp: 1,
-    abilities: [{}, resist(1)]
+    abilities: [
+      {
+        triggerOnOwnArrival: true,
+        steps: [
+          {
+            targetMode: targetMode.single,
+            targetTypes: [types.building],
+            action: ({ state, source, choices }) => {
+              state.entities[choices.targetId].damage += 1;
+              log.add(
+                state,
+                `${getName(state, source.id)} deals 1 damage to ${getName(
+                  state,
+                  choices.targetId
+                )}.`
+              );
+            }
+          },
+          {
+            targetMode: targetMode.single,
+            targetTypes: [types.building],
+            action: ({ state, source, choices }) => {
+              state.entities[choices.targetId].damage -= 1;
+              log.add(
+                state,
+                `${getName(state, source.id)} repairs 1 damage from ${getName(
+                  state,
+                  choices.targetId
+                )}.`
+              );
+            }
+          }
+        ]
+      },
+      resist(1)
+    ]
   },
   helpful_turtle: {
     color: colors.neutral,

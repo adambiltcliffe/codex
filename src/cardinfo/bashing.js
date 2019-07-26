@@ -30,7 +30,7 @@ const bashingCardInfo = {
         triggerOnOwnArrival: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit],
-        triggerAction: ({ state, source, choices }) => {
+        action: ({ state, source, choices }) => {
           state.entities[choices.targetId].damage += 3;
           log.add(
             state,

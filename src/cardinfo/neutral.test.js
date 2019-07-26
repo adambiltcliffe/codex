@@ -85,3 +85,27 @@ test("Fruit Ninja's frenzy functions correctly", () => {
   ]);
   expect(s4.entities[ims[1]].damage).toEqual(2);
 });
+
+test("Brick Thief can steal a brick from an opposing building", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "brick_thief");
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const p2base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp2Id
+  )[0];
+  s0.entities[p1base].damage = 1;
+  const s1 = playActions(s0, [
+    {
+      type: "play",
+      card: "brick_thief"
+    },
+    { type: "choice", target: p2base }
+  ]);
+  expect(s1.log).toContain("Brick Thief deals 1 damage to base.");
+  const s2 = playActions(s1, [{ type: "choice", target: p1base }]);
+  expect(s2.log).toContain("Brick Thief repairs 1 damage from base.");
+});

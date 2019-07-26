@@ -19,12 +19,13 @@ Invisible (effects on attacking and patrolling)
 
 # Tests to write
 
-Resist subtracts appropriate gold from targeting player
-Resist doesn't apply when targetting your own units
-Resist prevents choice being made when player has no gold left
+Lookout slot provides resist
+Bonus resist from lookout disappears when no longer patrolling
 Invisible unit can't be targetted by opponent
 Invisible unit can be targetted by controller
 Trigger fizzles if the only available target is invisible
+Brick Thief doesn't report repairing damage if none was repaired
+Brick Thief does its trigger when it attacks
 
 # Game features not implemented:
 

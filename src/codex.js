@@ -6,7 +6,9 @@ import { phases, advancePhase } from "./phases";
 import {
   addTriggerToQueue,
   canResolveCurrentTrigger,
-  currentTriggerDefinition
+  currentTriggerDefinition,
+  enqueueNextTrigger,
+  resolveCurrentTrigger
 } from "./triggers";
 import { checkState, getCurrentController } from "./entities";
 import { targetMode } from "./cardinfo/constants";
@@ -82,17 +84,11 @@ class CodexGame extends Game {
         break;
       }
       if (state.currentTrigger == null && state.queue.length > 0) {
-        state.currentTrigger = state.queue.shift();
-        state.currentTrigger.choices = {};
+        enqueueNextTrigger(state);
       }
-      if (state.currentTrigger) {
+      while (state.currentTrigger) {
         if (canResolveCurrentTrigger(state)) {
-          currentTriggerDefinition(state).triggerAction({
-            state,
-            source: state.entities[state.currentTrigger.sourceId],
-            choices: state.currentTrigger.choices
-          });
-          state.currentTrigger = null;
+          resolveCurrentTrigger(state);
           checkState(state);
         } else {
           // Can't resolve trigger without further choices
