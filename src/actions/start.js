@@ -56,6 +56,7 @@ export function doStartAction(state, action) {
   state.turn = 0;
   state.queue = [];
   state.currentTrigger = null;
+  state.currentAttack = null;
   state.newTriggers = [];
   log.add(state, "Game started.");
 

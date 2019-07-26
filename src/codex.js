@@ -20,6 +20,7 @@ import range from "lodash/range";
 import take from "lodash/take";
 import uniq from "lodash/uniq";
 import { emptyPatrolZone } from "./patrolzone";
+import { finishAttackAction } from "./actions/attack";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -99,7 +100,11 @@ class CodexGame extends Game {
       // If we get this far, we dealt with the current trigger if there was one
       if (state.queue.length == 0) {
         if (state.phase == phases.main) {
-          needAction = true;
+          if (state.currentAttack == null) {
+            needAction = true;
+          } else {
+            finishAttackAction(state);
+          }
         } else {
           advancePhase(state);
         }

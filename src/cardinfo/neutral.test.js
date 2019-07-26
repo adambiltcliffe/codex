@@ -97,7 +97,7 @@ test("Brick Thief can steal a brick from an opposing building", () => {
     s0,
     e => e.fixture == fixtureNames.base && e.owner == testp2Id
   )[0];
-  s0.entities[p1base].damage = 1;
+  s0.entities[p1base].damage = 2;
   const s1 = playActions(s0, [
     {
       type: "play",
@@ -108,4 +108,56 @@ test("Brick Thief can steal a brick from an opposing building", () => {
   expect(s1.log).toContain("Brick Thief deals 1 damage to base.");
   const s2 = playActions(s1, [{ type: "choice", target: p1base }]);
   expect(s2.log).toContain("Brick Thief repairs 1 damage from base.");
+  const bt = findEntityIds(s2, e => e.card == "brick_thief")[0];
+  const s3 = playActions(s2, [
+    { type: "endTurn" },
+    { type: "endTurn" },
+    { type: "attack", attacker: bt, target: p2base },
+    { type: "choice", target: p2base }
+  ]);
+  expect(s3.log).toContain("Brick Thief deals 1 damage to base.");
+  const s4 = playActions(s3, [{ type: "choice", target: p1base }]);
+  expect(s4.log).toContain("Brick Thief repairs 1 damage from base.");
+});
+
+test("Brick Thief doesn't report repairing damage if it didn't", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "brick_thief");
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const p2base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp2Id
+  )[0];
+  const s1 = playActions(s0, [
+    {
+      type: "play",
+      card: "brick_thief"
+    },
+    { type: "choice", target: p2base }
+  ]);
+  expect(s1.log).toContain("Brick Thief deals 1 damage to base.");
+  const s2 = playActions(s1, [{ type: "choice", target: p1base }]);
+  expect(s2.log).not.toContain("Brick Thief repairs 1 damage from base.");
+});
+
+test("Brick Thief can't damage and then repair the same building", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "brick_thief");
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const s1 = playActions(s0, [
+    {
+      type: "play",
+      card: "brick_thief"
+    },
+    { type: "choice", target: p1base }
+  ]);
+  expect(() => {
+    CodexGame.checkAction(s1, { type: "choice", target: p1base });
+  }).toThrow();
 });

@@ -20,3 +20,9 @@ they have maxband orpal on patrol and setsuki in backline. you declare that you'
 mimic, so you pay your last gold. glaxx dies, -1 rune from orpal's maxband spreads to the 1hp flier, killing it.
 wandering mimic loses flying and is now "illegally" attacking setsuki past the patrolling orpal
  */
+
+/*
+Hotter fire says that it doesnt increase sparkshot damage becuase although its an ability it's is combat damage
+Sentry prevents the first ability damage done to a patroller and does work on spark shot
+both use the same wording for this
+ */

@@ -152,8 +152,19 @@ function getFlownOverVals(state, playerId, targetId) {
 }
 
 export function doAttackAction(state, action) {
-  const attacker = state.entities[action.attacker];
-  const target = state.entities[action.target];
+  state.currentAttack = action;
+  const u = state.entities[action.attacker];
+  const attackerVals = getCurrentValues(state, u.id);
+  attackerVals.abilities.forEach((a, index) => {
+    if (a.triggerOnAttack) {
+      state.newTriggers.push({ card: u.card, index, sourceId: u.id });
+    }
+  });
+}
+
+export function finishAttackAction(state) {
+  const attacker = state.entities[state.currentAttack.attacker];
+  const target = state.entities[state.currentAttack.target];
   const values = getCurrentValues(state, [attacker.id, target.id]);
   const attackerValues = values[attacker.id];
   const targetValues = values[target.id];
@@ -182,5 +193,6 @@ export function doAttackAction(state, action) {
     attacker.damage += v.attack;
   });
   target.damage += attackerValues.attack;
+  state.currentAttack = null;
   checkState(state);
 }

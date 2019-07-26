@@ -47,6 +47,7 @@ const neutralCardInfo = {
     abilities: [
       {
         triggerOnOwnArrival: true,
+        triggerOnAttack: true,
         steps: [
           {
             targetMode: targetMode.single,
@@ -65,15 +66,20 @@ const neutralCardInfo = {
           {
             targetMode: targetMode.single,
             targetTypes: [types.building],
+            canTarget: ({ state, triggerInfo, targetId }) => {
+              return targetId != triggerInfo.choices[0].targetId;
+            },
             action: ({ state, source, choices }) => {
-              state.entities[choices.targetId].damage -= 1;
-              log.add(
-                state,
-                `${getName(state, source.id)} repairs 1 damage from ${getName(
+              if (state.entities[choices.targetId].damage > 0) {
+                state.entities[choices.targetId].damage -= 1;
+                log.add(
                   state,
-                  choices.targetId
-                )}.`
-              );
+                  `${getName(state, source.id)} repairs 1 damage from ${getName(
+                    state,
+                    choices.targetId
+                  )}.`
+                );
+              }
             }
           }
         ]

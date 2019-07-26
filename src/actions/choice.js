@@ -23,6 +23,17 @@ export function checkChoiceAction(state, action) {
   if (!stepDef.targetTypes.includes(chosenTargetVals.type)) {
     throw new Error("Target entity is the wrong type");
   }
+  if (
+    stepDef.canTarget &&
+    !stepDef.canTarget({
+      state,
+      triggerInfo: state.currentTrigger,
+      targetId: action.target,
+      targetVals: chosenTargetVals
+    })
+  ) {
+    throw new Error("Not a legal target for that ability");
+  }
   const resistCost = sumKeyword(chosenTargetVals, resist);
   if (resistCost > getAP(state).gold) {
     throw new Error("Not enough gold to pay for resist");
