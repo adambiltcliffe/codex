@@ -2,7 +2,10 @@ import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
 import { getCurrentValues } from "../entities";
+import findIndex from "lodash/findIndex";
 import forEach from "lodash/forEach";
+import { types } from "../cardinfo/constants";
+import { addSpellToQueue } from "../triggers";
 
 export function checkPlayAction(state, action) {
   const ap = getAP(state);
@@ -22,7 +25,26 @@ export function doPlayAction(state, action) {
   });
   const ap = getAP(state);
   ap.gold -= cardInfo[state.playedCard].cost;
+  if (cardInfo[state.playedCard].type == types.spell) {
+    playSpell(state);
+  } else {
+    playUnit(state);
+  }
+}
 
+function playSpell(state) {
+  const ci = cardInfo[state.playedCard];
+  log.add(state, log.fmt`${getAP(state)} plays ${ci.name}.`);
+  const spellEffectIndex = findIndex(ci.abilities, a => a.isSpellEffect);
+  addSpellToQueue(state, {
+    card: state.playedCard,
+    index: spellEffectIndex,
+    isSpell: true
+  });
+}
+
+function playUnit(state) {
+  const ap = getAP(state);
   const newUnit = {
     id: `e${state.nextId}`,
     card: state.playedCard,

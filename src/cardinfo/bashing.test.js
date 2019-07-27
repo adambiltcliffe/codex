@@ -6,6 +6,7 @@ import {
   testp2Id,
   findEntityIds
 } from "../testutil";
+import { fixtureNames } from "../fixtures";
 
 test("Hired Stomper can kill itself with own trigger", () => {
   const s0 = getNewGame();
@@ -47,4 +48,17 @@ test("Hired Stomper can target your own units or the opponent's", () => {
   ]);
   expect(s2.entities[p1rhino].damage).toEqual(3);
   expect(s2.entities[p2rhino].damage).toEqual(3);
+});
+
+test("Wrecking Ball can deal damage to base", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "wrecking_ball");
+  const p2base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp2Id
+  )[0];
+  const s1 = playActions(s0, [{ type: "play", card: "wrecking_ball" }]);
+  const s2 = playActions(s1, [{ type: "choice", target: p2base }]);
+  expect(s2.entities[p2base].damage).toEqual(2);
+  expect(s2.log).toContain("Wrecking Ball deals 2 damage to base.");
 });

@@ -17,7 +17,8 @@ export const colors = {
 
 export const specs = {
   bashing: "BASHING",
-  finesse: "FINESSE"
+  finesse: "FINESSE",
+  truth: "TRUTH"
 };
 
 export const targetMode = {

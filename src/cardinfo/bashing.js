@@ -4,6 +4,31 @@ import { getName } from "../entities";
 import { flying } from "./keywords";
 
 const bashingCardInfo = {
+  wrecking_ball: {
+    color: colors.neutral,
+    tech: 1,
+    spec: specs.bashing,
+    name: "Wrecking Ball",
+    type: types.spell,
+    cost: 0,
+    abilities: [
+      {
+        isSpellEffect: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.building],
+        action: ({ state, choices }) => {
+          state.entities[choices.targetId].damage += 2;
+          log.add(
+            state,
+            `Wrecking Ball deals 2 damage to ${getName(
+              state,
+              choices.targetId
+            )}.`
+          );
+        }
+      }
+    ]
+  },
   iron_man: {
     color: colors.neutral,
     tech: 1,

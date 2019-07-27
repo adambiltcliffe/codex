@@ -2,6 +2,11 @@ import log from "./log";
 import cardInfo from "./cardinfo";
 import { targetMode } from "./cardinfo/constants";
 import { getName } from "./entities";
+import { getAP } from "./util";
+
+export function addSpellToQueue(state, trigger) {
+  state.queue.push(trigger);
+}
 
 export function addTriggerToQueue(state, trigger) {
   state.queue.push(trigger);
@@ -69,6 +74,12 @@ export function resolveCurrentTrigger(state) {
   ) {
     state.currentTrigger.stepIndex++;
   } else {
+    if (state.currentTrigger.isSpell) {
+      state.updateHidden(fs => {
+        getAP(fs).discard.push(fs.playedCard);
+        delete fs.playedCard;
+      });
+    }
     state.currentTrigger = null;
   }
 }
