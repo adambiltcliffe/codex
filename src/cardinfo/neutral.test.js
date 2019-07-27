@@ -5,10 +5,12 @@ import {
   putCardInHand,
   testp1Id,
   testp2Id,
-  findEntityIds
+  findEntityIds,
+  getGameWithUnits
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import CodexGame from "../codex";
+import produce from "immer";
 
 test("Timely Messenger can attack with haste", () => {
   const s0 = getNewGame();
@@ -159,5 +161,36 @@ test("Brick Thief can't damage and then repair the same building", () => {
   ]);
   expect(() => {
     CodexGame.checkAction(s1, { type: "choice", target: p1base });
+  }).toThrow();
+});
+
+test("Spark can deal damage to patroller", () => {
+  const s0 = getGameWithUnits(["older_brother"], []);
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [null, ob, null, null, null] }
+  ]);
+  const s2 = produce(s1, d => {
+    d.players[testp2Id].hand.push("spark");
+  });
+  const s3 = playActions(s2, [
+    { type: "play", card: "spark" },
+    { type: "choice", target: ob }
+  ]);
+  expect(s3.entities[ob].damage).toEqual(1);
+});
+
+test("Spark can't target non-patroller", () => {
+  const s0 = getGameWithUnits(["older_brother"], []);
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const s1 = playActions(s0, [
+    { type: "endTurn", patrollers: [null, null, null, null, null] }
+  ]);
+  const s2 = produce(s1, d => {
+    d.players[testp2Id].hand.push("spark");
+  });
+  const s3 = playActions(s2, [{ type: "play", card: "spark" }]);
+  expect(() => {
+    CodexGame.checkAction(s3, { type: "choice", target: ob });
   }).toThrow();
 });

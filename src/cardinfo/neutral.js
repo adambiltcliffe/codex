@@ -1,7 +1,7 @@
 import log from "../log";
 import { types, colors, targetMode } from "./constants";
 import { frenzy, haste, healing, resist, flagbearer } from "./keywords";
-import { getName } from "../entities";
+import { getName, getCurrentController } from "../entities";
 
 const neutralCardInfo = {
   timely_messenger: {
@@ -119,6 +119,32 @@ const neutralCardInfo = {
     attack: 2,
     hp: 2,
     abilities: [frenzy(1)]
+  },
+  spark: {
+    color: colors.neutral,
+    tech: 0,
+    name: "Spark",
+    type: types.spell,
+    subtypes: ["Burn"],
+    cost: 1,
+    abilities: [
+      {
+        isSpellEffect: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.unit, types.hero],
+        canTarget: ({ state, targetId }) =>
+          state.players[
+            getCurrentController(state, targetId)
+          ].patrollerIds.includes(targetId),
+        action: ({ state, choices }) => {
+          state.entities[choices.targetId].damage += 1;
+          log.add(
+            state,
+            `Spark deals 1 damage to ${getName(state, choices.targetId)}.`
+          );
+        }
+      }
+    ]
   }
 };
 
