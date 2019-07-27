@@ -18,6 +18,7 @@ Flying, anti-air
 Patrol zone with taunt for squad leader and bonus for elite
 Invisible (effects on attacking and patrolling)
 Spell casting
+Runes
 
 # Tests to write
 
@@ -29,6 +30,7 @@ Trigger fizzles if the only available target is invisible
 Spells/abilities must target flagbearer
 Not required to target flagbearer if not a legal type
 Not required to target flagbearer if can't pay for resist
+Spark has to target patrolling flagbearer but not non-patrolling
 Spells are put in discard pile after resolving
 Spells are not in discard pile while resolving
 Spells are put in discard pile before resolving triggers they caused
@@ -48,7 +50,7 @@ Armor (requires effects)
 Armor for squad leader
 (More of) interaction of continuous effects
 Swift strike, overpower, sparkshot (requires choosing targets)
-Stealth, unstoppable (requires patrol zone)
+Stealth, unstoppable
 Invisible (effects on targetting)
 Detector (requires invisible to be finished)
 Tower (requires add-ons and detector)
@@ -61,7 +63,6 @@ Requirement to have tech buildings/unlocked specs to play units
 Requirement to have right hero to cast spells
 
 Hero(es)
-Spell casting
 Hero levels
 Hero level up on death
 Hero cooldown

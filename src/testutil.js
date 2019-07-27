@@ -1,6 +1,7 @@
 import CodexGame from "./codex";
 import pickBy from "lodash/pickby";
 import cardInfo from "./cardinfo";
+import produce from "immer";
 
 export const testp1Id = "test_player1";
 export const testp2Id = "test_player2";
@@ -13,6 +14,13 @@ export function getNewGame() {
 
 export function putCardInHand(state, player, card) {
   state.players[player].hand.push(card);
+}
+
+export function withCardsInHand(state, p1cards, p2cards) {
+  return produce(state, draft => {
+    p1cards.forEach(c => draft.players[testp1Id].hand.push(c));
+    p2cards.forEach(c => draft.players[testp2Id].hand.push(c));
+  });
 }
 
 export function getGameWithUnits(p1units, p2units) {

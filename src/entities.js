@@ -1,6 +1,6 @@
 import produce from "immer";
 import forEach from "lodash/forEach";
-import cardInfo from "./cardinfo";
+import cardInfo, { types } from "./cardinfo";
 import fixtures from "./fixtures";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
@@ -88,6 +88,10 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
         // 6a. pestering haunt
         // 7. conditional ability-gaining effects
         // at present we don't pay attention to effect order (because it doesn't matter)
+        if (draft.type == types.unit || draft.type == types.hero) {
+          draft.attack += u.runes;
+          draft.hp += u.runes;
+        }
         forEach(draft.abilities, a => {
           if (a.modifyOwnValues) {
             a.modifyOwnValues({
@@ -120,6 +124,8 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
         ) {
           draft.attack += 1;
         }
+        draft.attack = draft.attack > 0 ? draft.attack : 0;
+        draft.hp = draft.hp > 0 ? draft.hp : 0;
       });
       if (currentValues.controller != u.lastControlledBy) {
         u.controlledSince = state.turn;

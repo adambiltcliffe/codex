@@ -52,7 +52,8 @@ function playUnit(state) {
     lastControlledBy: getAP(state).id,
     controlledSince: state.turn,
     ready: true,
-    damage: 0
+    damage: 0,
+    runes: 0
   };
 
   state.entities[newUnit.id] = newUnit;

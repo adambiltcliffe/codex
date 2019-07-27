@@ -6,7 +6,8 @@ import {
   testp1Id,
   testp2Id,
   findEntityIds,
-  getGameWithUnits
+  getGameWithUnits,
+  withCardsInHand
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import CodexGame from "../codex";
@@ -192,5 +193,56 @@ test("Spark can't target non-patroller", () => {
   const s3 = playActions(s2, [{ type: "play", card: "spark" }]);
   expect(() => {
     CodexGame.checkAction(s3, { type: "choice", target: ob });
+  }).toThrow();
+});
+
+test("Wither puts -1/-1 rune on a unit", () => {
+  const s0 = withCardsInHand(
+    getGameWithUnits([], ["older_brother"]),
+    ["wither"],
+    []
+  );
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const s1 = playActions(s0, [
+    { type: "play", card: "wither" },
+    { type: "choice", target: ob }
+  ]);
+  expect(s1.entities[ob].runes).toEqual(-1);
+  expect(getCurrentValues(s1, ob).attack).toEqual(1);
+  expect(getCurrentValues(s1, ob).hp).toEqual(1);
+});
+
+test("Wither kills units with 1hp", () => {
+  const s0 = withCardsInHand(
+    getGameWithUnits([], ["timely_messenger"]),
+    ["wither"],
+    []
+  );
+  const tm = findEntityIds(s0, e => e.card == "timely_messenger")[0];
+  const s1 = playActions(s0, [
+    { type: "play", card: "wither" },
+    { type: "choice", target: tm }
+  ]);
+  expect(s1.entities[tm]).toBeUndefined();
+  expect(s1.log).toContain("Timely Messenger dies.");
+});
+
+test("Bloom puts a +1/+1 rune on a unit, but only if it doesn't have one", () => {
+  const s0 = withCardsInHand(
+    getGameWithUnits([], ["older_brother"]),
+    ["bloom", "bloom"],
+    []
+  );
+  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const acts = [
+    { type: "play", card: "bloom" },
+    { type: "choice", target: ob }
+  ];
+  const s1 = playActions(s0, acts);
+  expect(s1.entities[ob].runes).toEqual(1);
+  expect(getCurrentValues(s1, ob).attack).toEqual(3);
+  expect(getCurrentValues(s1, ob).hp).toEqual(3);
+  expect(() => {
+    playActions(s1, acts);
   }).toThrow();
 });

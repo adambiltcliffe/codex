@@ -122,9 +122,9 @@ const neutralCardInfo = {
   },
   spark: {
     color: colors.neutral,
-    tech: 0,
     name: "Spark",
     type: types.spell,
+    minor: true,
     subtypes: ["Burn"],
     cost: 1,
     abilities: [
@@ -141,6 +141,51 @@ const neutralCardInfo = {
           log.add(
             state,
             `Spark deals 1 damage to ${getName(state, choices.targetId)}.`
+          );
+        }
+      }
+    ]
+  },
+  bloom: {
+    color: colors.neutral,
+    name: "Bloom",
+    type: types.spell,
+    minor: true,
+    subtypes: ["Buff"],
+    cost: 2,
+    abilities: [
+      {
+        isSpellEffect: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.unit, types.hero],
+        canTarget: ({ state, targetId }) => state.entities[targetId].runes <= 0,
+        action: ({ state, choices }) => {
+          state.entities[choices.targetId].runes += 1;
+          log.add(
+            state,
+            `Bloom adds a +1/+1 rune to ${getName(state, choices.targetId)}.`
+          );
+        }
+      }
+    ]
+  },
+  wither: {
+    color: colors.neutral,
+    name: "Wither",
+    type: types.spell,
+    minor: true,
+    subtypes: ["Debuff"],
+    cost: 2,
+    abilities: [
+      {
+        isSpellEffect: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.unit, types.hero],
+        action: ({ state, choices }) => {
+          state.entities[choices.targetId].runes -= 1;
+          log.add(
+            state,
+            `Wither adds a -1/-1 rune to ${getName(state, choices.targetId)}.`
           );
         }
       }
