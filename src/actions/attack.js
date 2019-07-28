@@ -155,11 +155,21 @@ export function doAttackAction(state, action) {
   state.currentAttack = action;
   const u = state.entities[action.attacker];
   const attackerVals = getCurrentValues(state, u.id);
+  let triggered = false;
   attackerVals.abilities.forEach((a, index) => {
     if (a.triggerOnAttack) {
       state.newTriggers.push({ card: u.card, index, sourceId: u.id });
+      triggered = true;
     }
   });
+  if (triggered) {
+    // If nothing triggered, this message is redundant as the next one will
+    // describe the attack in detail anyway
+    log.add(
+      state,
+      log.fmt`${getAP(state)} declares an attack with ${attackerVals.name}.`
+    );
+  }
 }
 
 export function finishAttackAction(state) {

@@ -11,3 +11,13 @@ export function andJoin(strings) {
     return strings.slice(0, -1).join(", ") + " and " + strings.slice(-1);
   }
 }
+
+export function givePlayerGold(state, playerId, amount) {
+  const p = state.players[playerId];
+  const oldGold = p.gold;
+  p.gold += amount;
+  if (p.gold > 20) {
+    p.gold = 20;
+  }
+  return p.gold - oldGold;
+}

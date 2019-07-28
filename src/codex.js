@@ -10,17 +10,18 @@ import {
   enqueueNextTrigger,
   resolveCurrentTrigger
 } from "./triggers";
-import { checkState, getCurrentController } from "./entities";
+import { checkState, getCurrentController, getCurrentValues } from "./entities";
 import { targetMode } from "./cardinfo/constants";
+import { emptyPatrolZone } from "./patrolzone";
+import { finishAttackAction } from "./actions/attack";
 
+import flatMap from "lodash/flatMap";
 import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
 import partition from "lodash/partition";
 import range from "lodash/range";
 import take from "lodash/take";
 import uniq from "lodash/uniq";
-import { emptyPatrolZone } from "./patrolzone";
-import { finishAttackAction } from "./actions/attack";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -68,6 +69,9 @@ class CodexGame extends Game {
         break;
       case "attack":
         actions.doAttackAction(state, action);
+        break;
+      case "activate":
+        actions.doActivateAction(state, action);
         break;
       case "endTurn":
         actions.doEndTurnAction(state, action);
@@ -144,6 +148,8 @@ class CodexGame extends Game {
         return actions.checkPlayAction(state, action);
       case "attack":
         return actions.checkAttackAction(state, action);
+      case "activate":
+        return actions.checkActivateAction(state, action);
       case "endTurn":
         return actions.checkEndTurnAction(state, action);
       default:
@@ -197,11 +203,22 @@ class CodexGame extends Game {
     const examplePatrolAction = [
       { type: "endTurn", patrollers: examplePatrollers }
     ];
+    const apUnitVals = getCurrentValues(state, apUnits.map(u => u.id));
+    const activateActions = flatMap(apUnits, u =>
+      apUnitVals[u.id].abilities.reduce(
+        (acc, a, index) =>
+          a.isActivatedAbility ? acc.concat([[u.id, index]]) : acc,
+        []
+      )
+    ).map(([e, index]) => ({ type: "activate", source: e, index }));
+    console.log(activateActions);
+
     return base
       .concat(examplePatrolAction)
       .concat(workerActions)
       .concat(playActions)
-      .concat(attackActions);
+      .concat(attackActions)
+      .concat(activateActions);
   }
 }
 

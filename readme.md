@@ -19,6 +19,7 @@ Patrol zone with taunt for squad leader and bonus for elite
 Invisible (effects on attacking and patrolling)
 Spell casting
 Runes
+Activated abilities
 
 # Tests to write
 

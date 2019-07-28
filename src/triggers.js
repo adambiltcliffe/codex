@@ -10,13 +10,15 @@ export function addSpellToQueue(state, trigger) {
 
 export function addTriggerToQueue(state, trigger) {
   state.queue.push(trigger);
-  log.add(
-    state,
-    `Triggered action from ${getName(
+  if (!trigger.isActivatedAbility) {
+    log.add(
       state,
-      trigger.sourceId
-    )} was added to the queue.`
-  );
+      `Triggered action from ${getName(
+        state,
+        trigger.sourceId
+      )} was added to the queue.`
+    );
+  }
 }
 
 export function enqueueNextTrigger(state) {

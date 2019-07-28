@@ -1,4 +1,4 @@
-import { andJoin, getAP } from "./util";
+import { andJoin, getAP, givePlayerGold } from "./util";
 import log from "./log";
 import forEach from "lodash/forEach";
 import { getName, getCurrentValues } from "./entities";
@@ -46,12 +46,8 @@ export function enterReadyPhase(state) {
 export function enterUpkeepPhase(state) {
   state.phase = phases.upkeep;
   const ap = getAP(state);
-  const oldGold = ap.gold;
-  ap.gold += ap.workers;
-  if (ap.gold > 20) {
-    ap.gold = 20;
-  }
-  log.add(state, log.fmt`${ap} gains ${ap.gold - oldGold} gold from workers.`);
+  const workerGold = givePlayerGold(state, ap.id, ap.workers);
+  log.add(state, log.fmt`${ap} gains ${workerGold} gold from workers.`);
   forEach(state.entities, u => {
     const vals = getCurrentValues(state, u.id);
     if (vals.controller == ap.id) {

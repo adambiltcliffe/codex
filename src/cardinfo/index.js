@@ -1,4 +1,5 @@
 import neutralCardInfo from "./neutral";
+import greenCardInfo from "./green";
 import whiteCardInfo from "./white";
 import bashingCardInfo from "./bashing";
 import finesseCardInfo from "./finesse";
@@ -8,6 +9,7 @@ export * from "./constants";
 
 const cardInfo = {
   ...neutralCardInfo,
+  ...greenCardInfo,
   ...whiteCardInfo,
   ...bashingCardInfo,
   ...finesseCardInfo,
