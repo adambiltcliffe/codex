@@ -158,7 +158,10 @@ export function doAttackAction(state, action) {
   let triggered = false;
   attackerVals.abilities.forEach((a, index) => {
     if (a.triggerOnAttack) {
-      state.newTriggers.push({ card: u.card, index, sourceId: u.id });
+      state.newTriggers.push({
+        path: a.path,
+        sourceId: u.id
+      });
       triggered = true;
     }
   });

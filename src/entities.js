@@ -77,8 +77,11 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
       // 1a. tokens 1b. dancers 1c. heroes
       const currentValues = produce(printedValues, draft => {
         draft.controller = u.owner;
-        draft.abilities = draft.abilities || [];
         draft.subtypes = draft.subtypes || [];
+        draft.abilities = draft.abilities || [];
+        draft.abilities.forEach((a, index) => {
+          a.path = `${u.card}.abilities[${index}]`;
+        });
         // 2. chaos mirror, polymorph: squirrel and copy effects
         // 3. effects that set ATK and DEF to specific values (i.e. faerie dragon)
         // 4. ability-gaining effects that don't depend on ATK or HP

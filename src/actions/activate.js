@@ -38,9 +38,9 @@ export function checkActivateAction(state, action) {
 export function doActivateAction(state, action) {
   const source = state.entities[action.source];
   const sourceVals = getCurrentValues(state, source.id);
+  const ability = sourceVals.abilities[action.index];
   state.newTriggers.push({
-    card: source.card,
-    index: action.index,
+    path: ability.path,
     sourceId: source.id,
     isActivatedAbility: true
   });

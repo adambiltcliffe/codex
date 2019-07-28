@@ -53,7 +53,10 @@ export function enterUpkeepPhase(state) {
     if (vals.controller == ap.id) {
       forEach(vals.abilities, (a, index) => {
         if (a.triggerOnUpkeep) {
-          state.newTriggers.push({ card: u.card, index, sourceId: u.id });
+          state.newTriggers.push({
+            path: a.path,
+            sourceId: u.id
+          });
         }
       });
     }

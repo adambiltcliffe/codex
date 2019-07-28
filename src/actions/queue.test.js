@@ -8,6 +8,8 @@ import {
   findEntityIds
 } from "../testutil";
 
+import startsWith from "lodash/startsWith";
+
 test("Can choose the order of triggers in the queue when they trigger together", () => {
   const s0 = getNewGame();
   putCardInHand(s0, testp1Id, "helpful_turtle");
@@ -22,13 +24,11 @@ test("Can choose the order of triggers in the queue when they trigger together",
   expect(s1.queue.length).toEqual(0);
   expect(s1.newTriggers.length).toEqual(2);
   expect(() => CodexGame.checkAction(s1, { type: "endTurn" })).toThrow();
-  const turtleIndex = findTriggerIndices(
-    s1,
-    t => t.card == "helpful_turtle"
+  const turtleIndex = findTriggerIndices(s1, t =>
+    startsWith(t.path, "helpful_turtle")
   )[0];
-  const starletIndex = findTriggerIndices(
-    s1,
-    t => t.card == "starcrossed_starlet"
+  const starletIndex = findTriggerIndices(s1, t =>
+    startsWith(t.path, "starcrossed_starlet")
   )[0];
   const starletId = findEntityIds(s1, u => u.card == "starcrossed_starlet");
   expect(() =>

@@ -37,8 +37,7 @@ function playSpell(state) {
   log.add(state, log.fmt`${getAP(state)} plays ${ci.name}.`);
   const spellEffectIndex = findIndex(ci.abilities, a => a.isSpellEffect);
   addSpellToQueue(state, {
-    card: state.playedCard,
-    index: spellEffectIndex,
+    path: `${state.playedCard}.abilities[${spellEffectIndex}]`,
     isSpell: true
   });
 }
@@ -65,8 +64,7 @@ function playUnit(state) {
   forEach(vals.abilities, (a, index) => {
     if (a.triggerOnOwnArrival) {
       state.newTriggers.push({
-        card: newUnit.card,
-        index,
+        path: a.path,
         sourceId: newUnit.id
       });
     }
