@@ -26,3 +26,5 @@ Hotter fire says that it doesnt increase sparkshot damage becuase although its a
 Sentry prevents the first ability damage done to a patroller and does work on spark shot
 both use the same wording for this
  */
+
+// if you have smoker + dreamscape, I guess active player chooses bounce vs. death
