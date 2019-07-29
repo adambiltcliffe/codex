@@ -8,7 +8,7 @@ Combat
 Upkeep/arrival/attack triggers
 Activated abilities
 Choice of order when adding triggers to queue
-Passive effects on units that modify their own/others' stats
+Passive effects on units that modify their own/others' stats and add abilities
 Frenzy, haste, flying, anti-air, invisible, healing, resist
 Patrol zone with taunt for squad leader and bonus for elite
 Spell casting
@@ -17,8 +17,11 @@ Flagbearer ability
 
 # Tests to write
 
-Lookout slot provides resist
-Bonus resist from lookout disappears when no longer patrolling
+Maestro's conferred ability works correctly
+Maestro's conferred ability disappears if Maestro does
+Maestro reduces cost to cast Virtuosos to 0 (to do)
+Lookout slot provides resist (to do)
+Bonus resist from lookout disappears when no longer patrolling (to do)
 Spells/abilities must target flagbearer
 Not required to target flagbearer if not a legal type
 Not required to target flagbearer if can't pay for resist

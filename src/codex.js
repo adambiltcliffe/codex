@@ -172,7 +172,7 @@ class CodexGame extends Game {
     ) {
       return Object.keys(state.entities).map(id => ({
         type: "choice",
-        targetId: id
+        target: id
       }));
     }
     return this.suggestMainPhaseActions(state);

@@ -5,6 +5,8 @@ import fixtures from "./fixtures";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
 
+import get from "lodash/get";
+
 export function checkState(state) {
   forEach(state.entities, u => {
     const vals = getCurrentValues(state, u.id);
@@ -138,4 +140,13 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
     }
   });
   return shouldReturnSingleton ? result[unitIds] : result;
+}
+
+export function conferKeyword(values, kwAbility) {
+  values.abilities.push(kwAbility);
+}
+
+export function conferComplexAbility(values, path) {
+  const ability = get(cardInfo, path);
+  values.abilities.push({ ...ability, path });
 }

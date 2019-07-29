@@ -9,9 +9,9 @@ function initialisePlayerState(state, playerIndex) {
   state.updateHidden(fs => {
     const deck = [
       "merfolk_prospector",
-      "merfolk_prospector",
-      "merfolk_prospector",
-      "hired_stomper",
+      "maestro",
+      "maestro",
+      "maestro",
       "nimble_fencer",
       "timely_messenger",
       "older_brother",

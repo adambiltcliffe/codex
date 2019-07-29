@@ -1,6 +1,11 @@
 import log from "../log";
-import { types, colors, specs } from "./constants";
-import { getName, getCurrentController } from "../entities";
+import { types, colors, specs, targetMode } from "./constants";
+import {
+  conferComplexAbility,
+  conferKeyword,
+  getName,
+  getCurrentController
+} from "../entities";
 import { haste, flying, invisible } from "./keywords";
 
 const finesseCardInfo = {
@@ -19,7 +24,7 @@ const finesseCardInfo = {
         modifyGlobalValues: ({ state, source, values }) => {
           if (getCurrentController(state, source.id) == values.controller) {
             if (values.subtypes.includes("Virtuoso")) {
-              values.abilities.push(haste);
+              conferKeyword(values, haste);
             }
           }
         }
@@ -79,6 +84,44 @@ const finesseCardInfo = {
         }
       }
     ]
+  },
+  maestro: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.finesse,
+    name: "Maestro",
+    type: types.unit,
+    subtypes: ["Thespian"],
+    cost: 3,
+    attack: 3,
+    hp: 5,
+    abilities: [
+      {
+        modifyGlobalValues: ({ state, source, values }) => {
+          if (getCurrentController(state, source.id) == values.controller) {
+            if (values.subtypes.includes("Virtuoso")) {
+              conferComplexAbility(values, "maestro.conferredAbility");
+            }
+          }
+        }
+      }
+    ],
+    conferredAbility: {
+      isActivatedAbility: true,
+      costsExhaustSelf: true,
+      targetMode: targetMode.single,
+      targetTypes: [types.building],
+      action: ({ state, source, choices }) => {
+        state.entities[choices.targetId].damage += 2;
+        log.add(
+          state,
+          `${getName(state, source.id)} deals 2 damage to ${getName(
+            state,
+            choices.targetId
+          )}.`
+        );
+      }
+    }
   },
   backstabber: {
     color: colors.neutral,
