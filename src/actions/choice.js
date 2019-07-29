@@ -5,7 +5,8 @@ import {
   sumKeyword,
   resist,
   hasKeyword,
-  flagbearer
+  flagbearer,
+  invisible
 } from "../cardinfo/keywords";
 import { getAP } from "../util";
 
@@ -46,9 +47,14 @@ export function checkChoiceAction(state, action) {
   if (!stepCanTarget(state, stepDef, action.target, chosenTargetVals)) {
     throw new Error("Not a legal target for that ability");
   }
-  const resistCost = sumKeyword(chosenTargetVals, resist);
-  if (resistCost > getAP(state).gold) {
-    throw new Error("Not enough gold to pay for resist");
+  if (chosenTargetVals.controller != getAP(state).id) {
+    if (hasKeyword(chosenTargetVals, invisible)) {
+      throw new Error("Target is invisible");
+    }
+    const resistCost = sumKeyword(chosenTargetVals, resist);
+    if (resistCost > getAP(state).gold) {
+      throw new Error("Not enough gold to pay for resist");
+    }
   }
   if (!hasKeyword(chosenTargetVals, flagbearer)) {
     const allValues = getCurrentValues(state, Object.keys(state.entities));

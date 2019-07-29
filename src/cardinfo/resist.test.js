@@ -40,12 +40,13 @@ test("Don't need to pay for resist when targetting own unit", () => {
   const tr = findEntityIds(s0, e => e.card == "_test_resist")[0];
   const s1 = produce(s0, d => {
     d.players[testp1Id].hand.push("hired_stomper");
+    d.players[testp1Id].gold = 4;
   });
   const s2 = playActions(s1, [
     { type: "play", card: "hired_stomper" },
     { type: "choice", target: tr }
   ]);
-  expect(s2.players[testp1Id].gold).toEqual(4);
+  expect(s2.players[testp1Id].gold).toEqual(0);
 });
 
 test("Can't target a resist unit without gold to pay for it", () => {

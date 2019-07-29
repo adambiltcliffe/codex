@@ -1,8 +1,10 @@
 import {
   playActions,
   testp1Id,
+  testp2Id,
   findEntityIds,
-  getGameWithUnits
+  getGameWithUnits,
+  withCardsInHand
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
@@ -58,4 +60,27 @@ test("Invisible patroller can be attacked and prevents attacking past", () => {
   expect(() =>
     CodexGame.checkAction(s1, { type: "attack", attacker: ob, target: im })
   ).toThrow();
+});
+
+test("Can target your own invisible units but not the opponent's", () => {
+  const s0 = withCardsInHand(
+    getGameWithUnits(["backstabber"], ["backstabber"]),
+    ["wither"],
+    []
+  );
+  const p1bs = findEntityIds(
+    s0,
+    e => e.card == "backstabber" && e.owner == testp1Id
+  )[0];
+  const p2bs = findEntityIds(
+    s0,
+    e => e.card == "backstabber" && e.owner == testp2Id
+  )[0];
+  const s1 = playActions(s0, [{ type: "play", card: "wither" }]);
+  expect(() => {
+    CodexGame.checkAction(s1, { type: "choice", target: p1bs });
+  }).not.toThrow();
+  expect(() => {
+    CodexGame.checkAction(s1, { type: "choice", target: p2bs });
+  }).toThrow();
 });
