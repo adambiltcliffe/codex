@@ -1,5 +1,5 @@
 import { colors, types } from "./constants";
-import { frenzy, antiAir } from "./keywords";
+import { frenzy, antiAir } from "./abilities/keywords";
 
 const whiteCardInfo = {
   fox_primus: {

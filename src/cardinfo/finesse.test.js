@@ -10,7 +10,7 @@ import {
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
 import CodexGame from "../codex";
-import { hasKeyword, haste } from "./keywords";
+import { hasKeyword, haste } from "./abilities/keywords";
 
 test("Nimble Fencer gives herself and other Virtuosos haste", () => {
   const s0 = getNewGame();

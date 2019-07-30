@@ -1,12 +1,11 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { getName } from "../entities";
-import { flying } from "./keywords";
+import { flying } from "./abilities/keywords";
 
 const bashingCardInfo = {
   wrecking_ball: {
     color: colors.neutral,
-    tech: 1,
     spec: specs.bashing,
     name: "Wrecking Ball",
     type: types.spell,

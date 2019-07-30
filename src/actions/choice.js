@@ -7,7 +7,7 @@ import {
   hasKeyword,
   flagbearer,
   invisible
-} from "../cardinfo/keywords";
+} from "../cardinfo/abilities/keywords";
 import { getAP } from "../util";
 
 export function stepCanTarget(state, stepDef, targetId, targetVals) {

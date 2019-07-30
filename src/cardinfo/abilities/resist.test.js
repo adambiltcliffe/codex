@@ -1,12 +1,12 @@
-import cardInfo from ".";
-import { colors, types } from "./constants";
+import cardInfo from "..";
+import { colors, types } from "../constants";
 import { resist } from "./keywords";
 import {
   getGameWithUnits,
   findEntityIds,
   playActions,
   testp1Id
-} from "../testutil";
+} from "../../testutil";
 import produce from "immer";
 
 beforeAll(() => {

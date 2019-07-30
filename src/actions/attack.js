@@ -8,7 +8,7 @@ import {
   haste,
   antiAir,
   invisible
-} from "../cardinfo/keywords";
+} from "../cardinfo/abilities/keywords";
 import { patrolSlots } from "../patrolzone";
 import { andJoin } from "../util";
 import invert from "lodash/invert";

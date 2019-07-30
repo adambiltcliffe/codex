@@ -5,11 +5,11 @@ import {
   findEntityIds,
   getGameWithUnits,
   withCardsInHand
-} from "../testutil";
-import { getCurrentValues } from "../entities";
-import { fixtureNames } from "../fixtures";
-import { getAttackableEntityIds } from "../actions/attack";
-import CodexGame from "../codex";
+} from "../../testutil";
+import { getCurrentValues } from "../../entities";
+import { fixtureNames } from "../../fixtures";
+import { getAttackableEntityIds } from "../../actions/attack";
+import CodexGame from "../../codex";
 
 test("Invisible unit can sneak past patrollers", () => {
   const s0 = getGameWithUnits(["iron_man", "iron_man"], ["backstabber"]);

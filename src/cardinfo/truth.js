@@ -1,5 +1,5 @@
 import { colors, specs, types } from "./constants";
-import { flying } from "./keywords";
+import { flying } from "./abilities/keywords";
 
 const truthCardInfo = {
   spectral_roc: {

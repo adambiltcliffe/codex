@@ -6,7 +6,7 @@ import {
   getName,
   getCurrentController
 } from "../entities";
-import { haste, flying, invisible } from "./keywords";
+import { haste, flying, invisible } from "./abilities/keywords";
 
 const finesseCardInfo = {
   nimble_fencer: {

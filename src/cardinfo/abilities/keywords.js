@@ -1,6 +1,6 @@
-import log from "../log";
-import { andJoin, getAP } from "../util";
-import { getName, getCurrentValues } from "../entities";
+import log from "../../log";
+import { andJoin, getAP } from "../../util";
+import { getName, getCurrentValues } from "../../entities";
 
 import forEach from "lodash/forEach";
 import sum from "lodash/sum";

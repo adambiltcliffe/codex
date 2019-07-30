@@ -1,6 +1,12 @@
 import log from "../log";
 import { types, colors, targetMode } from "./constants";
-import { frenzy, haste, healing, resist, flagbearer } from "./keywords";
+import {
+  frenzy,
+  haste,
+  healing,
+  resist,
+  flagbearer
+} from "./abilities/keywords";
 import { getName, getCurrentController } from "../entities";
 
 const neutralCardInfo = {

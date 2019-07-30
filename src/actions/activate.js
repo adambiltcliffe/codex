@@ -1,5 +1,5 @@
 import { getCurrentValues } from "../entities";
-import { hasKeyword, haste } from "../cardinfo/keywords";
+import { hasKeyword, haste } from "../cardinfo/abilities/keywords";
 import { getAP } from "../util";
 
 export function checkActivateAction(state, action) {

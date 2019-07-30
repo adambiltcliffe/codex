@@ -3,10 +3,10 @@ import {
   findEntityIds,
   playActions,
   testp1Id
-} from "../testutil";
-import { fixtureNames } from "../fixtures";
-import { getCurrentValues } from "../entities";
-import { getAttackableEntityIds } from "../actions/attack";
+} from "../../testutil";
+import { fixtureNames } from "../../fixtures";
+import { getCurrentValues } from "../../entities";
+import { getAttackableEntityIds } from "../../actions/attack";
 
 test("Flying unit attacking non-flying unit takes no damage", () => {
   const s0 = getGameWithUnits(["eggship"], ["regularsized_rhinoceros"]);

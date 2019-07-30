@@ -4,11 +4,10 @@ import {
   findEntityIds,
   testp1Id,
   testp2Id
-} from "../testutil";
-import { getAttackableEntityIds } from "../actions/attack";
-import { getCurrentValues } from "../entities";
-import { fixtureNames } from "../fixtures";
-import { getAP } from "../util";
+} from "../../testutil";
+import { getAttackableEntityIds } from "../../actions/attack";
+import { getCurrentValues } from "../../entities";
+import { fixtureNames } from "../../fixtures";
 
 test("Anti-air unit can attack patrolling flyers or ignore them", () => {
   const s0 = getGameWithUnits(
