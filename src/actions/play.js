@@ -52,7 +52,8 @@ function playUnit(state) {
     controlledSince: state.turn,
     ready: true,
     damage: 0,
-    runes: 0
+    runes: 0,
+    thisTurn: {}
   };
 
   state.entities[newUnit.id] = newUnit;

@@ -31,6 +31,7 @@ export const flying = keyword("K_FLYING");
 export const antiAir = keyword("K_ANTIAIR");
 export const invisible = keyword("K_INVISIBLE");
 export const flagbearer = keyword("K_FLAGBEARER");
+export const readiness = keyword("K_READINESS");
 
 export const resist = numericKeyword("KV_RESIST");
 

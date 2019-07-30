@@ -33,6 +33,7 @@ export function enterReadyPhase(state) {
   ap.patrollerIds = emptyPatrolZone;
   const readied = [];
   forEach(state.entities, u => {
+    u.thisTurn = {};
     if (getCurrentValues(state, u.id).controller == ap.id && !u.ready) {
       readied.push(getName(state, u.id));
       u.ready = true;

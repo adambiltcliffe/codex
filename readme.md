@@ -17,6 +17,10 @@ Flagbearer ability
 
 # Tests to write
 
+Summoning heroes
+Values of level 1 hero
+Values of higher level heroes
+Heroes return to command zone after dying
 Maestro's conferred ability works correctly
 Maestro's conferred ability disappears if Maestro does
 Maestro reduces cost to cast Virtuosos to 0 (to do)
@@ -32,10 +36,7 @@ Spells are put in discard pile before resolving triggers they caused
 
 # Game features not implemented:
 
-Other targetting modes for triggers
-(Some of the) turn structure
 One reshuffle per main phase limit
-
 Don't lock the game if a trigger has no available targets
 
 Patroller bonuses for technician, scavenger, lookout
@@ -71,6 +72,8 @@ Victory condition
 
 # Other stuff to do
 
+Make sure state-based actions are checked at all appropriate times
+Move the first three tests from neutral.test.js into a keyword test file
 Make suggestActions do something sensible for patrollers
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground

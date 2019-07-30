@@ -7,7 +7,8 @@ import {
   flying,
   haste,
   antiAir,
-  invisible
+  invisible,
+  readiness
 } from "../cardinfo/abilities/keywords";
 import { patrolSlots } from "../patrolzone";
 import { andJoin } from "../util";
@@ -30,8 +31,8 @@ export function checkAttackAction(state, action) {
   if (attackerVals.controller != ap.id) {
     throw new Error("You don't control the attacker.");
   }
-  if (attackerVals.type != types.unit) {
-    throw new Error("Only units can attack.");
+  if (attackerVals.type != types.unit && attackerVals.type != types.hero) {
+    throw new Error("Only units and heroes can attack.");
   }
   if (
     attacker.controlledSince == state.turn &&
@@ -41,6 +42,11 @@ export function checkAttackAction(state, action) {
   }
   if (!attacker.ready) {
     throw new Error("Attacker is exhausted.");
+  }
+  if (hasKeyword(attackerVals, readiness) && attacker.thisTurn.attacks > 0) {
+    throw new Error(
+      "Attacker has readiness but has already attacked this turn."
+    );
   }
   const attackable = getAttackableEntityIds(state, attackerVals);
   if (!attackable.includes(action.target)) {
@@ -194,7 +200,10 @@ export function finishAttackAction(state) {
       attackerValues.name
     }${flownOverText}.`
   );
-  attacker.ready = false;
+  if (!hasKeyword(attackerValues, readiness)) {
+    attacker.ready = false;
+  }
+  attacker.thisTurn.attacks = 1 + (attacker.thisTurn.attacks || 0);
   const attackerReceivesDamage =
     !hasKeyword(attackerValues, flying) ||
     hasKeyword(targetValues, flying) ||

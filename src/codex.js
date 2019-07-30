@@ -67,6 +67,9 @@ class CodexGame extends Game {
       case "play":
         actions.doPlayAction(state, action);
         break;
+      case "summon":
+        actions.doSummonAction(state, action);
+        break;
       case "attack":
         actions.doAttackAction(state, action);
         break;
@@ -146,6 +149,8 @@ class CodexGame extends Game {
         return actions.checkWorkerAction(state, action);
       case "play":
         return actions.checkPlayAction(state, action);
+      case "summon":
+        return actions.checkSummonAction(state, action);
       case "attack":
         return actions.checkAttackAction(state, action);
       case "activate":
@@ -185,6 +190,10 @@ class CodexGame extends Game {
       handIndex: n
     }));
     const playActions = uniq(ap.hand).map(c => ({ type: "play", card: c }));
+    const summonActions = uniq(ap.commandZone).map(h => ({
+      type: "summon",
+      hero: h
+    }));
     const entityControllers = getCurrentController(
       state,
       Object.keys(state.entities)
@@ -217,6 +226,7 @@ class CodexGame extends Game {
       .concat(examplePatrolAction)
       .concat(workerActions)
       .concat(playActions)
+      .concat(summonActions)
       .concat(attackActions)
       .concat(activateActions);
   }

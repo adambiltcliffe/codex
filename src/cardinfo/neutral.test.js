@@ -25,6 +25,10 @@ test("Timely Messenger can attack with haste", () => {
   expect(() => {
     CodexGame.checkAction(s1, { type: "attack", attacker: tm, target: p2base });
   }).not.toThrow();
+  const s2 = playActions(s1, [
+    { type: "attack", attacker: tm, target: p2base }
+  ]);
+  expect(s2.entities[p2base].damage).toEqual(1);
 });
 
 test("Helpful Turtle heals your units but not the enemy's", () => {

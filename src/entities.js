@@ -74,9 +74,13 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
   forEach(state.entities, (u, id) => {
     if (unitIds.includes(id)) {
       // 1. Start with the printed values
-      const printedValues =
+      let printedValues =
         u.card == undefined ? fixtures[u.fixture] : cardInfo[u.card];
-      // 1a. tokens 1b. dancers 1c. heroes
+      // 1a. tokens 1b. dancers
+      // 1c. heroes
+      if (u.card && u.card.type == types.hero) {
+        printedValues = { ...printedValues, ...printedValues.bands[0] };
+      }
       const currentValues = produce(printedValues, draft => {
         draft.controller = u.owner;
         draft.subtypes = draft.subtypes || [];
