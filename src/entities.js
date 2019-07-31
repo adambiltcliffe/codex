@@ -73,21 +73,23 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
   // they have added or removed a global effect from a unit
   forEach(state.entities, (u, id) => {
     if (unitIds.includes(id)) {
-      // 1. Start with the printed values
+      // 1. Start with the printed values (careful not to modify them!)
       let printedValues =
         u.card == undefined ? fixtures[u.fixture] : cardInfo[u.card];
       // 1a. tokens 1b. dancers
       // 1c. heroes
-      if (u.card && u.card.type == types.hero) {
-        printedValues = { ...printedValues, ...printedValues.bands[0] };
+      if (printedValues.type == types.hero) {
+        printedValues = getLevelValuesForHero(u, printedValues);
       }
       const currentValues = produce(printedValues, draft => {
         draft.controller = u.owner;
         draft.subtypes = draft.subtypes || [];
         draft.abilities = draft.abilities || [];
-        draft.abilities.forEach((a, index) => {
-          a.path = `${u.card}.abilities[${index}]`;
-        });
+        if (draft.type != types.hero) {
+          draft.abilities.forEach((a, index) => {
+            a.path = `${u.card}.abilities[${index}]`;
+          });
+        }
         // 2. chaos mirror, polymorph: squirrel and copy effects
         // 3. effects that set ATK and DEF to specific values (i.e. faerie dragon)
         // 4. ability-gaining effects that don't depend on ATK or HP
@@ -144,6 +146,29 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
     }
   });
   return shouldReturnSingleton ? result[unitIds] : result;
+}
+
+function getLevelValuesForHero(u, printedValues) {
+  const band =
+    u.level >= printedValues.maxbandLevel
+      ? 2
+      : u.level >= printedValues.midbandLevel
+      ? 1
+      : 0;
+  const result = {
+    ...printedValues,
+    ...printedValues.bands[band],
+    abilities: []
+  };
+  for (let b = 0; b <= band; b++) {
+    (printedValues.bands[b].abilities || []).forEach((a, index) => {
+      result.abilities.push({
+        ...a,
+        path: `${u.card}.bands[${b}].abilities[${index}]`
+      });
+    });
+  }
+  return result;
 }
 
 export function conferKeyword(values, kwAbility) {

@@ -11,7 +11,7 @@ import {
   resolveCurrentTrigger
 } from "./triggers";
 import { checkState, getCurrentController, getCurrentValues } from "./entities";
-import { targetMode } from "./cardinfo/constants";
+import { targetMode, types } from "./cardinfo/constants";
 import { emptyPatrolZone } from "./patrolzone";
 import { finishAttackAction } from "./actions/attack";
 
@@ -69,6 +69,9 @@ class CodexGame extends Game {
         break;
       case "summon":
         actions.doSummonAction(state, action);
+        break;
+      case "level":
+        actions.doLevelAction(state, action);
         break;
       case "attack":
         actions.doAttackAction(state, action);
@@ -151,6 +154,8 @@ class CodexGame extends Game {
         return actions.checkPlayAction(state, action);
       case "summon":
         return actions.checkSummonAction(state, action);
+      case "level":
+        return actions.checkLevelAction(state, action);
       case "attack":
         return actions.checkAttackAction(state, action);
       case "activate":
@@ -220,13 +225,21 @@ class CodexGame extends Game {
         []
       )
     ).map(([e, index]) => ({ type: "activate", source: e, index }));
-    console.log(activateActions);
-
+    const levelActions = flatMap(
+      Object.entries(apUnitVals).filter(([_k, v]) => v.type == types.hero),
+      ([id, hv]) =>
+        range(1, 1 + hv.maxbandLevel - state.entities[id].level).map(n => ({
+          type: "level",
+          hero: id,
+          amount: n
+        }))
+    );
     return base
       .concat(examplePatrolAction)
       .concat(workerActions)
       .concat(playActions)
       .concat(summonActions)
+      .concat(levelActions)
       .concat(attackActions)
       .concat(activateActions);
   }

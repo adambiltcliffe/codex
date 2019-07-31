@@ -9,9 +9,9 @@ function initialisePlayerState(state, playerIndex) {
   state.updateHidden(fs => {
     const deck = [
       "merfolk_prospector",
-      "troq_bashar",
-      "troq_bashar",
-      "troq_bashar",
+      "maestro",
+      "maestro",
+      "maestro",
       "nimble_fencer",
       "timely_messenger",
       "older_brother",
@@ -27,7 +27,7 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
   state.players[player].patrollerIds = emptyPatrolZone;
-  state.players[player].commandZone = ["troq_bashar"];
+  state.players[player].commandZone = ["troq_bashar", "troq_bashar"];
   const newBase = {
     id: `e${state.nextId}`,
     fixture: fixtureNames.base,

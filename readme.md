@@ -5,6 +5,8 @@ Workers generating gold, making new workers
 Units
 Base
 Combat
+Heroes
+Ability to level up heroes
 Upkeep/arrival/attack triggers
 Activated abilities
 Choice of order when adding triggers to queue
@@ -17,10 +19,8 @@ Flagbearer ability
 
 # Tests to write
 
-Summoning heroes
-Values of level 1 hero
-Values of higher level heroes
-Heroes return to command zone after dying
+Troq abilities
+Heroes return to command zone after dying (to do)
 Maestro's conferred ability works correctly
 Maestro's conferred ability disappears if Maestro does
 Maestro reduces cost to cast Virtuosos to 0 (to do)
@@ -38,6 +38,9 @@ Spells are put in discard pile before resolving triggers they caused
 
 One reshuffle per main phase limit
 Don't lock the game if a trigger has no available targets
+Auto-target if there is only one available target
+
+Heroes return to command zone and go on cooldown when killed
 
 Patroller bonuses for technician, scavenger, lookout
 Tech buildings
@@ -59,8 +62,6 @@ Building cards and upgrade cards
 Requirement to have tech buildings/unlocked specs to play units
 Requirement to have right hero to cast spells
 
-Hero(es)
-Hero levels
 Hero level up on death
 Hero cooldown
 Ultimate spell requirements

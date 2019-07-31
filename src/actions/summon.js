@@ -28,7 +28,7 @@ export function doSummonAction(state, action) {
     ready: true,
     damage: 0,
     runes: 0,
-    level: 0,
+    level: 1,
     thisTurn: {}
   };
   state.entities[newHero.id] = newHero;
