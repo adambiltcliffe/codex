@@ -60,6 +60,18 @@ export function killEntity(state, entityId) {
   const pz = state.players[vals.controller].patrollerIds;
   pz.forEach((id, index) => {
     if (id == entityId) {
+      if (index == patrolSlots.scavenger) {
+        state.newTriggers.push({
+          path: "triggerInfo.scavenger",
+          playerId: vals.controller
+        });
+      }
+      if (index == patrolSlots.technician) {
+        state.newTriggers.push({
+          path: "triggerInfo.technician",
+          playerId: vals.controller
+        });
+      }
       pz[index] = null;
     }
   });

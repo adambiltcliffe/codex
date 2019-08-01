@@ -7,7 +7,6 @@ import {
   getCurrentController
 } from "../entities";
 import { haste, flying, invisible } from "./abilities/keywords";
-import cardInfo from ".";
 import { getAP } from "../util";
 
 const finesseCardInfo = {

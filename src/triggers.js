@@ -19,13 +19,10 @@ export function addSpellToQueue(state, trigger) {
 export function addTriggerToQueue(state, trigger) {
   state.queue.push(trigger);
   if (!trigger.isActivatedAbility) {
-    log.add(
-      state,
-      `Triggered action from ${getName(
-        state,
-        trigger.sourceId
-      )} was added to the queue.`
-    );
+    const desc =
+      "Triggered action" +
+      (trigger.sourceId ? `from ${getName(state, trigger.sourceId)}` : "");
+    log.add(state, `${desc} was added to the queue.`);
   }
 }
 
