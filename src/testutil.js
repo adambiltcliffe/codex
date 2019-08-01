@@ -1,7 +1,8 @@
 import CodexGame from "./codex";
 import pickBy from "lodash/pickby";
-import cardInfo from "./cardinfo";
+import cardInfo, { types } from "./cardinfo";
 import produce from "immer";
+import { createUnit, createHero } from "./entities";
 
 export const testp1Id = "test_player1";
 export const testp2Id = "test_player2";
@@ -12,6 +13,9 @@ export function getNewGame() {
   return state;
 }
 
+// Currently just an alias, but we might want to expand on this
+export const getTestGame = getNewGame;
+
 export function putCardInHand(state, player, card) {
   state.players[player].hand.push(card);
 }
@@ -21,6 +25,32 @@ export function withCardsInHand(state, p1cards, p2cards) {
     p1cards.forEach(c => draft.players[testp1Id].hand.push(c));
     p2cards.forEach(c => draft.players[testp2Id].hand.push(c));
   });
+}
+
+export function withInsertedEntity(state, owner, card) {
+  let newId = null;
+  const newState = produce(state, draft => {
+    switch (cardInfo[card].type) {
+      case types.unit:
+        newId = createUnit(draft, owner, card);
+        break;
+      case types.hero:
+        newId = createHero(draft, owner, card);
+        break;
+    }
+  });
+  return [newState, newId];
+}
+
+export function withInsertedEntities(state, owner, cards) {
+  let newIds = [];
+  let newState = state;
+  let latestId = null;
+  cards.forEach(c => {
+    [newState, latestId] = withInsertedEntity(newState, owner, c);
+    newIds.push(latestId);
+  });
+  return [newState, newIds];
 }
 
 export function getGameWithUnits(p1units, p2units) {

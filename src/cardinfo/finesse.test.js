@@ -5,7 +5,10 @@ import {
   testp1Id,
   findEntityIds,
   testp2Id,
-  getGameWithUnits
+  getGameWithUnits,
+  withInsertedEntity,
+  getTestGame,
+  withInsertedEntities
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
@@ -40,9 +43,7 @@ test("Nimble Fencer gives herself and other Virtuosos haste", () => {
 
 test("Star-Crossed Starlet buffs her attack with damage and kills herself after 2 turns", () => {
   const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "starcrossed_starlet");
-  const s1 = playActions(s0, [{ type: "play", card: "starcrossed_starlet" }]);
-  const scs = findEntityIds(s1, u => u.card == "starcrossed_starlet")[0];
+  const [s1, scs] = withInsertedEntity(s0, testp1Id, "starcrossed_starlet");
   expect(s1.entities[scs].damage).toEqual(0);
   expect(getCurrentValues(s1, scs).attack).toEqual(3);
   const s2 = playActions(s1, [{ type: "endTurn" }, { type: "endTurn" }]);
@@ -98,4 +99,32 @@ test("Nimble Fencer and Grounded Guide don't buff opposing units", () => {
   expect(tfv.attack).toEqual(1);
   expect(tfv.hp).toEqual(2);
   expect(hasKeyword(tfv, haste)).toBeFalsy();
+});
+
+test("Maestro confers its activated ability on Virtuosos", () => {
+  const [s0, [ma, tf, ob]] = withInsertedEntities(getTestGame(), testp1Id, [
+    "maestro",
+    "tenderfoot",
+    "older_brother"
+  ]);
+  const p2base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp2Id
+  )[0];
+  expect(getCurrentValues(s0, ma).abilities.length).toEqual(1);
+  expect(getCurrentValues(s0, tf).abilities.length).toEqual(1);
+  expect(getCurrentValues(s0, ob).abilities.length).toEqual(0);
+  expect(() =>
+    CodexGame.checkAction(s0, { type: "activate", source: tf, index: 0 })
+  ).toThrow();
+  const s1 = playActions(s0, [{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(() =>
+    CodexGame.checkAction(s1, { type: "activate", source: tf, index: 0 })
+  ).not.toThrow();
+  const s2 = playActions(s1, [
+    { type: "activate", source: tf, index: 0 },
+    { type: "choice", target: p2base }
+  ]);
+  expect(s2.entities[p2base].damage).toEqual(2);
+  expect(s2.log).toContain("Tenderfoot deals 2 damage to base.");
 });

@@ -1,7 +1,7 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import { getCurrentValues } from "../entities";
+import { getCurrentValues, createUnit, getName } from "../entities";
 import findIndex from "lodash/findIndex";
 import forEach from "lodash/forEach";
 import { types } from "../cardinfo/constants";
@@ -44,29 +44,15 @@ function playSpell(state) {
 
 function playUnit(state) {
   const ap = getAP(state);
-  const newUnit = {
-    id: `e${state.nextId}`,
-    card: state.playedCard,
-    owner: getAP(state).id,
-    lastControlledBy: getAP(state).id,
-    controlledSince: state.turn,
-    ready: true,
-    damage: 0,
-    runes: 0,
-    thisTurn: {}
-  };
-
-  state.entities[newUnit.id] = newUnit;
+  const newUnitId = createUnit(state, ap.id, state.playedCard);
   delete state.playedCard;
-  state.nextId++;
-  log.add(state, log.fmt`${ap} plays ${cardInfo[newUnit.card].name}.`);
-
-  const vals = getCurrentValues(state, newUnit.id);
-  forEach(vals.abilities, (a, index) => {
+  const vals = getCurrentValues(state, newUnitId);
+  log.add(state, log.fmt`${ap} plays ${getName(state, newUnitId)}.`);
+  forEach(vals.abilities, a => {
     if (a.triggerOnOwnArrival) {
       state.newTriggers.push({
         path: a.path,
-        sourceId: newUnit.id
+        sourceId: newUnitId
       });
     }
   });

@@ -1,7 +1,7 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import { getCurrentValues, getName } from "../entities";
+import { getCurrentValues, getName, createHero } from "../entities";
 import forEach from "lodash/forEach";
 
 export function checkSummonAction(state, action) {
@@ -19,27 +19,14 @@ export function doSummonAction(state, action) {
   const czIndex = ap.commandZone.indexOf(action.hero);
   ap.commandZone.splice(czIndex, 1);
   ap.gold -= cardInfo[action.hero].cost;
-  const newHero = {
-    id: `e${state.nextId}`,
-    card: action.hero,
-    owner: getAP(state).id,
-    lastControlledBy: getAP(state).id,
-    controlledSince: state.turn,
-    ready: true,
-    damage: 0,
-    runes: 0,
-    level: 1,
-    thisTurn: {}
-  };
-  state.entities[newHero.id] = newHero;
-  state.nextId++;
-  log.add(state, log.fmt`${ap} summons ${getName(state, newHero.id)}.`);
-  const vals = getCurrentValues(state, newHero.id);
+  const newHeroId = createHero(state, ap.id, action.hero);
+  log.add(state, log.fmt`${ap} summons ${getName(state, newHeroId)}.`);
+  const vals = getCurrentValues(state, newHeroId);
   forEach(vals.abilities, a => {
     if (a.triggerOnOwnArrival) {
       state.newTriggers.push({
         path: a.path,
-        sourceId: newHero.id
+        sourceId: newHeroId
       });
     }
   });

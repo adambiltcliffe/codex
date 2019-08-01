@@ -7,6 +7,41 @@ import { patrolSlots } from "./patrolzone";
 
 import get from "lodash/get";
 
+export function createUnit(state, owner, card) {
+  const newUnit = {
+    id: `e${state.nextId}`,
+    card,
+    owner,
+    lastControlledBy: owner,
+    controlledSince: state.turn,
+    ready: true,
+    damage: 0,
+    runes: 0,
+    thisTurn: {}
+  };
+  state.entities[newUnit.id] = newUnit;
+  state.nextId++;
+  return newUnit.id;
+}
+
+export function createHero(state, owner, card) {
+  const newHero = {
+    id: `e${state.nextId}`,
+    card,
+    owner,
+    lastControlledBy: owner,
+    controlledSince: state.turn,
+    ready: true,
+    damage: 0,
+    runes: 0,
+    level: 1,
+    thisTurn: {}
+  };
+  state.entities[newHero.id] = newHero;
+  state.nextId++;
+  return newHero.id;
+}
+
 export function checkState(state) {
   forEach(state.entities, u => {
     const vals = getCurrentValues(state, u.id);

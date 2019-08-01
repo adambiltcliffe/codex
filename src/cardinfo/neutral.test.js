@@ -7,7 +7,8 @@ import {
   testp2Id,
   findEntityIds,
   getGameWithUnits,
-  withCardsInHand
+  withCardsInHand,
+  withInsertedEntities
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import CodexGame from "../codex";
@@ -64,31 +65,28 @@ test("Fruit Ninja's frenzy functions correctly", () => {
   const s0 = getNewGame();
   s0.players[testp1Id].gold = 20;
   s0.players[testp2Id].gold = 20;
-  putCardInHand(s0, testp1Id, "fruit_ninja");
   putCardInHand(s0, testp2Id, "iron_man");
-  putCardInHand(s0, testp1Id, "fruit_ninja");
   putCardInHand(s0, testp2Id, "iron_man");
-  const s1 = playActions(s0, [
-    { type: "play", card: "fruit_ninja" },
-    { type: "play", card: "fruit_ninja" }
+  const [s1, [fn1, fn2]] = withInsertedEntities(s0, testp1Id, [
+    "fruit_ninja",
+    "fruit_ninja"
   ]);
-  const fns = findEntityIds(s1, u => u.card == "fruit_ninja");
-  expect(getCurrentValues(s1, fns[0]).attack).toEqual(3);
+  expect(getCurrentValues(s1, fn1).attack).toEqual(3);
   const s2 = playActions(s1, [
     { type: "endTurn" },
     { type: "play", card: "iron_man" },
     { type: "play", card: "iron_man" }
   ]);
   const ims = findEntityIds(s2, u => u.card == "iron_man");
-  expect(getCurrentValues(s2, fns[0]).attack).toEqual(2);
+  expect(getCurrentValues(s2, fn1).attack).toEqual(2);
   const s3 = playActions(s2, [
     { type: "endTurn" },
-    { type: "attack", attacker: fns[0], target: ims[0] }
+    { type: "attack", attacker: fn1, target: ims[0] }
   ]);
   expect(s3.entities[ims[0]].damage).toEqual(3);
   const s4 = playActions(s3, [
     { type: "endTurn" },
-    { type: "attack", attacker: ims[1], target: fns[1] }
+    { type: "attack", attacker: ims[1], target: fn2 }
   ]);
   expect(s4.entities[ims[1]].damage).toEqual(2);
 });

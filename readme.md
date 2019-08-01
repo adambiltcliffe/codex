@@ -21,7 +21,6 @@ Flagbearer ability
 
 Troq abilities
 Heroes return to command zone after dying (to do)
-Maestro's conferred ability works correctly
 Maestro's conferred ability disappears if Maestro does
 Maestro reduces cost to cast Virtuosos to 0 (to do)
 Lookout slot provides resist (to do)
