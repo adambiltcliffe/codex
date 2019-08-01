@@ -1,10 +1,16 @@
 import log from "./log";
 import cardInfo from "./cardinfo";
+import triggerInfo from "./triggerinfo";
 import { targetMode } from "./cardinfo/constants";
 import { getName } from "./entities";
 import { getAP } from "./util";
 
 import get from "lodash/get";
+
+export const triggerDefinitions = {
+  cardInfo,
+  triggerInfo
+};
 
 export function addSpellToQueue(state, trigger) {
   state.queue.push(trigger);
@@ -35,7 +41,7 @@ export function enqueueNextTrigger(state) {
 }
 
 export function currentTriggerDefinition(state) {
-  return get(cardInfo, state.currentTrigger.path);
+  return get(triggerDefinitions, state.currentTrigger.path);
 }
 
 export function canResolveCurrentTrigger(state) {

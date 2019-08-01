@@ -56,7 +56,7 @@ function playSpell(state) {
   log.add(state, log.fmt`${getAP(state)} plays ${ci.name}.`);
   const spellEffectIndex = findIndex(ci.abilities, a => a.isSpellEffect);
   addSpellToQueue(state, {
-    path: `${state.playedCard}.abilities[${spellEffectIndex}]`,
+    path: `cardInfo.${state.playedCard}.abilities[${spellEffectIndex}]`,
     isSpell: true
   });
 }

@@ -1,5 +1,5 @@
-import cardInfo from "..";
 import { colors, types } from "../constants";
+import { triggerDefinitions } from "../../triggers";
 import { resist } from "./keywords";
 import {
   getGameWithUnits,
@@ -10,7 +10,7 @@ import {
 import produce from "immer";
 
 beforeAll(() => {
-  cardInfo["_test_resist"] = {
+  triggerDefinitions.cardInfo["_test_resist"] = {
     color: colors.neutral,
     tech: 0,
     name: "Test Unit (Resist)",

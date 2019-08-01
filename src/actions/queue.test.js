@@ -25,10 +25,10 @@ test("Can choose the order of triggers in the queue when they trigger together",
   expect(s1.newTriggers.length).toEqual(2);
   expect(() => CodexGame.checkAction(s1, { type: "endTurn" })).toThrow();
   const turtleIndex = findTriggerIndices(s1, t =>
-    startsWith(t.path, "helpful_turtle")
+    startsWith(t.path, "cardInfo.helpful_turtle")
   )[0];
   const starletIndex = findTriggerIndices(s1, t =>
-    startsWith(t.path, "starcrossed_starlet")
+    startsWith(t.path, "cardInfo.starcrossed_starlet")
   )[0];
   const starletId = findEntityIds(s1, u => u.card == "starcrossed_starlet");
   expect(() =>

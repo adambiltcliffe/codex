@@ -102,7 +102,7 @@ const finesseCardInfo = {
         modifyGlobalValues: ({ state, source, values }) => {
           if (getCurrentController(state, source.id) == values.controller) {
             if (values.subtypes.includes("Virtuoso")) {
-              conferComplexAbility(values, "maestro.conferredAbility");
+              conferComplexAbility(values, "cardInfo.maestro.conferredAbility");
             }
           }
         },

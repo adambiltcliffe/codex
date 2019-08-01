@@ -1,10 +1,10 @@
-import cardInfo from "./cardinfo";
 import { colors, types } from "./cardinfo/constants";
 import log from "./log";
 import { getNewGame, putCardInHand, testp1Id, playActions } from "./testutil";
+import { triggerDefinitions } from "./triggers";
 
 beforeAll(() => {
-  cardInfo["_test_single_trigger"] = {
+  triggerDefinitions.cardInfo["_test_single_trigger"] = {
     color: colors.neutral,
     tech: 0,
     name: "Test Unit (Single Trigger)",
@@ -22,7 +22,7 @@ beforeAll(() => {
     ]
   };
 
-  cardInfo["_test_double_trigger"] = {
+  triggerDefinitions.cardInfo["_test_double_trigger"] = {
     color: colors.neutral,
     tech: 0,
     name: "Test Unit (Double Trigger)",

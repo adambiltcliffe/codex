@@ -6,6 +6,7 @@ import log from "./log";
 import { patrolSlots } from "./patrolzone";
 
 import get from "lodash/get";
+import { triggerDefinitions } from "./triggers";
 
 export function createUnit(state, owner, card) {
   const newUnit = {
@@ -126,7 +127,7 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
         draft.abilities = draft.abilities || [];
         if (draft.type != types.hero) {
           draft.abilities.forEach((a, index) => {
-            a.path = `${u.card}.abilities[${index}]`;
+            a.path = `cardInfo.${u.card}.abilities[${index}]`;
           });
         }
         // 2. chaos mirror, polymorph: squirrel and copy effects
@@ -203,7 +204,7 @@ function getLevelValuesForHero(u, printedValues) {
     (printedValues.bands[b].abilities || []).forEach((a, index) => {
       result.abilities.push({
         ...a,
-        path: `${u.card}.bands[${b}].abilities[${index}]`
+        path: `cardInfo.${u.card}.bands[${b}].abilities[${index}]`
       });
     });
   }
@@ -215,6 +216,6 @@ export function conferKeyword(values, kwAbility) {
 }
 
 export function conferComplexAbility(values, path) {
-  const ability = get(cardInfo, path);
+  const ability = get(triggerDefinitions, path);
   values.abilities.push({ ...ability, path });
 }
