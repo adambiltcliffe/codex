@@ -28,3 +28,9 @@ both use the same wording for this
  */
 
 // if you have smoker + dreamscape, I guess active player chooses bounce vs. death
+
+/*
+If you fly over a patroller which has anti-air but not swift strike, and after swift strike damage is dealt it no longer has anti-air, does it still deal damage?
+i think yes, anti-air gets locked in after 2 choose defender
+the reasoning was that otherwise its sorta undefined whether youre using flying to bypass things (since you could be attacking illegally)
+ */
