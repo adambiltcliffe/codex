@@ -1,5 +1,6 @@
 import log from "./log";
 import { givePlayerGold } from "./util";
+import { drawCards } from "./draw";
 
 const triggerInfo = {
   scavenger: {
@@ -14,10 +15,11 @@ const triggerInfo = {
   },
   technician: {
     action: ({ state }) => {
-      const player = state.players[state.currentTrigger.playerId];
-      log.add(
+      drawCards(
         state,
-        log.fmt`${player} fails to draw a card from death of technician as it's not implemented.`
+        state.currentTrigger.playerId,
+        1,
+        " from death of technician"
       );
     }
   }
