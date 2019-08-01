@@ -7,12 +7,31 @@ import forEach from "lodash/forEach";
 import { types } from "../cardinfo/constants";
 import { addSpellToQueue } from "../triggers";
 
+function getPlayCost(state, cardInfo) {
+  let currentCost = cardInfo.cost;
+  const vals = getCurrentValues(state, Object.keys(state.entities));
+  Object.entries(vals).forEach(([id, e]) => {
+    e.abilities.forEach(a => {
+      if (a.modifyPlayCost) {
+        currentCost = a.modifyPlayCost({
+          state,
+          sourceId: id,
+          sourceVals: e,
+          cardInfo,
+          currentCost
+        });
+      }
+    });
+  });
+  return currentCost;
+}
+
 export function checkPlayAction(state, action) {
   const ap = getAP(state);
   if (ap.hand.indexOf(action.card) == -1) {
     throw new Error("Card not in hand");
   }
-  if (ap.gold < cardInfo[action.card].cost) {
+  if (ap.gold < getPlayCost(state, cardInfo[action.card])) {
     throw new Error("Not enough gold");
   }
 }
@@ -24,7 +43,7 @@ export function doPlayAction(state, action) {
     fs.playedCard = ap.hand.splice(handIndex, 1)[0];
   });
   const ap = getAP(state);
-  ap.gold -= cardInfo[state.playedCard].cost;
+  ap.gold -= getPlayCost(state, cardInfo[action.card]);
   if (cardInfo[state.playedCard].type == types.spell) {
     playSpell(state);
   } else {

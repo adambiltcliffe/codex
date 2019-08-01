@@ -53,6 +53,12 @@ export function withInsertedEntities(state, owner, cards) {
   return [newState, newIds];
 }
 
+export function withGoldSetTo(state, playerId, amount) {
+  return produce(state, draft => {
+    draft.players[playerId].gold = amount;
+  });
+}
+
 export function getGameWithUnits(p1units, p2units) {
   const s0 = getNewGame();
   p1units.forEach(u => {

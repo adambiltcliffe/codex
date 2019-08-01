@@ -3,7 +3,10 @@ import {
   playActions,
   findEntityIds,
   testp1Id,
-  getGameWithUnits
+  getGameWithUnits,
+  withInsertedEntity,
+  getTestGame,
+  testp2Id
 } from "./testutil";
 import { getCurrentValues } from "./entities";
 import CodexGame from "./codex";
@@ -79,4 +82,17 @@ test("Levelling up a hero to mid/maxband heals all damage", () => {
   expect(s3.entities[troq].damage).toEqual(0);
   expect(s3.entities[im].damage).toEqual(3);
   expect(s3.log).toContain("Troq Bashar is fully healed.");
+});
+
+test("Heroes go to command zone after dying", () => {
+  const [s0, troq] = withInsertedEntity(getTestGame(), testp1Id, "troq_bashar");
+  const [s1, im] = withInsertedEntity(s0, testp2Id, "iron_man");
+  const s2 = playActions(s1, [
+    { type: "endTurn" },
+    { type: "endTurn" },
+    { type: "attack", attacker: troq, target: im }
+  ]);
+  expect(s2.log).toContain("Troq Bashar dies.");
+  expect(s2.players[testp1Id].discard).not.toContain("troq_bashar");
+  expect(s2.players[testp1Id].commandZone).toContain("troq_bashar");
 });

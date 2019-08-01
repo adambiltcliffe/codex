@@ -7,6 +7,8 @@ import {
   getCurrentController
 } from "../entities";
 import { haste, flying, invisible } from "./abilities/keywords";
+import cardInfo from ".";
+import { getAP } from "../util";
 
 const finesseCardInfo = {
   nimble_fencer: {
@@ -103,6 +105,14 @@ const finesseCardInfo = {
               conferComplexAbility(values, "maestro.conferredAbility");
             }
           }
+        },
+        modifyPlayCost({ state, sourceVals, cardInfo, currentCost }) {
+          if (getAP(state).id == sourceVals.controller) {
+            if ((cardInfo.subtypes || []).includes("Virtuoso")) {
+              return 0;
+            }
+          }
+          return currentCost;
         }
       }
     ],

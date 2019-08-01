@@ -62,9 +62,13 @@ export function killEntity(state, entityId) {
       pz[index] = null;
     }
   });
-  state.updateHidden(fs => {
-    fs.players[e.owner].discard.push(e.card);
-  });
+  if (vals.type == types.hero) {
+    state.players[e.owner].commandZone.push(e.card);
+  } else {
+    state.updateHidden(fs => {
+      fs.players[e.owner].discard.push(e.card);
+    });
+  }
 }
 
 export function getName(state, entityId) {

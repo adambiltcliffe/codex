@@ -8,7 +8,9 @@ import {
   getGameWithUnits,
   withInsertedEntity,
   getTestGame,
-  withInsertedEntities
+  withInsertedEntities,
+  withGoldSetTo,
+  withCardsInHand
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
@@ -127,4 +129,51 @@ test("Maestro confers its activated ability on Virtuosos", () => {
   ]);
   expect(s2.entities[p2base].damage).toEqual(2);
   expect(s2.log).toContain("Tenderfoot deals 2 damage to base.");
+});
+
+test("Maestro's conferred ability disappears if it dies", () => {
+  const [s0, [im1, im2]] = withInsertedEntities(getTestGame(), testp2Id, [
+    "iron_man",
+    "iron_man"
+  ]);
+  const [s1, [ma, tf]] = withInsertedEntities(s0, testp1Id, [
+    "maestro",
+    "tenderfoot"
+  ]);
+  const s2 = playActions(s1, [{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(getCurrentValues(s2, tf).abilities.length).toEqual(1);
+  expect(() =>
+    CodexGame.checkAction(s2, { type: "activate", source: tf, index: 0 })
+  ).not.toThrow();
+  const s3 = playActions(s2, [
+    { type: "endTurn" },
+    { type: "attack", attacker: im1, target: ma },
+    { type: "attack", attacker: im2, target: ma },
+    { type: "endTurn" }
+  ]);
+  expect(s3.entities[ma]).toBeUndefined();
+  expect(getCurrentValues(s3, tf).abilities.length).toEqual(0);
+  expect(() =>
+    CodexGame.checkAction(s3, { type: "activate", source: tf, index: 0 })
+  ).toThrow();
+});
+
+test("Maestro reduces cost to cast Virtuosos to 0", () => {
+  const s0 = withGoldSetTo(
+    withCardsInHand(getTestGame(), ["tenderfoot"], []),
+    testp1Id,
+    0
+  );
+  expect(() =>
+    CodexGame.checkAction(s0, { type: "play", card: "tenderfoot" })
+  ).toThrow();
+  const [s1, ma] = withInsertedEntity(s0, testp1Id, "maestro");
+  expect(() =>
+    CodexGame.checkAction(s1, { type: "play", card: "tenderfoot" })
+  ).not.toThrow();
+  const s2 = playActions(s1, [{ type: "play", card: "tenderfoot" }]);
+  expect(s2.players[testp1Id].gold).toEqual(0);
+  const s1a = withGoldSetTo(s1, testp1Id, 10);
+  const s2a = playActions(s1a, [{ type: "play", card: "tenderfoot" }]);
+  expect(s2a.players[testp1Id].gold).toEqual(10);
 });

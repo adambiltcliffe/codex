@@ -20,9 +20,6 @@ Flagbearer ability
 # Tests to write
 
 Troq abilities
-Heroes return to command zone after dying (to do)
-Maestro's conferred ability disappears if Maestro does
-Maestro reduces cost to cast Virtuosos to 0 (to do)
 Lookout slot provides resist (to do)
 Bonus resist from lookout disappears when no longer patrolling (to do)
 Spells/abilities must target flagbearer
