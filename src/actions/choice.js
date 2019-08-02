@@ -9,6 +9,16 @@ import {
   invisible
 } from "../cardinfo/abilities/keywords";
 import { getAP } from "../util";
+import { patrolSlots } from "../patrolzone";
+
+function getResistCost(state, entityId, entityVals) {
+  const bonusResist =
+    state.players[entityVals.controller].patrollerIds[patrolSlots.lookout] ==
+    entityId
+      ? 1
+      : 0;
+  return sumKeyword(entityVals, resist) + bonusResist;
+}
 
 export function stepCanTarget(state, stepDef, targetId, targetVals) {
   if (!stepDef.targetTypes.includes(targetVals.type)) {
@@ -51,7 +61,7 @@ export function checkChoiceAction(state, action) {
     if (hasKeyword(chosenTargetVals, invisible)) {
       throw new Error("Target is invisible");
     }
-    const resistCost = sumKeyword(chosenTargetVals, resist);
+    const resistCost = getResistCost(state, action.target, chosenTargetVals);
     if (resistCost > getAP(state).gold) {
       throw new Error("Not enough gold to pay for resist");
     }
@@ -75,7 +85,7 @@ export function doChoiceAction(state, action) {
   choices.targetId = action.target;
   const chosenTargetVals = getCurrentValues(state, action.target);
   if (chosenTargetVals.controller != getAP(state).id) {
-    const resistCost = sumKeyword(chosenTargetVals, resist);
+    const resistCost = getResistCost(state, action.target, chosenTargetVals);
     getAP(state).gold -= resistCost;
   }
 }

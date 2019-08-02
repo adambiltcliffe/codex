@@ -12,7 +12,7 @@ Activated abilities
 Choice of order when adding triggers to queue
 Passive effects on units that modify their own/others' stats and add abilities
 Frenzy, haste, flying, anti-air, invisible, healing, resist
-Patrol zone with taunt for squad leader and bonus for elite, scavenger and technician
+Patrol zone with taunt for squad leader and bonus for elite, scavenger, technician and lookout
 Spell casting
 Flagbearer ability
 +1/+1 and -1/-1 runes
@@ -20,8 +20,6 @@ Flagbearer ability
 # Tests to write
 
 Troq abilities
-Lookout slot provides resist (to do)
-Bonus resist from lookout disappears when no longer patrolling (to do)
 Technician trigger
 Scavenger trigger
 Spells/abilities must target flagbearer

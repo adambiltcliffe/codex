@@ -2,11 +2,18 @@ import {
   getGameWithUnits,
   playActions,
   testp1Id,
-  findEntityIds
+  findEntityIds,
+  getTestGame,
+  withInsertedEntities,
+  withInsertedEntity,
+  testp2Id,
+  withCardsInHand,
+  withGoldSetTo
 } from "./testutil";
 import CodexGame from "./codex";
 import { fixtureNames } from "./fixtures";
 import { getCurrentValues } from "./entities";
+import forEach from "lodash/forEach";
 
 test("Attacking various combinations of patrollers", () => {
   const s0 = getGameWithUnits(
@@ -79,4 +86,56 @@ test("Killing a patroller stops it blocking attacks", () => {
   expect(() => CodexGame.checkAction(s1, atk)).toThrow();
   const s2 = playActions(s1, [{ type: "attack", attacker: im1, target: ob }]);
   expect(() => CodexGame.checkAction(s2, atk)).not.toThrow();
+});
+
+test("Lookout gets +1 resist (but only as long as patrolling)", () => {
+  const [s0, troq] = withInsertedEntity(
+    withCardsInHand(getTestGame(), [], ["wither"]),
+    testp2Id,
+    "troq_bashar"
+  );
+  const [s1, ob] = withInsertedEntity(s0, testp1Id, "older_brother");
+  const s2 = playActions(s1, [
+    { type: "endTurn", patrollers: [null, null, null, null, ob] },
+    { type: "play", card: "wither" }
+  ]);
+  const g = s2.players[testp2Id].gold;
+  const s3 = playActions(s2, [{ type: "choice", target: ob }]);
+  expect(s3.players[testp2Id].gold).toEqual(g - 1);
+  const s2a = withGoldSetTo(s2, testp2Id, 0);
+  expect(() =>
+    CodexGame.checkAction(s2a, { type: "choice", target: ob })
+  ).toThrow();
+  const s2b = playActions(
+    withCardsInHand(
+      playActions(s1, [
+        { type: "endTurn", patrollers: [null, null, null, null, ob] },
+        { type: "endTurn" },
+        { type: "endTurn" }
+      ]),
+      [],
+      ["wither"]
+    ),
+    [{ type: "play", card: "wither" }]
+  );
+  const gb = s2b.players[testp2Id].gold;
+  const s3b = playActions(s2b, [{ type: "choice", target: ob }]);
+  expect(s3b.players[testp2Id].gold).toEqual(gb);
+  const s2c = withGoldSetTo(s2b, testp2Id, 0);
+  expect(() =>
+    CodexGame.checkAction(s2c, { type: "choice", target: ob })
+  ).not.toThrow();
+});
+
+test("Patrolling doesn't grant any abilities", () => {
+  const [s0, bros] = withInsertedEntities(
+    getTestGame(),
+    testp1Id,
+    [1, 2, 3, 4, 5].map(_ => "older_brother")
+  );
+  const s1 = playActions(s0, [{ type: "endTurn", patrollers: bros }]);
+  const broVals = getCurrentValues(s1, bros);
+  forEach(broVals, v => {
+    expect(v.abilities.length).toEqual(0);
+  });
 });
