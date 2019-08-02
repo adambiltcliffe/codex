@@ -21,9 +21,11 @@ function getResistCost(state, entityId, entityVals) {
 }
 
 export function stepCanTarget(state, stepDef, targetId, targetVals) {
+  // can only target specified types
   if (!stepDef.targetTypes.includes(targetVals.type)) {
     return false;
   }
+  // check additional restrictions if there are any
   if (
     stepDef.canTarget &&
     !stepDef.canTarget({
@@ -35,6 +37,17 @@ export function stepCanTarget(state, stepDef, targetId, targetVals) {
   ) {
     return false;
   }
+  // if it's an opponent's unit, check resist and invisible
+  if (targetVals.controller != getAP(state).id) {
+    if (hasKeyword(targetVals, invisible)) {
+      return false;
+    }
+    const resistCost = getResistCost(state, targetId, targetVals);
+    if (resistCost > getAP(state).gold) {
+      return false;
+    }
+  }
+  // otherwise it's ok
   return true;
 }
 
@@ -57,19 +70,14 @@ export function checkChoiceAction(state, action) {
   if (!stepCanTarget(state, stepDef, action.target, chosenTargetVals)) {
     throw new Error("Not a legal target for that ability");
   }
-  if (chosenTargetVals.controller != getAP(state).id) {
-    if (hasKeyword(chosenTargetVals, invisible)) {
-      throw new Error("Target is invisible");
-    }
-    const resistCost = getResistCost(state, action.target, chosenTargetVals);
-    if (resistCost > getAP(state).gold) {
-      throw new Error("Not enough gold to pay for resist");
-    }
-  }
   if (!hasKeyword(chosenTargetVals, flagbearer)) {
     const allValues = getCurrentValues(state, Object.keys(state.entities));
-    Object.values(allValues).forEach(v => {
-      if (hasKeyword(v, flagbearer) && v.id != action.target) {
+    Object.entries(allValues).forEach(([id, v]) => {
+      if (
+        hasKeyword(v, flagbearer) &&
+        v.id != action.target &&
+        stepCanTarget(state, stepDef, id, v)
+      ) {
         throw new Error("Must choose a flagbearer if able");
       }
     });

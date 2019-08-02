@@ -22,12 +22,6 @@ Flagbearer ability
 Troq abilities
 Technician trigger
 Scavenger trigger
-Spells/abilities must target flagbearer
-Not required to target flagbearer if not a legal type
-Not required to target flagbearer if can't pay for resist
-Spark has to target patrolling flagbearer but not non-patrolling
-Spells are put in discard pile after resolving
-Spells are not in discard pile while resolving
 Spells are put in discard pile before resolving triggers they caused
 
 # Game features not implemented:
