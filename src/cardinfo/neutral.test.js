@@ -10,57 +10,58 @@ import {
   withCardsInHand,
   withInsertedEntity,
   withInsertedEntities,
-  getTestGame
+  getTestGame,
+  TestGame
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import CodexGame from "../codex";
 import produce from "immer";
 
 test("Timely Messenger can attack with haste", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "timely_messenger");
-  const s1 = playActions(s0, [{ type: "play", card: "timely_messenger" }]);
-  const tm = findEntityIds(s1, e => e.card == "timely_messenger")[0];
-  const p2base = findEntityIds(
-    s1,
-    e => e.owner == testp2Id && e.fixture == fixtureNames.base
-  )[0];
-  expect(() => {
-    CodexGame.checkAction(s1, { type: "attack", attacker: tm, target: p2base });
-  }).not.toThrow();
-  const s2 = playActions(s1, [
-    { type: "attack", attacker: tm, target: p2base }
-  ]);
-  expect(s2.entities[p2base].damage).toEqual(1);
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["timely_messenger"])
+    .playAction({ type: "play", card: "timely_messenger" });
+  const tm = findEntityIds(tg.state, e => e.card == "timely_messenger")[0];
+  const p2base = tg.findBaseId(testp2Id);
+  expect(() =>
+    tg.checkAction({
+      type: "attack",
+      attacker: tm,
+      target: p2base
+    })
+  ).not.toThrow();
+  tg.playAction({ type: "attack", attacker: tm, target: p2base });
+  expect(tg.state.entities[p2base].damage).toEqual(1);
 });
 
 test("Helpful Turtle heals your units but not the enemy's", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "helpful_turtle");
-  putCardInHand(s0, testp1Id, "tenderfoot");
-  putCardInHand(s0, testp2Id, "tenderfoot");
-  const s1 = playActions(s0, [
-    { type: "play", card: "tenderfoot" },
-    { type: "play", card: "helpful_turtle" },
-    { type: "endTurn" },
-    { type: "play", card: "tenderfoot" },
-    { type: "endTurn" }
-  ]);
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["helpful_turtle", "tenderfoot"])
+    .putCardsInHand(testp2Id, ["tenderfoot"])
+    .playActions([
+      { type: "play", card: "tenderfoot" },
+      { type: "play", card: "helpful_turtle" },
+      { type: "endTurn" },
+      { type: "play", card: "tenderfoot" },
+      { type: "endTurn" }
+    ]);
   const attacker = findEntityIds(
-    s1,
+    tg.state,
     u => u.owner == testp1Id && u.card == "tenderfoot"
   )[0];
   const target = findEntityIds(
-    s1,
+    tg.state,
     u => u.owner == testp2Id && u.card == "tenderfoot"
   )[0];
-  const s2 = playActions(s1, [{ type: "attack", attacker, target }]);
-  expect(s2.entities[attacker].damage).toEqual(1);
-  expect(s2.entities[target].damage).toEqual(1);
-  const s3 = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
-  expect(s3.entities[attacker].damage).toEqual(0);
-  expect(s3.entities[target].damage).toEqual(1);
-  expect(s3.log).toContain("Helpful Turtle heals 1 damage from Tenderfoot.");
+  tg.playAction({ type: "attack", attacker, target });
+  expect(tg.state.entities[attacker].damage).toEqual(1);
+  expect(tg.state.entities[target].damage).toEqual(1);
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(tg.state.entities[attacker].damage).toEqual(0);
+  expect(tg.state.entities[target].damage).toEqual(1);
+  expect(tg.state.log).toContain(
+    "Helpful Turtle heals 1 damage from Tenderfoot."
+  );
 });
 
 test("Fruit Ninja's frenzy functions correctly", () => {
@@ -240,25 +241,20 @@ test("Wither kills units with 1hp", () => {
 });
 
 test("Bloom puts a +1/+1 rune on a unit, but only if it doesn't have one", () => {
-  const [s0, troq] = withInsertedEntity(
-    withCardsInHand(
-      getGameWithUnits([], ["older_brother"]),
-      ["bloom", "bloom"],
-      []
-    ),
-    testp1Id,
-    "troq_bashar"
-  );
-  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntity(testp2Id, "older_brother")
+    .putCardsInHand(testp1Id, ["bloom", "bloom"]);
+  const [troq, ob] = tg.insertedEntityIds;
   const acts = [
     { type: "play", card: "bloom" },
     { type: "choice", target: ob }
   ];
-  const s1 = playActions(s0, acts);
-  expect(s1.entities[ob].runes).toEqual(1);
-  expect(getCurrentValues(s1, ob).attack).toEqual(3);
-  expect(getCurrentValues(s1, ob).hp).toEqual(3);
+  tg.playActions(acts);
+  expect(tg.state.entities[ob].runes).toEqual(1);
+  expect(getCurrentValues(tg.state, ob).attack).toEqual(3);
+  expect(getCurrentValues(tg.state, ob).hp).toEqual(3);
   expect(() => {
-    playActions(s1, acts);
+    tg.playActions(acts);
   }).toThrow();
 });

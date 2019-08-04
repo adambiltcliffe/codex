@@ -105,10 +105,12 @@ export class TestGame {
         this.state.entities,
         e => e.fixture == fixtureNames.base && e.owner == playerId
       )
-    );
+    )[0];
   }
   findTriggerIndex(predicate) {
-    return Object.keys(pickBy(this.state.newTriggers, predicate)).map(Number);
+    return Object.keys(pickBy(this.state.newTriggers, predicate)).map(
+      Number
+    )[0];
   }
   setGold(playerId, amount) {
     this.state = produce(this.state, draft => {
@@ -124,7 +126,7 @@ export class TestGame {
   }
   insertEntity(playerId, card) {
     let newId = null;
-    const newState = produce(state, draft => {
+    const newState = produce(this.state, draft => {
       switch (cardInfo[card].type) {
         case types.unit:
           newId = createUnit(draft, playerId, card);
@@ -141,6 +143,9 @@ export class TestGame {
   insertEntities(playerId, cards) {
     cards.forEach(c => this.insertEntity(playerId, c));
     return this;
+  }
+  checkAction(action) {
+    return CodexGame.checkAction(this.state, action);
   }
   playAction(action) {
     this.state = playActions(this.state, [action]);
