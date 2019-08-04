@@ -1,6 +1,5 @@
-import { knuthShuffle } from "knuth-shuffle";
 import { phases, advanceTurn } from "../phases";
-import { getCurrentValues } from "../entities";
+import { getCurrentValues, applyStateBasedEffects } from "../entities";
 import { andJoin, getAP } from "../util";
 import { types } from "../cardinfo/constants";
 import log from "../log";
@@ -60,6 +59,8 @@ export function doEndTurnAction(state, action) {
       )}.`
     );
   }
+  // have to do this because of "X while patrolling" and "X during your turn" effects
+  applyStateBasedEffects(state);
   state.phase = phases.draw;
   // draw phase
   doDrawPhase(state);

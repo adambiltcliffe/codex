@@ -1,7 +1,7 @@
 import { types } from "../cardinfo";
 import { getAP } from "../util";
 import log from "../log";
-import { getCurrentValues, getName } from "../entities";
+import { getCurrentValues, getName, applyStateBasedEffects } from "../entities";
 
 export function checkLevelAction(state, action) {
   const ap = getAP(state);
@@ -54,4 +54,5 @@ export function doLevelAction(state, action) {
     hero.damage = 0;
     log.add(state, log.fmt`${getName(state, hero.id)} is fully healed.`);
   }
+  applyStateBasedEffects(state);
 }

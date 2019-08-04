@@ -3,6 +3,7 @@ import { enterReadyPhase } from "../phases";
 import log from "../log";
 import { fixtureNames } from "../fixtures";
 import { emptyPatrolZone } from "../patrolzone";
+import { updateCurrentValues } from "../entities";
 
 function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
@@ -60,6 +61,7 @@ export function doStartAction(state, action) {
   state.currentAttack = null;
   state.newTriggers = [];
   log.add(state, "Game started.");
+  updateCurrentValues(state);
 
   enterReadyPhase(state);
 }

@@ -10,7 +10,12 @@ import {
   enqueueNextTrigger,
   resolveCurrentTrigger
 } from "./triggers";
-import { checkState, getCurrentController, getCurrentValues } from "./entities";
+import {
+  checkState,
+  getCurrentController,
+  getCurrentValues,
+  cacheCurrentValues
+} from "./entities";
 import { targetMode, types } from "./cardinfo/constants";
 import { emptyPatrolZone } from "./patrolzone";
 import { finishAttackAction } from "./actions/attack";
@@ -51,6 +56,7 @@ class CodexGame extends Game {
       this.applyUpdate.bind(this)(state, t);
     };
     log.clear(state);
+    cacheCurrentValues(state);
     switch (action.type) {
       case "start":
         actions.doStartAction(state, action);
@@ -83,7 +89,6 @@ class CodexGame extends Game {
         actions.doEndTurnAction(state, action);
         break;
     }
-
     // We stop the simulation when we can't continue without a player acting
     let needAction = false;
     while (needAction == false) {
@@ -100,7 +105,6 @@ class CodexGame extends Game {
       while (state.currentTrigger) {
         if (canResolveCurrentTrigger(state)) {
           resolveCurrentTrigger(state);
-          checkState(state);
         } else {
           // Can't resolve trigger without further choices
           needAction = true;

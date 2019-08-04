@@ -1,7 +1,13 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import { getCurrentValues, createUnit, getName } from "../entities";
+import {
+  getCurrentValues,
+  createUnit,
+  getName,
+  updateCurrentValues,
+  applyStateBasedEffects
+} from "../entities";
 import { types, colors } from "../cardinfo/constants";
 import { addSpellToQueue } from "../triggers";
 

@@ -1,7 +1,7 @@
 import { andJoin, getAP, givePlayerGold } from "./util";
 import log from "./log";
 import forEach from "lodash/forEach";
-import { getName, getCurrentValues } from "./entities";
+import { getName, getCurrentValues, applyStateBasedEffects } from "./entities";
 import { emptyPatrolZone } from "./patrolzone";
 
 export const phases = {
@@ -15,6 +15,8 @@ export function advanceTurn(state) {
   state.turn++;
   state.activePlayerIndex += 1;
   state.activePlayerIndex %= state.playerList.length;
+  // have to do this because of "X during your turn" effects
+  applyStateBasedEffects(state);
   enterReadyPhase(state);
 }
 
@@ -31,6 +33,8 @@ export function enterReadyPhase(state) {
   state.madeWorkerThisTurn = false;
   const ap = getAP(state);
   ap.patrollerIds = emptyPatrolZone;
+  // have to do this because of "X while patrolling" effects
+  applyStateBasedEffects(state);
   const readied = [];
   forEach(state.entities, u => {
     u.thisTurn = {};

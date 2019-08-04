@@ -1,7 +1,7 @@
 import { getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
-import { checkState, getCurrentValues } from "../entities";
+import { getCurrentValues, applyStateBasedEffects } from "../entities";
 import {
   hasKeyword,
   flying,
@@ -216,5 +216,5 @@ export function finishAttackAction(state) {
   });
   target.damage += attackerValues.attack;
   state.currentAttack = null;
-  checkState(state);
+  applyStateBasedEffects(state);
 }

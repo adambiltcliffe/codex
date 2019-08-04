@@ -2,7 +2,7 @@ import log from "./log";
 import cardInfo from "./cardinfo";
 import triggerInfo from "./triggerinfo";
 import { targetMode } from "./cardinfo/constants";
-import { getName } from "./entities";
+import { getName, applyStateBasedEffects } from "./entities";
 import { getAP } from "./util";
 
 import get from "lodash/get";
@@ -87,4 +87,5 @@ export function resolveCurrentTrigger(state) {
     }
     state.currentTrigger = null;
   }
+  applyStateBasedEffects(state);
 }

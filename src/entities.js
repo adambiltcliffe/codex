@@ -22,6 +22,7 @@ export function createUnit(state, owner, card) {
   };
   state.entities[newUnit.id] = newUnit;
   state.nextId++;
+  applyStateBasedEffects(state);
   return newUnit.id;
 }
 
@@ -40,6 +41,7 @@ export function createHero(state, owner, card) {
   };
   state.entities[newHero.id] = newHero;
   state.nextId++;
+  applyStateBasedEffects(state);
   return newHero.id;
 }
 
@@ -230,4 +232,13 @@ export function conferKeyword(values, kwAbility) {
 export function conferComplexAbility(values, path) {
   const ability = get(triggerDefinitions, path);
   values.abilities.push({ ...ability, path });
+}
+
+export function cacheCurrentValues(state) {}
+
+export function updateCurrentValues(state) {}
+
+export function applyStateBasedEffects(state) {
+  // this is the old version which we are using for now
+  checkState(state);
 }
