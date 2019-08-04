@@ -8,7 +8,9 @@ import {
   findEntityIds,
   getGameWithUnits,
   withCardsInHand,
-  withInsertedEntities
+  withInsertedEntity,
+  withInsertedEntities,
+  getTestGame
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import CodexGame from "../codex";
@@ -173,9 +175,13 @@ test("Spark can deal damage to patroller", () => {
   const s1 = playActions(s0, [
     { type: "endTurn", patrollers: [null, ob, null, null, null] }
   ]);
-  const s2 = produce(s1, d => {
-    d.players[testp2Id].hand.push("spark");
-  });
+  const [s2, troq] = withInsertedEntity(
+    produce(s1, d => {
+      d.players[testp2Id].hand.push("spark");
+    }),
+    testp2Id,
+    "troq_bashar"
+  );
   const s3 = playActions(s2, [
     { type: "play", card: "spark" },
     { type: "choice", target: ob }
@@ -189,9 +195,13 @@ test("Spark can't target non-patroller", () => {
   const s1 = playActions(s0, [
     { type: "endTurn", patrollers: [null, null, null, null, null] }
   ]);
-  const s2 = produce(s1, d => {
-    d.players[testp2Id].hand.push("spark");
-  });
+  const [s2, troq] = withInsertedEntity(
+    produce(s1, d => {
+      d.players[testp2Id].hand.push("spark");
+    }),
+    testp2Id,
+    "troq_bashar"
+  );
   const s3 = playActions(s2, [{ type: "play", card: "spark" }]);
   expect(() => {
     CodexGame.checkAction(s3, { type: "choice", target: ob });
@@ -199,10 +209,10 @@ test("Spark can't target non-patroller", () => {
 });
 
 test("Wither puts -1/-1 rune on a unit", () => {
-  const s0 = withCardsInHand(
-    getGameWithUnits([], ["older_brother"]),
-    ["wither"],
-    []
+  const [s0, troq] = withInsertedEntity(
+    withCardsInHand(getGameWithUnits([], ["older_brother"]), ["wither"], []),
+    testp1Id,
+    "troq_bashar"
   );
   const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
   const s1 = playActions(s0, [
@@ -215,13 +225,13 @@ test("Wither puts -1/-1 rune on a unit", () => {
 });
 
 test("Wither kills units with 1hp", () => {
-  const s0 = withCardsInHand(
-    getGameWithUnits([], ["timely_messenger"]),
-    ["wither"],
-    []
+  const [s0, troq] = withInsertedEntity(
+    withCardsInHand(getTestGame(), ["wither"], []),
+    testp1Id,
+    "troq_bashar"
   );
-  const tm = findEntityIds(s0, e => e.card == "timely_messenger")[0];
-  const s1 = playActions(s0, [
+  const [s0a, tm] = withInsertedEntity(s0, testp2Id, "timely_messenger");
+  const s1 = playActions(s0a, [
     { type: "play", card: "wither" },
     { type: "choice", target: tm }
   ]);
@@ -230,10 +240,14 @@ test("Wither kills units with 1hp", () => {
 });
 
 test("Bloom puts a +1/+1 rune on a unit, but only if it doesn't have one", () => {
-  const s0 = withCardsInHand(
-    getGameWithUnits([], ["older_brother"]),
-    ["bloom", "bloom"],
-    []
+  const [s0, troq] = withInsertedEntity(
+    withCardsInHand(
+      getGameWithUnits([], ["older_brother"]),
+      ["bloom", "bloom"],
+      []
+    ),
+    testp1Id,
+    "troq_bashar"
   );
   const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
   const acts = [

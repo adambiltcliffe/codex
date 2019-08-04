@@ -2,10 +2,26 @@ import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
 import { getCurrentValues, createUnit, getName } from "../entities";
+import { types, colors } from "../cardinfo/constants";
+import { addSpellToQueue } from "../triggers";
+
 import findIndex from "lodash/findIndex";
 import forEach from "lodash/forEach";
-import { types } from "../cardinfo/constants";
-import { addSpellToQueue } from "../triggers";
+import filter from "lodash/filter";
+
+function getHeroColors(state) {
+  return filter(
+    getCurrentValues(state, Object.keys(state.entities)),
+    v => v.controller == getAP(state).id && v.type == types.hero
+  ).map(v => v.color);
+}
+
+function getHeroSpecs(state) {
+  return filter(
+    getCurrentValues(state, Object.keys(state.entities)),
+    v => v.controller == getAP(state).id && v.type == types.hero
+  ).map(v => v.spec);
+}
 
 function getPlayCost(state, cardInfo) {
   let currentCost = cardInfo.cost;
@@ -23,6 +39,16 @@ function getPlayCost(state, cardInfo) {
       }
     });
   });
+  // Off-color penalty for non-neutral minor spells
+  if (
+    cardInfo.type == types.spell &&
+    cardInfo.minor &&
+    cardInfo.color != colors.neutral
+  ) {
+    if (!getHeroColors(state).includes(cardInfo.color)) {
+      currentCost += 1;
+    }
+  }
   return currentCost;
 }
 
@@ -33,6 +59,14 @@ export function checkPlayAction(state, action) {
   }
   if (ap.gold < getPlayCost(state, cardInfo[action.card])) {
     throw new Error("Not enough gold");
+  }
+  const ci = cardInfo[action.card];
+  const heroSpecs = getHeroSpecs(state);
+  if (
+    ci.type == types.spell &&
+    ((!ci.minor && !heroSpecs.includes(ci.spec)) || heroSpecs.length == 0)
+  ) {
+    throw new Error("Don't have the right hero to cast that spell");
   }
 }
 

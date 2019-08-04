@@ -4,7 +4,8 @@ import {
   putCardInHand,
   testp1Id,
   testp2Id,
-  findEntityIds
+  findEntityIds,
+  withInsertedEntity
 } from "../testutil";
 import { fixtureNames } from "../fixtures";
 
@@ -51,7 +52,7 @@ test("Hired Stomper can target your own units or the opponent's", () => {
 });
 
 test("Wrecking Ball can deal damage to base", () => {
-  const s0 = getNewGame();
+  const [s0, troq] = withInsertedEntity(getNewGame(), testp1Id, "troq_bashar");
   putCardInHand(s0, testp1Id, "wrecking_ball");
   const p2base = findEntityIds(
     s0,

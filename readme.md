@@ -13,7 +13,7 @@ Choice of order when adding triggers to queue
 Passive effects on units that modify their own/others' stats and add abilities
 Frenzy, haste, flying, anti-air, invisible, healing, resist
 Patrol zone with taunt for squad leader and bonus for elite, scavenger, technician and lookout
-Spell casting
+Spell casting including checking if you have the right hero
 Flagbearer ability
 +1/+1 and -1/-1 runes
 
@@ -23,6 +23,7 @@ Troq abilities
 Technician trigger
 Scavenger trigger
 Spells are put in discard pile before resolving triggers they caused
+Hero requirements to cast spells
 
 # Game features not implemented:
 
@@ -32,7 +33,6 @@ Auto-target if there is only one available target
 
 Heroes return to command zone and go on cooldown when killed
 
-Patroller bonus for lookout
 Tech buildings
 Building hp (other than base?)
 Base damage from building destruction
@@ -50,7 +50,6 @@ Multicolour tax
 Building cards and upgrade cards
 
 Requirement to have tech buildings/unlocked specs to play units
-Requirement to have right hero to cast spells
 
 Hero level up on death
 Hero cooldown
@@ -63,8 +62,10 @@ Victory condition
 
 # Other stuff to do
 
+Rewrite the test helper functions to be consistent and not crazy
 Make sure state-based actions are checked at all appropriate times
+Cache the result of getCurrentValues everywhere it makes sense
 Move the first three tests from neutral.test.js into a keyword test file
-Make suggestActions do something sensible for patrollers
+Make suggestActions do something sensible for patrollers (not bases)
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground

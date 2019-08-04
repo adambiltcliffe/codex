@@ -4,7 +4,8 @@ import {
   testp2Id,
   findEntityIds,
   getGameWithUnits,
-  withCardsInHand
+  withCardsInHand,
+  withInsertedEntity
 } from "../../testutil";
 import { getCurrentValues } from "../../entities";
 import { fixtureNames } from "../../fixtures";
@@ -63,10 +64,14 @@ test("Invisible patroller can be attacked and prevents attacking past", () => {
 });
 
 test("Can target your own invisible units but not the opponent's", () => {
-  const s0 = withCardsInHand(
-    getGameWithUnits(["backstabber"], ["backstabber"]),
-    ["wither"],
-    []
+  const [s0, troq] = withInsertedEntity(
+    withCardsInHand(
+      getGameWithUnits(["backstabber"], ["backstabber"]),
+      ["wither"],
+      []
+    ),
+    testp1Id,
+    "troq_bashar"
   );
   const p1bs = findEntityIds(
     s0,

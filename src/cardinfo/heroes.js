@@ -1,4 +1,4 @@
-import { colors, types } from "./constants";
+import { colors, types, specs } from "./constants";
 import { readiness } from "./abilities/keywords";
 import log from "../log";
 import { getName, getCurrentController } from "../entities";
@@ -9,6 +9,7 @@ import { fixtureNames } from "../fixtures";
 const heroCardInfo = {
   troq_bashar: {
     color: colors.neutral,
+    spec: specs.bashing,
     name: "Troq Bashar",
     title: "Renegade Beast",
     type: types.hero,
