@@ -3,6 +3,7 @@ import pickBy from "lodash/pickby";
 import cardInfo, { types } from "./cardinfo";
 import produce from "immer";
 import { createUnit, createHero } from "./entities";
+import { fixtureNames } from "./fixtures";
 
 export const testp1Id = "test_player1";
 export const testp2Id = "test_player2";
@@ -91,4 +92,62 @@ export function findEntityIds(state, predicate) {
 
 export function findTriggerIndices(state, predicate) {
   return Object.keys(pickBy(state.newTriggers, predicate)).map(Number);
+}
+
+export class TestGame {
+  constructor(state) {
+    this.state = state || getTestGame();
+    this.insertedEntityIds = [];
+  }
+  findBaseId(playerId) {
+    return Object.keys(
+      pickBy(
+        this.state.entities,
+        e => e.fixture == fixtureNames.base && e.owner == playerId
+      )
+    );
+  }
+  findTriggerIndex(predicate) {
+    return Object.keys(pickBy(this.state.newTriggers, predicate)).map(Number);
+  }
+  setGold(playerId, amount) {
+    this.state = produce(this.state, draft => {
+      draft.players[playerId].gold = amount;
+    });
+    return this;
+  }
+  putCardsInHand(playerId, cards) {
+    this.state = produce(this.state, draft => {
+      cards.forEach(c => draft.players[playerId].hand.push(c));
+    });
+    return this;
+  }
+  insertEntity(playerId, card) {
+    let newId = null;
+    const newState = produce(state, draft => {
+      switch (cardInfo[card].type) {
+        case types.unit:
+          newId = createUnit(draft, playerId, card);
+          break;
+        case types.hero:
+          newId = createHero(draft, playerId, card);
+          break;
+      }
+    });
+    this.state = newState;
+    this.insertedEntityIds.push(newId);
+    return this;
+  }
+  insertEntities(playerId, cards) {
+    cards.forEach(c => this.insertEntity(playerId, c));
+    return this;
+  }
+  playAction(action) {
+    this.state = playActions(this.state, [action]);
+    return this;
+  }
+  playActions(actions) {
+    this.state = playActions(this.state, actions);
+    return this;
+  }
 }
