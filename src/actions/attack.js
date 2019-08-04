@@ -1,7 +1,11 @@
 import { getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
-import { getCurrentValues, applyStateBasedEffects } from "../entities";
+import {
+  getCurrentValues,
+  applyStateBasedEffects,
+  updateCurrentValues
+} from "../entities";
 import {
   hasKeyword,
   flying,
@@ -159,6 +163,8 @@ function getFlownOverVals(state, playerId, targetId) {
 
 export function doAttackAction(state, action) {
   state.currentAttack = action;
+  // have to do this here because of "X while attacking" effects
+  updateCurrentValues(state);
   const u = state.entities[action.attacker];
   const attackerVals = getCurrentValues(state, u.id);
   let triggered = false;

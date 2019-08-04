@@ -1,4 +1,4 @@
-import produce from "immer";
+import produce, { createDraft, finishDraft, isDraft } from "immer";
 import cardInfo, { types } from "./cardinfo";
 import fixtures from "./fixtures";
 import log from "./log";
@@ -78,35 +78,29 @@ export function killEntity(state, entityId) {
 }
 
 export function getName(state, entityId) {
-  const entity = state.entities[entityId];
-  if (entity.card) {
-    return cardInfo[entity.card].name;
-  } else {
-    return fixtures[entity.fixture].name;
-  }
+  // should be deprecated eventually
+  return state.entities[entityId].current.name;
 }
 
 export function getCurrentController(state, unitIds) {
-  // Nothing can change a unit's controller yet, but we will need this
-  // a bunch in future
+  // It turns out this should never have existed, eventually it should
+  // be deprecated
   let shouldReturnSingleton = false;
   if (!Array.isArray(unitIds)) {
     unitIds = [unitIds];
     shouldReturnSingleton = true;
   }
   const result = {};
-  // currently we do each unit separately but we handle requesting several at once
-  // because of the future case where we need to check all copy effects to see if
-  // they have added or removed a global effect from a unit
   forEach(state.entities, (u, id) => {
     if (unitIds.includes(id)) {
-      result[id] = u.owner;
+      result[id] = u.owner; // u.current.controller;
     }
   });
   return shouldReturnSingleton ? result[unitIds] : result;
 }
 
-export function getCurrentValues(state, unitIds, attackTargetId) {
+export function getCurrentValues(state, unitIds) {
+  // should be deprecated eventually
   let shouldReturnSingleton = false;
   if (!Array.isArray(unitIds)) {
     unitIds = [unitIds];
@@ -118,76 +112,7 @@ export function getCurrentValues(state, unitIds, attackTargetId) {
   // they have added or removed a global effect from a unit
   forEach(state.entities, (u, id) => {
     if (unitIds.includes(id)) {
-      // 1. Start with the printed values (careful not to modify them!)
-      let printedValues =
-        u.card == undefined ? fixtures[u.fixture] : cardInfo[u.card];
-      // 1a. tokens 1b. dancers
-      // 1c. heroes
-      if (printedValues.type == types.hero) {
-        printedValues = getLevelValuesForHero(u, printedValues);
-      }
-      const currentValues = produce(printedValues, draft => {
-        draft.controller = u.owner;
-        draft.subtypes = draft.subtypes || [];
-        draft.abilities = draft.abilities || [];
-        if (draft.type != types.hero) {
-          draft.abilities.forEach((a, index) => {
-            a.path = `cardInfo.${u.card}.abilities[${index}]`;
-          });
-        }
-        // 2. chaos mirror, polymorph: squirrel and copy effects
-        // 3. effects that set ATK and DEF to specific values (i.e. faerie dragon)
-        // 4. ability-gaining effects that don't depend on ATK or HP
-        // 5. apply bonuses or penalties to ATK or HP from runes, entities and effects
-        // (note: order does not matter in this step)
-        // 6. reset negative ATK and HP to 0
-        // 6a. pestering haunt
-        // 7. conditional ability-gaining effects
-        // at present we don't pay attention to effect order (because it doesn't matter)
-        if (draft.type == types.unit || draft.type == types.hero) {
-          draft.attack += u.runes;
-          draft.hp += u.runes;
-        }
-        forEach(draft.abilities, a => {
-          if (a.modifyOwnValues) {
-            a.modifyOwnValues({
-              state,
-              self: u,
-              values: draft,
-              attackTargetId
-            });
-          }
-        });
-        forEach(state.entities, other => {
-          // also at the moment we can just use the printed values here
-          if (other.card) {
-            // fixtures don't have global passives
-            forEach(cardInfo[other.card].abilities, a => {
-              if (a.modifyGlobalValues) {
-                a.modifyGlobalValues({
-                  state,
-                  source: other,
-                  subject: u,
-                  values: draft,
-                  attackTargetId
-                });
-              }
-            });
-          }
-        });
-        if (
-          state.players[draft.controller].patrollerIds[patrolSlots.elite] == id
-        ) {
-          draft.attack += 1;
-        }
-        draft.attack = draft.attack > 0 ? draft.attack : 0;
-        draft.hp = draft.hp > 0 ? draft.hp : 0;
-      });
-      if (currentValues.controller != u.lastControlledBy) {
-        u.controlledSince = state.turn;
-        u.lastControlledBy = currentValues.controller;
-      }
-      result[id] = currentValues;
+      result[id] = u.current;
     }
   });
   return shouldReturnSingleton ? result[unitIds] : result;
@@ -216,13 +141,13 @@ function getLevelValuesForHero(u, printedValues) {
   return result;
 }
 
-export function conferKeyword(values, kwAbility) {
-  values.abilities.push(kwAbility);
+export function conferKeyword(entity, kwAbility) {
+  entity.current.abilities.push(kwAbility);
 }
 
-export function conferComplexAbility(values, path) {
+export function conferComplexAbility(entity, path) {
   const ability = get(triggerDefinitions, path);
-  values.abilities.push({ ...ability, path });
+  entity.current.abilities.push({ ...ability, path });
 }
 
 export function clearCurrentValues(state) {
@@ -240,9 +165,76 @@ export function cacheCurrentValues(state) {
 
 export function updateCurrentValues(state) {
   state.currentCache = true;
-  const vals = getCurrentValues(state, Object.keys(state.entities));
+  // 1. Start with a draft based on each entity's printed values
   forEach(state.entities, e => {
-    e.current = vals[e.id];
+    let printedValues =
+      e.card == undefined ? fixtures[e.fixture] : cardInfo[e.card];
+    // 1a. tokens 1b. dancers
+    if (printedValues.type == types.hero) {
+      printedValues = getLevelValuesForHero(e, printedValues);
+    }
+    e.current = createDraft(printedValues);
+    e.current.controller = e.owner;
+    e.current.subtypes = e.current.subtypes || [];
+    e.current.abilities = e.current.abilities || [];
+    if (e.current.type != types.hero) {
+      e.current.abilities.forEach((a, index) => {
+        a.path = `cardInfo.${e.card}.abilities[${index}]`;
+      });
+    }
+  });
+  forEach(state.entities, e => {
+    // 2. chaos mirror, polymorph: squirrel and copy effects
+    // 3. effects that set ATK and DEF to specific values (i.e. faerie dragon)
+    // 4. ability-gaining effects that don't depend on ATK or HP
+    // 5. apply bonuses or penalties to ATK or HP from runes, entities and effects
+    // (note: order does not matter in this step)
+    if (e.current.type == types.unit || e.current.type == types.hero) {
+      e.current.attack += e.runes;
+      e.current.hp += e.runes;
+    }
+    forEach(e.current.abilities, a => {
+      if (a.modifyOwnValues) {
+        a.modifyOwnValues({
+          state,
+          self: e
+        });
+      }
+    });
+    forEach(state.entities, other => {
+      // also at the moment we can just use the printed values here
+      if (other.card) {
+        // fixtures don't have global passives
+        forEach(cardInfo[other.card].abilities, a => {
+          if (a.modifyGlobalValues) {
+            a.modifyGlobalValues({
+              state,
+              self: other,
+              other: e
+            });
+          }
+        });
+      }
+    });
+    if (
+      state.players[e.current.controller].patrollerIds[patrolSlots.elite] ==
+      e.id
+    ) {
+      e.current.attack += 1;
+    }
+    // 6. reset negative ATK and HP to 0
+    // 6a. pestering haunt
+    // 7. conditional ability-gaining effects
+    e.current.attack = e.current.attack > 0 ? e.current.attack : 0;
+    e.current.hp = e.current.hp > 0 ? e.current.hp : 0;
+  });
+  // Values have been computed so finalise the drafts
+  forEach(state.entities, e => {
+    e.current = finishDraft(e.current);
+    if (e.current.controller != e.lastControlledBy) {
+      e.controlledSince = state.turn;
+      e.lastControlledBy = e.current.controller;
+    }
   });
 }
 

@@ -8,6 +8,7 @@ import {
 } from "../entities";
 import { haste, flying, invisible } from "./abilities/keywords";
 import { getAP } from "../util";
+import { isDraft } from "immer";
 
 const finesseCardInfo = {
   nimble_fencer: {
@@ -22,10 +23,10 @@ const finesseCardInfo = {
     hp: 3,
     abilities: [
       {
-        modifyGlobalValues: ({ state, source, values }) => {
-          if (getCurrentController(state, source.id) == values.controller) {
-            if (values.subtypes.includes("Virtuoso")) {
-              conferKeyword(values, haste);
+        modifyGlobalValues: ({ self, other }) => {
+          if (self.current.controller == other.current.controller) {
+            if (other.current.subtypes.includes("Virtuoso")) {
+              conferKeyword(other, haste);
             }
           }
         }
@@ -52,8 +53,8 @@ const finesseCardInfo = {
         }
       },
       {
-        modifyOwnValues: ({ state, self, values }) => {
-          values.attack += state.entities[self.id].damage;
+        modifyOwnValues: ({ self }) => {
+          self.current.attack += self.damage;
         }
       }
     ]
@@ -70,16 +71,16 @@ const finesseCardInfo = {
     hp: 4,
     abilities: [
       {
-        modifyGlobalValues: ({ state, source, subject, values }) => {
+        modifyGlobalValues: ({ self, other }) => {
           if (
-            getCurrentController(state, source.id) == values.controller &&
-            source.id != subject.id
+            self.current.controller == other.current.controller &&
+            self.id != other.id
           ) {
-            if (values.subtypes.includes("Virtuoso")) {
-              values.attack += 2;
-              values.hp += 1;
+            if (other.current.subtypes.includes("Virtuoso")) {
+              other.current.attack += 2;
+              other.current.hp += 1;
             } else {
-              values.attack += 1;
+              other.current.attack += 1;
             }
           }
         }
@@ -98,10 +99,10 @@ const finesseCardInfo = {
     hp: 5,
     abilities: [
       {
-        modifyGlobalValues: ({ state, source, values }) => {
-          if (getCurrentController(state, source.id) == values.controller) {
-            if (values.subtypes.includes("Virtuoso")) {
-              conferComplexAbility(values, "cardInfo.maestro.conferredAbility");
+        modifyGlobalValues: ({ state, self, other }) => {
+          if (self.current.controller == other.current.controller) {
+            if (other.current.subtypes.includes("Virtuoso")) {
+              conferComplexAbility(other, "cardInfo.maestro.conferredAbility");
             }
           }
         },

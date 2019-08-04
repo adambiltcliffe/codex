@@ -38,9 +38,9 @@ export const resist = numericKeyword("KV_RESIST");
 
 export function frenzy(n) {
   return {
-    modifyOwnValues: ({ state, values }) => {
-      if (values.controller == getAP(state).id) {
-        values.attack += n;
+    modifyOwnValues: ({ state, self }) => {
+      if (self.current.controller == getAP(state).id) {
+        self.current.attack += n;
       }
     }
   };
