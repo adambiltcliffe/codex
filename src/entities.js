@@ -45,15 +45,6 @@ export function createHero(state, owner, card) {
   return newHero.id;
 }
 
-export function checkState(state) {
-  forEach(state.entities, u => {
-    const vals = getCurrentValues(state, u.id);
-    if (u.damage >= vals.hp) {
-      killEntity(state, u.id);
-    }
-  });
-}
-
 export function killEntity(state, entityId) {
   const e = state.entities[entityId];
   const vals = getCurrentValues(state, entityId);
@@ -249,12 +240,22 @@ export function cacheCurrentValues(state) {
 
 export function updateCurrentValues(state) {
   state.currentCache = true;
+  const vals = getCurrentValues(state, Object.keys(state.entities));
   forEach(state.entities, e => {
-    e.current = {};
+    e.current = vals[e.id];
   });
 }
 
 export function applyStateBasedEffects(state) {
-  // this is the old version which we are using for now
-  checkState(state);
+  let stable = false;
+  while (!stable) {
+    stable = true;
+    updateCurrentValues(state);
+    forEach(state.entities, u => {
+      if (u.damage >= u.current.hp) {
+        killEntity(state, u.id);
+        stable = false;
+      }
+    });
+  }
 }
