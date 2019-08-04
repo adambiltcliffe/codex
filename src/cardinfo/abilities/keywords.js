@@ -32,6 +32,7 @@ export const antiAir = keyword("K_ANTIAIR");
 export const invisible = keyword("K_INVISIBLE");
 export const flagbearer = keyword("K_FLAGBEARER");
 export const readiness = keyword("K_READINESS");
+export const sparkshot = keyword("K_SPARKSHOT");
 
 export const resist = numericKeyword("KV_RESIST");
 

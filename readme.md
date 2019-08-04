@@ -20,10 +20,14 @@ Flagbearer ability
 # Tests to write
 
 Troq abilities
+Jaina abilities
 Technician trigger
 Scavenger trigger
 Spells are put in discard pile before resolving triggers they caused
-Hero requirements to cast spells
+With Troq: can cast Wither, Wrecking Ball, can cast Scorch at +1 cost, can't cast Fire Dart
+With Jaina: can cast Wither, Scorch, Fire Dart, can't cast Wrecking Ball
+With no hero: can't cast Wither, Scorch, Wrecking Ball or Fire Dart
+With Troq and Jaina: can cast Wither, Scorch, Fire Dart and Wrecking Ball
 
 # Game features not implemented:
 
