@@ -66,9 +66,9 @@ Victory condition
 
 # Other stuff to do
 
+Change signature of canTarget on abilities
 Rewrite the test helper functions to be consistent and not crazy
-Make sure state-based actions are checked at all appropriate times
-Cache the result of getCurrentValues everywhere it makes sense
+Deprecate the use of getCurrentValues, getName and getCurrentController
 Move the first three tests from neutral.test.js into a keyword test file
 Make suggestActions do something sensible for patrollers (not bases)
 Use a schema validation library to simplify action checking

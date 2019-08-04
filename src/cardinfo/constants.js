@@ -17,8 +17,6 @@ export const colors = {
 };
 
 export const specs = {
-  bashing: "BASHING",
-  finesse: "FINESSE",
   anarchy: "ANARCHY",
   blood: "BLOOD",
   fire: "FIRE",
@@ -36,7 +34,9 @@ export const specs = {
   strength: "STRENGTH",
   past: "PAST",
   present: "PRESENT",
-  future: "FUTURE"
+  future: "FUTURE",
+  bashing: "BASHING",
+  finesse: "FINESSE"
 };
 
 export const targetMode = {

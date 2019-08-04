@@ -1,22 +1,26 @@
-import neutralCardInfo from "./neutral";
+import redCardInfo from "./red";
 import greenCardInfo from "./green";
 import whiteCardInfo from "./white";
-import bashingCardInfo from "./bashing";
-import finesseCardInfo from "./finesse";
+import neutralCardInfo from "./neutral";
+import fireCardInfo from "./fire";
 import truthCardInfo from "./truth";
 import presentCardInfo from "./present";
+import bashingCardInfo from "./bashing";
+import finesseCardInfo from "./finesse";
 import heroCardInfo from "./heroes";
 
 export * from "./constants";
 
 const cardInfo = {
-  ...neutralCardInfo,
+  ...redCardInfo,
   ...greenCardInfo,
   ...whiteCardInfo,
-  ...bashingCardInfo,
-  ...finesseCardInfo,
+  ...neutralCardInfo,
+  ...fireCardInfo,
   ...truthCardInfo,
   ...presentCardInfo,
+  ...bashingCardInfo,
+  ...finesseCardInfo,
   ...heroCardInfo
 };
 
