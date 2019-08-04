@@ -28,6 +28,7 @@ With Troq: can cast Wither, Wrecking Ball, can cast Scorch at +1 cost, can't cas
 With Jaina: can cast Wither, Scorch, Fire Dart, can't cast Wrecking Ball
 With no hero: can't cast Wither, Scorch, Wrecking Ball or Fire Dart
 With Troq and Jaina: can cast Wither, Scorch, Fire Dart and Wrecking Ball
+Scorch and Fire Dart
 
 # Game features not implemented:
 
@@ -43,10 +44,10 @@ Base damage from building destruction
 Add-ons
 Armor (requires effects)
 Armor for squad leader
-(More of) interaction of continuous effects
-Swift strike, overpower, sparkshot (requires choosing targets)
+Proper continuous effects ordering
+Swift strike, overpower, sparkshot (requires making attack into triggers)
 Stealth, unstoppable
-Detector (requires stealth)
+Detector
 Tower (requires add-ons and detector)
 
 Multicolour tax
