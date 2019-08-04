@@ -73,3 +73,15 @@ Move the first three tests from neutral.test.js into a keyword test file
 Make suggestActions do something sensible for patrollers (not bases)
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
+
+# Cards that will need special attention
+
+Hotter Fire
+Smoker
+Second Chances
+Manufactured Truth
+Dreamscape
+Master Midori
+Jail
+Graveyard
+Debilitator Alpha
