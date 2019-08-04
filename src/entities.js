@@ -1,12 +1,12 @@
 import produce from "immer";
-import forEach from "lodash/forEach";
 import cardInfo, { types } from "./cardinfo";
 import fixtures from "./fixtures";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
+import { triggerDefinitions } from "./triggers";
 
 import get from "lodash/get";
-import { triggerDefinitions } from "./triggers";
+import forEach from "lodash/forEach";
 
 export function createUnit(state, owner, card) {
   const newUnit = {
@@ -234,9 +234,25 @@ export function conferComplexAbility(values, path) {
   values.abilities.push({ ...ability, path });
 }
 
-export function cacheCurrentValues(state) {}
+export function clearCurrentValues(state) {
+  forEach(state.entities, e => {
+    e.current = undefined;
+  });
+  state.currentCache = undefined;
+}
 
-export function updateCurrentValues(state) {}
+export function cacheCurrentValues(state) {
+  if (state.started && !state.currentCache) {
+    updateCurrentValues(state);
+  }
+}
+
+export function updateCurrentValues(state) {
+  state.currentCache = true;
+  forEach(state.entities, e => {
+    e.current = {};
+  });
+}
 
 export function applyStateBasedEffects(state) {
   // this is the old version which we are using for now

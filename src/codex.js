@@ -14,7 +14,8 @@ import {
   checkState,
   getCurrentController,
   getCurrentValues,
-  cacheCurrentValues
+  cacheCurrentValues,
+  clearCurrentValues
 } from "./entities";
 import { targetMode, types } from "./cardinfo/constants";
 import { emptyPatrolZone } from "./patrolzone";
@@ -124,6 +125,7 @@ class CodexGame extends Game {
         }
       }
     }
+    // clearCurrentValues(state)
     delete state.updateHidden;
   }
   static checkAction(state, action) {
