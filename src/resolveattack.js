@@ -9,25 +9,25 @@ import { andJoin, getAP } from "./util";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
 
-function getFlownOverVals(state, playerId, targetId) {
+function getFlownOver(state, target) {
+  const playerId = target.current.controller;
   const patrollerIds = state.players[playerId].patrollerIds;
-  if (targetId == patrollerIds[patrolSlots.squadLeader]) {
+  if (target.id == patrollerIds[patrolSlots.squadLeader]) {
     // Attacking squad leader, don't need to fly over anything
     return [];
   }
-  if (patrollerIds.includes(targetId)) {
+  if (patrollerIds.includes(target.id)) {
     // Attacking a patroller, only squad leader flown over
     return [patrollerIds[patrolSlots.squadLeader]]
       .filter(id => id != null)
-      .map(id => getCurrentValues(state, id))
-      .filter(v => hasKeyword(v, antiAir));
+      .map(id => state.entities[id])
+      .filter(e => hasKeyword(e.current, antiAir));
   }
   // Otherwise we are potentially flying over all patrollers
-  const vals = getCurrentValues(state, patrollerIds);
   return patrollerIds
     .filter(id => id != null)
-    .map(id => vals[id])
-    .filter(v => hasKeyword(v, antiAir));
+    .map(id => state.entities[id])
+    .filter(e => hasKeyword(e.current, antiAir));
 }
 
 export function enqueueResolveAttack(state) {
@@ -43,37 +43,34 @@ const resolveAttackTriggers = {
     action: ({ state }) => {
       const attacker = state.entities[state.currentAttack.attacker];
       const target = state.entities[state.currentAttack.target];
-      const values = getCurrentValues(state, [attacker.id, target.id]);
-      const attackerValues = values[attacker.id];
-      const targetValues = values[target.id];
-      const flownOverVals = hasKeyword(attackerValues, flying)
-        ? getFlownOverVals(state, targetValues.controller, target.id)
+      const flownOver = hasKeyword(attacker.current, flying)
+        ? getFlownOver(state, target)
         : [];
       const flownOverText =
-        flownOverVals.length == 0
+        flownOver.length == 0
           ? ""
-          : `, flying over ${andJoin(flownOverVals.map(v => v.name))}`;
+          : `, flying over ${andJoin(flownOver.map(e => e.current.name))}`;
       log.add(
         state,
-        log.fmt`${getAP(state)} attacks ${targetValues.name} with ${
-          attackerValues.name
+        log.fmt`${getAP(state)} attacks ${target.current.name} with ${
+          attacker.current.name
         }${flownOverText}.`
       );
-      if (!hasKeyword(attackerValues, readiness)) {
+      if (!hasKeyword(attacker.current, readiness)) {
         attacker.ready = false;
       }
       attacker.thisTurn.attacks = 1 + (attacker.thisTurn.attacks || 0);
       const attackerReceivesDamage =
-        !hasKeyword(attackerValues, flying) ||
-        hasKeyword(targetValues, flying) ||
-        hasKeyword(targetValues, antiAir);
+        !hasKeyword(attacker.current, flying) ||
+        hasKeyword(target.current, flying) ||
+        hasKeyword(target.current, antiAir);
       if (attackerReceivesDamage) {
-        attacker.damage += targetValues.attack;
+        attacker.damage += target.current.attack;
       }
-      flownOverVals.forEach(v => {
-        attacker.damage += v.attack;
+      flownOver.forEach(e => {
+        attacker.damage += e.current.attack;
       });
-      target.damage += attackerValues.attack;
+      target.damage += attacker.current.attack;
       state.currentAttack.begun = true;
       applyStateBasedEffects(state);
     }

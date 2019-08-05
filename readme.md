@@ -68,6 +68,7 @@ Victory condition
 # Other stuff to do
 
 Change signature of canTarget on abilities
+Change signature of hasKeyword
 Rewrite the test helper functions to be consistent and not crazy
 Deprecate the use of getCurrentValues, getName and getCurrentController
 Move the first three tests from neutral.test.js into a keyword test file
