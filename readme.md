@@ -85,4 +85,6 @@ Dreamscape
 Master Midori
 Jail
 Graveyard
-Debilitator Alpha
+Gilded Glaxx
+Reteller of Truths
+Lawbringer Gryphon
