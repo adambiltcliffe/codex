@@ -8,6 +8,7 @@ import {
 import { getAP } from "./util";
 import { targetMode } from "./cardinfo";
 import { patrolSlots } from "./patrolzone";
+import { getAttackableEntityIds } from "./actions/attack";
 
 export function getResistCost(state, entity) {
   const bonusResist =
@@ -61,7 +62,10 @@ export function getLegalChoicesForStep(state, stepDef) {
       );
       return (flagbearers.length > 0 ? flagbearers : targets).map(e => e.id);
     case targetMode.overpower:
-      return [];
+      return getAttackableEntityIds(
+        state,
+        state.entities[state.currentAttack.attacker].current
+      ).filter(id => id != state.currentAttack.target);
     case targetMode.sparkshot:
       const result = [];
       const attackTarget = state.entities[state.currentAttack.target];

@@ -16,9 +16,9 @@ function initialisePlayerState(state, playerIndex) {
       "nimble_fencer",
       "timely_messenger",
       "older_brother",
-      "starcrossed_starlet",
-      "brick_thief",
-      "brick_thief"
+      "harvest_reaper",
+      "harvest_reaper",
+      "harvest_reaper"
     ];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);

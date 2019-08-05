@@ -111,8 +111,13 @@ class CodexGame extends Game {
           break;
         }
       }
+      if (needAction) {
+        break;
+      }
       // If we get this far, we dealt with the current trigger if there was one
       if (state.queue.length == 0) {
+        if (state.currentTrigger) {
+        }
         if (state.phase == phases.main) {
           if (state.currentAttack == null) {
             needAction = true;

@@ -172,7 +172,18 @@ const resolveAttackTriggers = {
 };
 
 function dealAttackerDamage(state, attacker, target) {
-  target.damage += attacker.current.attack;
+  const lethal = target.current.hp - target.damage;
+  if (
+    hasKeyword(attacker.current, overpower) &&
+    attacker.current.attack > lethal
+  ) {
+    target.damage += lethal;
+    state.entities[
+      state.currentTrigger.choices[overpowerStep].targetId
+    ].damage += attacker.current.attack - lethal;
+  } else {
+    target.damage += attacker.current.attack;
+  }
   if (hasKeyword(attacker.current, sparkshot)) {
     state.entities[
       state.currentTrigger.choices[sparkshotStep].targetId
