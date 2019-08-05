@@ -68,17 +68,32 @@ function canAttack(attackerVals, targetVals, patrolSlot) {
   );
 }
 
-function canIgnorePatroller(attackerVals, patrollerVals, patrolSlot) {
-  if (!canAttack(attackerVals, patrollerVals, patrolSlot)) {
+function canIgnorePatroller(state, attackerVals, patroller, patrolSlot) {
+  // If this is called in the middle of an attack, we're choosing an overpower
+  // target, so we can ignore the thing we're actually attacking
+  if (state.currentAttack && state.currentAttack.target == patroller.id) {
+    return true;
+  }
+  // Now the normal rules for when you can really ignore a patroller
+  if (!canAttack(attackerVals, patroller.current, patrolSlot)) {
     return true;
   }
   if (hasKeyword(attackerVals, invisible)) {
     return true;
   }
-  if (hasKeyword(attackerVals, antiAir) && hasKeyword(patrollerVals, flying)) {
+  if (
+    hasKeyword(attackerVals, antiAir) &&
+    hasKeyword(patroller.current, flying)
+  ) {
     return true;
   }
-  return hasKeyword(attackerVals, flying) && !hasKeyword(patrollerVals, flying);
+  if (
+    hasKeyword(attackerVals, flying) &&
+    !hasKeyword(patroller.current, flying)
+  ) {
+    return true;
+  }
+  return false;
 }
 
 export function getAttackableEntityIds(state, attackerVals) {
@@ -102,8 +117,9 @@ export function getAttackableEntityIdsControlledBy(
   const squadLeaderId = player.patrollerIds[patrolSlots.squadLeader];
   if (squadLeaderId != null) {
     const canIgnoreSquadLeader = canIgnorePatroller(
+      state,
       attackerVals,
-      getCurrentValues(state, squadLeaderId),
+      state.entities[squadLeaderId],
       patrolSlots.squadLeader
     );
     if (!canIgnoreSquadLeader) {
@@ -119,7 +135,8 @@ export function getAttackableEntityIdsControlledBy(
     canAttack(attackerVals, patrollerVals[id], slots[id])
   );
   const blockingPatrollerIds = patrollerIds.filter(
-    id => !canIgnorePatroller(attackerVals, patrollerVals[id], slots[id])
+    id =>
+      !canIgnorePatroller(state, attackerVals, state.entities[id], slots[id])
   );
   if (blockingPatrollerIds.length > 0) {
     return attackablePatrollerIds;
