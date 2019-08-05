@@ -90,10 +90,8 @@ const heroCardInfo = {
           {
             triggerOnAttack: true,
             action: ({ state, source }) => {
-              const defendingPlayer = getCurrentController(
-                state,
-                state.currentAttack.target
-              );
+              const defendingPlayer =
+                state.entities[state.currentAttack.target].current.controller;
               const base = find(
                 Object.entries(state.entities),
                 ([id, e]) =>

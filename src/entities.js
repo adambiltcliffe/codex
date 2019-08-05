@@ -77,6 +77,8 @@ export function killEntity(state, entityId) {
 }
 
 export function getCurrentController(state, unitIds) {
+  console.log("getCurrentController() is deprecated");
+  console.log(new Error().stack);
   // It turns out this should never have existed, eventually it should
   // be deprecated
   let shouldReturnSingleton = false;

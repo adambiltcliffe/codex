@@ -141,7 +141,7 @@ const neutralCardInfo = {
         targetTypes: [types.unit, types.hero],
         canTarget: ({ state, targetId }) =>
           state.players[
-            getCurrentController(state, targetId)
+            state.entities[targetId].current.controller
           ].patrollerIds.includes(targetId),
         action: ({ state, choices }) => {
           state.entities[choices.targetId].damage += 1;
