@@ -8,7 +8,8 @@ import {
   canResolveCurrentTrigger,
   currentTriggerDefinition,
   enqueueNextTrigger,
-  resolveCurrentTrigger
+  resolveCurrentTrigger,
+  getLegalChoicesForCurrentTrigger
 } from "./triggers";
 import {
   getCurrentController,
@@ -180,13 +181,10 @@ class CodexGame extends Game {
         index: n
       }));
     }
-    if (
-      state.currentTrigger &&
-      currentTriggerDefinition(state).targetMode == targetMode.single
-    ) {
-      return Object.keys(state.entities).map(id => ({
+    if (state.currentTrigger) {
+      return getLegalChoicesForCurrentTrigger(state).map(c => ({
         type: "choice",
-        target: id
+        target: c
       }));
     }
     return this.suggestMainPhaseActions(state);
