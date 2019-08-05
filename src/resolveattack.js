@@ -15,6 +15,9 @@ import { patrolSlots } from "./patrolzone";
 import partition from "lodash/partition";
 import { targetMode } from "./cardinfo";
 
+const overpowerStep = 0;
+const sparkshotStep = 1;
+
 function getFlownOver(state, target) {
   const playerId = target.current.controller;
   const patrollerIds = state.players[playerId].patrollerIds;
@@ -74,11 +77,23 @@ export function needsSparkshotTarget(state) {
   );
 }
 
+const chooseOverpowerTarget = {
+  prompt: "Choose where to deal excess damage with overpower",
+  targetMode: targetMode.overpower,
+  action: () => {}
+};
+
+const chooseSparkshotTarget = {
+  prompt: "Choose a patroller to receive sparkshot damage",
+  targetMode: targetMode.sparkshot,
+  action: () => {}
+};
+
 const resolveAttackTriggers = {
   beginResolveAttack: {
     steps: [
-      { targetMode: targetMode.overpower, action: () => {} },
-      { targetMode: targetMode.sparkshot, action: () => {} },
+      chooseOverpowerTarget,
+      chooseSparkshotTarget,
       {
         action: ({ state }) => {
           const attacker = state.entities[state.currentAttack.attacker];
@@ -109,7 +124,7 @@ const resolveAttackTriggers = {
             defenders.push(target);
           }
           if (hasKeyword(attacker.current, swiftStrike)) {
-            target.damage += attacker.current.attack;
+            dealAttackerDamage(state, attacker, target);
             state.currentAttack.attackerDealtDamage = true;
           } else {
             state.currentAttack.attackerDealtDamage = false;
@@ -129,8 +144,8 @@ const resolveAttackTriggers = {
   },
   finishResolveAttack: {
     steps: [
-      { targetMode: targetMode.overpower, action: () => {} },
-      { targetMode: targetMode.sparkshot, action: () => {} },
+      chooseOverpowerTarget,
+      chooseSparkshotTarget,
       {
         action: ({ state }) => {
           const attacker = state.entities[state.currentAttack.attacker];
@@ -138,7 +153,7 @@ const resolveAttackTriggers = {
           if (attacker != undefined) {
             const target = state.entities[state.currentAttack.target];
             if (!state.currentAttack.attackerDealtDamage) {
-              target.damage += attacker.current.attack;
+              dealAttackerDamage(state, attacker, target);
             }
             state.currentAttack.slowDefenderIds.forEach(id => {
               if (state.entities[id] != undefined) {
@@ -155,5 +170,14 @@ const resolveAttackTriggers = {
     ]
   }
 };
+
+function dealAttackerDamage(state, attacker, target) {
+  target.damage += attacker.current.attack;
+  if (hasKeyword(attacker.current, sparkshot)) {
+    state.entities[
+      state.currentTrigger.choices[sparkshotStep].targetId
+    ].damage += 1;
+  }
+}
 
 export default resolveAttackTriggers;

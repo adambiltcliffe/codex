@@ -11,8 +11,8 @@ function initialisePlayerState(state, playerIndex) {
     const deck = [
       "merfolk_prospector",
       "maestro",
-      "maestro",
-      "maestro",
+      "revolver_ocelot",
+      "revolver_ocelot",
       "nimble_fencer",
       "timely_messenger",
       "older_brother",

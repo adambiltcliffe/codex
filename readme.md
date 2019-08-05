@@ -64,6 +64,8 @@ Hero level up on death
 Hero cooldown
 Ultimate spell requirements
 
+Sparkshot stacking
+
 Avoid leaking minor information when workering
 Codex and tech phase
 

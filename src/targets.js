@@ -63,6 +63,20 @@ export function getLegalChoicesForStep(state, stepDef) {
     case targetMode.overpower:
       return [];
     case targetMode.sparkshot:
-      return [];
+      const result = [];
+      const attackTarget = state.entities[state.currentAttack.target];
+      if (attackTarget) {
+        const pz = state.players[attackTarget.current.controller].patrollerIds;
+        const pIndex = pz.indexOf(attackTarget.id);
+        if (pIndex != -1) {
+          if (pz[pIndex - 1] != null) {
+            result.push(pz[pIndex - 1]);
+          }
+          if (pz[pIndex + 1] != null) {
+            result.push(pz[pIndex + 1]);
+          }
+        }
+      }
+      return result;
   }
 }
