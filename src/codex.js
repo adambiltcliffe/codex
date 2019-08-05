@@ -11,15 +11,12 @@ import {
   resolveCurrentTrigger
 } from "./triggers";
 import {
-  checkState,
   getCurrentController,
   getCurrentValues,
-  cacheCurrentValues,
-  clearCurrentValues
+  cacheCurrentValues
 } from "./entities";
 import { targetMode, types } from "./cardinfo/constants";
 import { emptyPatrolZone } from "./patrolzone";
-import { finishAttackAction as enqueueAttackAction } from "./actions/attack";
 
 import flatMap from "lodash/flatMap";
 import flatten from "lodash/flatten";

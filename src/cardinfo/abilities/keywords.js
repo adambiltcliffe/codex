@@ -33,6 +33,8 @@ export const invisible = keyword("K_INVISIBLE");
 export const flagbearer = keyword("K_FLAGBEARER");
 export const readiness = keyword("K_READINESS");
 export const sparkshot = keyword("K_SPARKSHOT");
+export const overpower = keyword("K_OVERPOWER");
+export const swiftStrike = keyword("K_SWIFTSTRIKE");
 
 export const resist = numericKeyword("KV_RESIST");
 

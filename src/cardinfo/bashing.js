@@ -1,7 +1,7 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { getName } from "../entities";
-import { flying } from "./abilities/keywords";
+import { flying, sparkshot, overpower } from "./abilities/keywords";
 
 const bashingCardInfo = {
   wrecking_ball: {
@@ -38,6 +38,18 @@ const bashingCardInfo = {
     cost: 3,
     attack: 3,
     hp: 4
+  },
+  revolver_ocelot: {
+    color: colors.neutral,
+    tech: 1,
+    spec: specs.bashing,
+    name: "Revolver Ocelot",
+    type: types.unit,
+    subtypes: ["Leopard"],
+    cost: 2,
+    attack: 3,
+    hp: 3,
+    abilities: [sparkshot]
   },
   hired_stomper: {
     color: colors.neutral,
@@ -89,6 +101,18 @@ const bashingCardInfo = {
     attack: 4,
     hp: 3,
     abilities: [flying]
+  },
+  harvest_reaper: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.bashing,
+    name: "Harvest Reaper",
+    type: types.unit,
+    subtypes: ["Contraption"],
+    cost: 5,
+    attack: 6,
+    hp: 5,
+    abilities: [overpower]
   }
 };
 

@@ -19,6 +19,7 @@ Flagbearer ability
 
 # Tests to write
 
+Everything involving swift strike
 Troq abilities
 Jaina abilities
 Technician trigger

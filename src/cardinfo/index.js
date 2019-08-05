@@ -4,6 +4,7 @@ import whiteCardInfo from "./white";
 import neutralCardInfo from "./neutral";
 import fireCardInfo from "./fire";
 import truthCardInfo from "./truth";
+import ninjutsuCardInfo from "./ninjutsu";
 import presentCardInfo from "./present";
 import bashingCardInfo from "./bashing";
 import finesseCardInfo from "./finesse";
@@ -18,6 +19,7 @@ const cardInfo = {
   ...neutralCardInfo,
   ...fireCardInfo,
   ...truthCardInfo,
+  ...ninjutsuCardInfo,
   ...presentCardInfo,
   ...bashingCardInfo,
   ...finesseCardInfo,
