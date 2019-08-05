@@ -34,7 +34,7 @@ Scorch and Fire Dart
 # Game features not implemented:
 
 One reshuffle per main phase limit
-Don't lock the game if a trigger has no available targets
+Don't lock the game if a trigger has no available targets (including overpower, sparkshot)
 Auto-target if there is only one available target
 
 Heroes return to command zone and go on cooldown when killed

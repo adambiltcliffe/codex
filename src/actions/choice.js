@@ -1,55 +1,6 @@
-import { targetMode } from "../cardinfo/constants";
 import { currentTriggerDefinition } from "../triggers";
-import { getCurrentValues } from "../entities";
-import {
-  sumKeyword,
-  resist,
-  hasKeyword,
-  flagbearer,
-  invisible
-} from "../cardinfo/abilities/keywords";
-import { getAP } from "../util";
-import { patrolSlots } from "../patrolzone";
-
-function getResistCost(state, entityId, entityVals) {
-  const bonusResist =
-    state.players[entityVals.controller].patrollerIds[patrolSlots.lookout] ==
-    entityId
-      ? 1
-      : 0;
-  return sumKeyword(entityVals, resist) + bonusResist;
-}
-
-export function stepCanTarget(state, stepDef, targetId, targetVals) {
-  // can only target specified types
-  if (!stepDef.targetTypes.includes(targetVals.type)) {
-    return false;
-  }
-  // check additional restrictions if there are any
-  if (
-    stepDef.canTarget &&
-    !stepDef.canTarget({
-      state,
-      triggerInfo: state.currentTrigger,
-      targetId,
-      targetVals
-    })
-  ) {
-    return false;
-  }
-  // if it's an opponent's unit, check resist and invisible
-  if (targetVals.controller != getAP(state).id) {
-    if (hasKeyword(targetVals, invisible)) {
-      return false;
-    }
-    const resistCost = getResistCost(state, targetId, targetVals);
-    if (resistCost > getAP(state).gold) {
-      return false;
-    }
-  }
-  // otherwise it's ok
-  return true;
-}
+import { getAP, andJoin } from "../util";
+import { getResistCost, getLegalChoicesForStep } from "../targets";
 
 export function checkChoiceAction(state, action) {
   if (state.currentTrigger === null) {
@@ -59,28 +10,11 @@ export function checkChoiceAction(state, action) {
   if (stepDef.steps) {
     stepDef = stepDef.steps[state.currentTrigger.stepIndex];
   }
-  if (stepDef.targetMode != targetMode.single) {
-    throw new Error("Can't choose a target for a trigger without a target");
-  }
-  const chosenTarget = state.entities[action.target];
-  if (typeof chosenTarget != "object") {
-    throw new Error("Invalid target ID");
-  }
-  const chosenTargetVals = getCurrentValues(state, action.target);
-  if (!stepCanTarget(state, stepDef, action.target, chosenTargetVals)) {
-    throw new Error("Not a legal target for that ability");
-  }
-  if (!hasKeyword(chosenTargetVals, flagbearer)) {
-    const allValues = getCurrentValues(state, Object.keys(state.entities));
-    Object.entries(allValues).forEach(([id, v]) => {
-      if (
-        hasKeyword(v, flagbearer) &&
-        v.id != action.target &&
-        stepCanTarget(state, stepDef, id, v)
-      ) {
-        throw new Error("Must choose a flagbearer if able");
-      }
-    });
+  const legalChoices = getLegalChoicesForStep(state, stepDef);
+  if (!legalChoices.includes(action.target)) {
+    throw new Error(
+      `Not a legal choice, legal choices are ${andJoin(legalChoices)}`
+    );
   }
   return true;
 }
@@ -91,9 +25,9 @@ export function doChoiceAction(state, action) {
     ? state.currentTrigger.choices[state.currentTrigger.stepIndex]
     : state.currentTrigger.choices;
   choices.targetId = action.target;
-  const chosenTargetVals = getCurrentValues(state, action.target);
-  if (chosenTargetVals.controller != getAP(state).id) {
-    const resistCost = getResistCost(state, action.target, chosenTargetVals);
+  const target = state.entities[action.target];
+  if (target.current.controller != getAP(state).id) {
+    const resistCost = getResistCost(state, target);
     getAP(state).gold -= resistCost;
   }
 }

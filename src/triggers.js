@@ -6,6 +6,7 @@ import { getName, applyStateBasedEffects } from "./entities";
 import { getAP } from "./util";
 
 import get from "lodash/get";
+import { needsOverpowerTarget, needsSparkshotTarget } from "./resolveattack";
 
 export const triggerDefinitions = {
   cardInfo,
@@ -55,6 +56,10 @@ export function canResolveCurrentTrigger(state) {
     case targetMode.single:
       // need to cover the case where there is no valid target
       return choices.targetId !== undefined;
+    case targetMode.overpower:
+      return !needsOverpowerTarget(state) || choices.targetId !== undefined;
+    case targetMode.sparkshot:
+      return !needsSparkshotTarget(state) || choices.targetId !== undefined;
   }
 }
 
