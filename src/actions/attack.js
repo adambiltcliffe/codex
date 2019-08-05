@@ -1,11 +1,7 @@
 import { getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
-import {
-  getCurrentValues,
-  applyStateBasedEffects,
-  updateCurrentValues
-} from "../entities";
+import { getCurrentValues, updateCurrentValues } from "../entities";
 import {
   hasKeyword,
   flying,
@@ -140,29 +136,8 @@ export function getAttackableEntityIdsControlledBy(
     .map(([ek, _ev]) => ek);
 }
 
-function getFlownOverVals(state, playerId, targetId) {
-  const patrollerIds = state.players[playerId].patrollerIds;
-  if (targetId == patrollerIds[patrolSlots.squadLeader]) {
-    // Attacking squad leader, don't need to fly over anything
-    return [];
-  }
-  if (patrollerIds.includes(targetId)) {
-    // Attacking a patroller, only squad leader flown over
-    return [patrollerIds[patrolSlots.squadLeader]]
-      .filter(id => id != null)
-      .map(id => getCurrentValues(state, id))
-      .filter(v => hasKeyword(v, antiAir));
-  }
-  // Otherwise we are potentially flying over all patrollers
-  const vals = getCurrentValues(state, patrollerIds);
-  return patrollerIds
-    .filter(id => id != null)
-    .map(id => vals[id])
-    .filter(v => hasKeyword(v, antiAir));
-}
-
 export function doAttackAction(state, action) {
-  state.currentAttack = action;
+  state.currentAttack = { ...action, begun: false };
   // have to do this here because of "X while attacking" effects
   updateCurrentValues(state);
   const u = state.entities[action.attacker];
@@ -185,42 +160,4 @@ export function doAttackAction(state, action) {
       log.fmt`${getAP(state)} declares an attack with ${attackerVals.name}.`
     );
   }
-}
-
-export function finishAttackAction(state) {
-  const attacker = state.entities[state.currentAttack.attacker];
-  const target = state.entities[state.currentAttack.target];
-  const values = getCurrentValues(state, [attacker.id, target.id]);
-  const attackerValues = values[attacker.id];
-  const targetValues = values[target.id];
-  const flownOverVals = hasKeyword(attackerValues, flying)
-    ? getFlownOverVals(state, targetValues.controller, target.id)
-    : [];
-  const flownOverText =
-    flownOverVals.length == 0
-      ? ""
-      : `, flying over ${andJoin(flownOverVals.map(v => v.name))}`;
-  log.add(
-    state,
-    log.fmt`${getAP(state)} attacks ${targetValues.name} with ${
-      attackerValues.name
-    }${flownOverText}.`
-  );
-  if (!hasKeyword(attackerValues, readiness)) {
-    attacker.ready = false;
-  }
-  attacker.thisTurn.attacks = 1 + (attacker.thisTurn.attacks || 0);
-  const attackerReceivesDamage =
-    !hasKeyword(attackerValues, flying) ||
-    hasKeyword(targetValues, flying) ||
-    hasKeyword(targetValues, antiAir);
-  if (attackerReceivesDamage) {
-    attacker.damage += targetValues.attack;
-  }
-  flownOverVals.forEach(v => {
-    attacker.damage += v.attack;
-  });
-  target.damage += attackerValues.attack;
-  state.currentAttack = null;
-  applyStateBasedEffects(state);
 }

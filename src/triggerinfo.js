@@ -1,8 +1,10 @@
 import log from "./log";
 import { givePlayerGold } from "./util";
 import { drawCards } from "./draw";
+import resolveAttackTriggers from "./resolveattack";
 
 const triggerInfo = {
+  ...resolveAttackTriggers,
   scavenger: {
     action: ({ state }) => {
       const player = state.players[state.currentTrigger.playerId];

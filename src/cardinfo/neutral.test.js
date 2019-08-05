@@ -117,12 +117,11 @@ test("Brick Thief can steal a brick from an opposing building", () => {
   const s2 = playActions(s1, [{ type: "choice", target: p1base }]);
   expect(s2.log).toContain("Brick Thief repairs 1 damage from base.");
   const bt = findEntityIds(s2, e => e.card == "brick_thief")[0];
-  const s3 = playActions(s2, [
-    { type: "endTurn" },
-    { type: "endTurn" },
-    { type: "attack", attacker: bt, target: p2base },
-    { type: "choice", target: p2base }
+  const s2a = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
+  const s2b = playActions(s2a, [
+    { type: "attack", attacker: bt, target: p2base }
   ]);
+  const s3 = playActions(s2b, [{ type: "choice", target: p2base }]);
   expect(s3.log).toContain("Brick Thief deals 1 damage to base.");
   const s4 = playActions(s3, [{ type: "choice", target: p1base }]);
   expect(s4.log).toContain("Brick Thief repairs 1 damage from base.");

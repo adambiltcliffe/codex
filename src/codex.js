@@ -19,7 +19,7 @@ import {
 } from "./entities";
 import { targetMode, types } from "./cardinfo/constants";
 import { emptyPatrolZone } from "./patrolzone";
-import { finishAttackAction } from "./actions/attack";
+import { finishAttackAction as enqueueAttackAction } from "./actions/attack";
 
 import flatMap from "lodash/flatMap";
 import flatten from "lodash/flatten";
@@ -28,6 +28,7 @@ import partition from "lodash/partition";
 import range from "lodash/range";
 import take from "lodash/take";
 import uniq from "lodash/uniq";
+import { enqueueResolveAttack } from "./resolveattack";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -118,7 +119,7 @@ class CodexGame extends Game {
           if (state.currentAttack == null) {
             needAction = true;
           } else {
-            finishAttackAction(state);
+            enqueueResolveAttack(state);
           }
         } else {
           advancePhase(state);
