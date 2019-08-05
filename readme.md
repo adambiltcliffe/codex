@@ -20,7 +20,7 @@ Flagbearer ability
 
 # Tests to write
 
-Everything involving swift strike
+Everything involving swift strike, sparkshot and overpower (including in combination)
 Troq abilities
 Jaina abilities
 Technician trigger
@@ -37,8 +37,6 @@ Auto-targetting triggers with only one choice
 # Game features not implemented:
 
 One reshuffle per main phase limit
-Don't lock the game if a trigger has no available targets (including overpower, sparkshot)
-Auto-target if there is only one available target
 
 Heroes return to command zone and go on cooldown when killed
 
@@ -49,7 +47,6 @@ Add-ons
 Armor (requires effects)
 Armor for squad leader
 Proper continuous effects ordering
-Swift strike, overpower, sparkshot (requires making attack into triggers)
 Stealth, unstoppable
 Detector
 Tower (requires add-ons and detector)
