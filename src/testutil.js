@@ -4,6 +4,7 @@ import cardInfo, { types } from "./cardinfo";
 import produce from "immer";
 import { createUnit, createHero } from "./entities";
 import { fixtureNames } from "./fixtures";
+import { getLegalChoicesForCurrentTrigger } from "./triggers";
 
 export const testp1Id = "test_player1";
 export const testp2Id = "test_player2";
@@ -111,6 +112,9 @@ export class TestGame {
     return Object.keys(pickBy(this.state.newTriggers, predicate)).map(
       Number
     )[0];
+  }
+  getLegalChoices() {
+    return getLegalChoicesForCurrentTrigger(this.state);
   }
   setGold(playerId, amount) {
     this.state = produce(this.state, draft => {

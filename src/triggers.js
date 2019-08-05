@@ -7,6 +7,7 @@ import { getAP } from "./util";
 
 import get from "lodash/get";
 import { needsOverpowerTarget, needsSparkshotTarget } from "./resolveattack";
+import { getLegalChoicesForStep } from "./targets";
 
 export const triggerDefinitions = {
   cardInfo,
@@ -42,6 +43,15 @@ export function currentTriggerDefinition(state) {
   return get(triggerDefinitions, state.currentTrigger.path);
 }
 
+export function getLegalChoicesForCurrentTrigger(state) {
+  const def = currentTriggerDefinition(state);
+  let stepDef = def;
+  if (def.steps) {
+    stepDef = def.steps[state.currentTrigger.stepIndex];
+  }
+  return getLegalChoicesForStep(state, stepDef);
+}
+
 export function canResolveCurrentTrigger(state) {
   const def = currentTriggerDefinition(state);
   let stepDef = def;
@@ -50,16 +60,36 @@ export function canResolveCurrentTrigger(state) {
     stepDef = def.steps[state.currentTrigger.stepIndex];
     choices = state.currentTrigger.choices[state.currentTrigger.stepIndex];
   }
-  switch (stepDef.targetMode) {
-    case undefined:
+  // special cases for where no choice is needed
+  if (stepDef.targetMode == undefined) {
+    return true;
+  }
+  if (
+    (stepDef.targetMode == targetMode.overpower &&
+      !needsOverpowerTarget(state)) ||
+    (stepDef.targetMode == targetMode.sparkshot && !needsSparkshotTarget(state))
+  ) {
+    return true;
+  }
+  // all remaining possibilities require choices.targetId to be set
+  if (choices.targetId !== undefined) {
+    return true;
+  }
+  const desc = state.currentTrigger.isActivatedAbility
+    ? "activated ability"
+    : "triggered action";
+  const possibleChoices = getLegalChoicesForStep(state, stepDef);
+  switch (possibleChoices.length) {
+    case 0:
+      log.add(state, `No legal choices for ${desc}.`);
+      choices.skipped = true;
       return true;
-    case targetMode.single:
-      // need to cover the case where there is no valid target
-      return choices.targetId !== undefined;
-    case targetMode.overpower:
-      return !needsOverpowerTarget(state) || choices.targetId !== undefined;
-    case targetMode.sparkshot:
-      return !needsSparkshotTarget(state) || choices.targetId !== undefined;
+    case 1:
+      log.add(state, `Only one legal choice for ${desc}.`);
+      choices.targetId = possibleChoices[0];
+      return true;
+    default:
+      return false;
   }
 }
 
@@ -73,11 +103,13 @@ export function resolveCurrentTrigger(state) {
     action = def.steps[state.currentTrigger.stepIndex].action;
     choices = choices[state.currentTrigger.stepIndex];
   }
-  action({
-    state,
-    source: state.entities[state.currentTrigger.sourceId],
-    choices
-  });
+  if (!choices.skipped) {
+    action({
+      state,
+      source: state.entities[state.currentTrigger.sourceId],
+      choices
+    });
+  }
   if (
     isMultiStepTrigger &&
     state.currentTrigger.stepIndex < def.steps.length - 1

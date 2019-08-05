@@ -94,7 +94,39 @@ test("Fruit Ninja's frenzy functions correctly", () => {
   expect(s4.entities[ims[1]].damage).toEqual(2);
 });
 
-test("Brick Thief can steal a brick from an opposing building", () => {
+test("Brick Thief can steal a brick from enemy base at start of game", () => {
+  const s0 = getNewGame();
+  putCardInHand(s0, testp1Id, "brick_thief");
+  const p1base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp1Id
+  )[0];
+  const p2base = findEntityIds(
+    s0,
+    e => e.fixture == fixtureNames.base && e.owner == testp2Id
+  )[0];
+  s0.entities[p1base].damage = 2;
+  const s1 = playActions(s0, [
+    {
+      type: "play",
+      card: "brick_thief"
+    },
+    { type: "choice", target: p2base }
+  ]);
+  expect(s1.log).toContain("Brick Thief deals 1 damage to base.");
+  expect(s1.log).toContain("Brick Thief repairs 1 damage from base.");
+  const bt = findEntityIds(s1, e => e.card == "brick_thief")[0];
+  const s2 = playActions(s1, [{ type: "endTurn" }, { type: "endTurn" }]);
+  const s2b = playActions(s2, [
+    { type: "attack", attacker: bt, target: p2base }
+  ]);
+  const s3 = playActions(s2b, [{ type: "choice", target: p2base }]);
+  expect(s3.log).toContain("Brick Thief deals 1 damage to base.");
+  expect(s3.log).toContain("Brick Thief repairs 1 damage from base.");
+});
+
+//Reinstate this test when more than 2 buildings can be in play
+/*test("Brick Thief can steal a brick from an opposing building", () => {
   const s0 = getNewGame();
   putCardInHand(s0, testp1Id, "brick_thief");
   const p1base = findEntityIds(
@@ -125,7 +157,7 @@ test("Brick Thief can steal a brick from an opposing building", () => {
   expect(s3.log).toContain("Brick Thief deals 1 damage to base.");
   const s4 = playActions(s3, [{ type: "choice", target: p1base }]);
   expect(s4.log).toContain("Brick Thief repairs 1 damage from base.");
-});
+});*/
 
 test("Brick Thief doesn't report repairing damage if it didn't", () => {
   const s0 = getNewGame();
@@ -146,8 +178,7 @@ test("Brick Thief doesn't report repairing damage if it didn't", () => {
     { type: "choice", target: p2base }
   ]);
   expect(s1.log).toContain("Brick Thief deals 1 damage to base.");
-  const s2 = playActions(s1, [{ type: "choice", target: p1base }]);
-  expect(s2.log).not.toContain("Brick Thief repairs 1 damage from base.");
+  expect(s1.log).not.toContain("Brick Thief repairs 1 damage from base.");
 });
 
 test("Brick Thief can't damage and then repair the same building", () => {
@@ -170,42 +201,34 @@ test("Brick Thief can't damage and then repair the same building", () => {
 });
 
 test("Spark can deal damage to patroller", () => {
-  const s0 = getGameWithUnits(["older_brother"], []);
-  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
-  const s1 = playActions(s0, [
-    { type: "endTurn", patrollers: [null, ob, null, null, null] }
-  ]);
-  const [s2, troq] = withInsertedEntity(
-    produce(s1, d => {
-      d.players[testp2Id].hand.push("spark");
-    }),
-    testp2Id,
-    "troq_bashar"
-  );
-  const s3 = playActions(s2, [
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["older_brother", "older_brother"])
+    .insertEntity(testp2Id, "troq_bashar")
+    .putCardsInHand(testp2Id, ["spark"]);
+  const [ob1, ob2] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, ob1, ob2, null, null] },
     { type: "play", card: "spark" },
-    { type: "choice", target: ob }
+    { type: "choice", target: ob1 }
   ]);
-  expect(s3.entities[ob].damage).toEqual(1);
+  expect(tg.state.entities[ob1].damage).toEqual(1);
 });
 
 test("Spark can't target non-patroller", () => {
-  const s0 = getGameWithUnits(["older_brother"], []);
-  const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
-  const s1 = playActions(s0, [
-    { type: "endTurn", patrollers: [null, null, null, null, null] }
+  const tg = new TestGame().insertEntities(testp1Id, [
+    "older_brother",
+    "older_brother",
+    "older_brother"
   ]);
-  const [s2, troq] = withInsertedEntity(
-    produce(s1, d => {
-      d.players[testp2Id].hand.push("spark");
-    }),
-    testp2Id,
-    "troq_bashar"
-  );
-  const s3 = playActions(s2, [{ type: "play", card: "spark" }]);
+  const [ob1, ob2, ob3] = tg.insertedEntityIds;
+  tg.playAction({ type: "endTurn", patrollers: [ob2, ob3, null, null, null] });
+  tg.insertEntity(testp2Id, "troq_bashar")
+    .putCardsInHand(testp2Id, ["spark"])
+    .playAction({ type: "play", card: "spark" });
   expect(() => {
-    CodexGame.checkAction(s3, { type: "choice", target: ob });
+    tg.checkAction({ type: "choice", target: ob1 });
   }).toThrow();
+  expect(tg.getLegalChoices().sort()).toEqual([ob2, ob3].sort());
 });
 
 test("Wither puts -1/-1 rune on a unit", () => {

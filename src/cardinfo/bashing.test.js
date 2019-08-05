@@ -5,13 +5,23 @@ import {
   testp1Id,
   testp2Id,
   findEntityIds,
-  withInsertedEntity
+  withInsertedEntity,
+  TestGame
 } from "../testutil";
 import { fixtureNames } from "../fixtures";
 
-test("Hired Stomper can kill itself with own trigger", () => {
+test("Hired Stomper must kill itself with own trigger if no other units", () => {
   const s0 = getNewGame();
   putCardInHand(s0, testp1Id, "hired_stomper");
+  expect(s0.currentTrigger).toBeNull();
+  const s1 = playActions(s0, [{ type: "play", card: "hired_stomper" }]);
+  expect(s1.log).toContain("Hired Stomper deals 3 damage to Hired Stomper.");
+});
+
+test("Hired Stomper can kill itself with own trigger even if other options available", () => {
+  const s0 = new TestGame()
+    .insertEntity(testp1Id, "older_brother")
+    .putCardsInHand(testp1Id, ["hired_stomper"]).state;
   expect(s0.currentTrigger).toBeNull();
   const s1 = playActions(s0, [{ type: "play", card: "hired_stomper" }]);
   expect(s1.currentTrigger).not.toBeNull();

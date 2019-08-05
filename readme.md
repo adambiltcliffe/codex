@@ -10,6 +10,7 @@ Ability to level up heroes
 Upkeep/arrival/attack triggers
 Activated abilities
 Choice of order when adding triggers to queue
+Automatic resolution of triggers when only one choice exists and skipping if none
 Passive effects on units that modify their own/others' stats and add abilities
 Frenzy, haste, flying, anti-air, invisible, healing, resist
 Patrol zone with taunt for squad leader and bonus for elite, scavenger, technician and lookout
@@ -30,6 +31,8 @@ With Jaina: can cast Wither, Scorch, Fire Dart, can't cast Wrecking Ball
 With no hero: can't cast Wither, Scorch, Wrecking Ball or Fire Dart
 With Troq and Jaina: can cast Wither, Scorch, Fire Dart and Wrecking Ball
 Scorch and Fire Dart
+Skipping triggers with no choices
+Auto-targetting triggers with only one choice
 
 # Game features not implemented:
 
@@ -70,7 +73,7 @@ Victory condition
 
 Change signature of canTarget on abilities
 Change signature of hasKeyword
-Rewrite the test helper functions to be consistent and not crazy
+Put back deleted Brick Thief tests when more than 2 buildings can exist
 Deprecate the use of getCurrentValues, getName and getCurrentController
 Move the first three tests from neutral.test.js into a keyword test file
 Make suggestActions do something sensible for patrollers (not bases)
@@ -79,14 +82,13 @@ Make sure it works out of the box, i.e. without npm linking playground
 
 # Cards that will need special attention
 
-Hotter Fire
-Smoker
-Second Chances
-Manufactured Truth
-Dreamscape
-Master Midori
-Jail
-Graveyard
-Gilded Glaxx
-Reteller of Truths
-Lawbringer Gryphon
+Hotter Fire (Red/Fire)
+Master Midori (Green/Balance)
+Manufactured Truth (Blue/starter)
+Jail (Blue/starter)
+Reteller of Truths (Blue/Truth)
+Dreamscape (Blue/Truth)
+Graveyard (Black/starter)
+Smoker (White/starter)
+Second Chances (Purple/Past)
+Gilded Glaxx (Purple/Future)
