@@ -56,6 +56,7 @@ const neutralCardInfo = {
         triggerOnAttack: true,
         steps: [
           {
+            prompt: "Choose a building to damage",
             targetMode: targetMode.single,
             targetTypes: [types.building],
             action: ({ state, source, choices }) => {
@@ -70,6 +71,7 @@ const neutralCardInfo = {
             }
           },
           {
+            prompt: "Choose a building to repair",
             targetMode: targetMode.single,
             targetTypes: [types.building],
             canTarget: ({ state, triggerInfo, targetId }) => {
@@ -135,6 +137,7 @@ const neutralCardInfo = {
     cost: 1,
     abilities: [
       {
+        prompt: "Choose a patroller to damage",
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
@@ -161,6 +164,7 @@ const neutralCardInfo = {
     cost: 2,
     abilities: [
       {
+        prompt: "Choose a friendly unit or hero to put a +1/+1 rune on",
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
@@ -184,6 +188,7 @@ const neutralCardInfo = {
     cost: 2,
     abilities: [
       {
+        prompt: "Choose a unit or hero to put a -1/-1 rune on",
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],

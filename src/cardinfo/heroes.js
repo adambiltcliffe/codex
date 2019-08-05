@@ -23,6 +23,7 @@ const heroCardInfo = {
         hp: 3,
         abilities: [
           {
+            prompt: "Choose a patrolling unit or building to damage",
             isActivatedAbility: true,
             costsExhaustSelf: true,
             targetMode: targetMode.single,
@@ -51,6 +52,7 @@ const heroCardInfo = {
         hp: 3,
         abilities: [
           {
+            prompt: "Choose a unit or building to damage",
             isActivatedAbility: true,
             costsExhaustSelf: true,
             targetMode: targetMode.single,

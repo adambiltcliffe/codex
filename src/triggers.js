@@ -75,17 +75,14 @@ export function canResolveCurrentTrigger(state) {
   if (choices.targetId !== undefined) {
     return true;
   }
-  const desc = state.currentTrigger.isActivatedAbility
-    ? "activated ability"
-    : "triggered action";
   const possibleChoices = getLegalChoicesForStep(state, stepDef);
   switch (possibleChoices.length) {
     case 0:
-      log.add(state, `No legal choices for ${desc}.`);
+      log.add(state, `${stepDef.prompt}: No legal choices.`);
       choices.skipped = true;
       return true;
     case 1:
-      log.add(state, `Only one legal choice for ${desc}.`);
+      log.add(state, `${stepDef.prompt}: Only one legal choice.`);
       choices.targetId = possibleChoices[0];
       return true;
     default:

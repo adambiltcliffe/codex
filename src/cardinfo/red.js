@@ -10,6 +10,7 @@ const redCardInfo = {
     cost: 3,
     abilities: [
       {
+        prompt: "Choose a patroller or building to damage",
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.building],

@@ -9,6 +9,7 @@ const fireCardInfo = {
     cost: 2,
     abilities: [
       {
+        prompt: "Choose a unit or building to damage",
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.building],

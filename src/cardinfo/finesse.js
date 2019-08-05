@@ -1,14 +1,8 @@
 import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
-import {
-  conferComplexAbility,
-  conferKeyword,
-  getName,
-  getCurrentController
-} from "../entities";
+import { conferComplexAbility, conferKeyword, getName } from "../entities";
 import { haste, flying, invisible } from "./abilities/keywords";
 import { getAP } from "../util";
-import { isDraft } from "immer";
 
 const finesseCardInfo = {
   nimble_fencer: {
@@ -117,6 +111,7 @@ const finesseCardInfo = {
       }
     ],
     conferredAbility: {
+      prompt: "Choose a building to damage",
       isActivatedAbility: true,
       costsExhaustSelf: true,
       targetMode: targetMode.single,

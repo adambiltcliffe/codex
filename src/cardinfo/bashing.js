@@ -12,6 +12,7 @@ const bashingCardInfo = {
     cost: 0,
     abilities: [
       {
+        prompt: "Choose a building to damage",
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.building],
@@ -63,6 +64,7 @@ const bashingCardInfo = {
     hp: 3,
     abilities: [
       {
+        prompt: "Choose a unit to stomp",
         triggerOnOwnArrival: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit],
