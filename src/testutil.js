@@ -34,10 +34,10 @@ export function withInsertedEntity(state, owner, card) {
   const newState = produce(state, draft => {
     switch (cardInfo[card].type) {
       case types.unit:
-        newId = createUnit(draft, owner, card);
+        newId = createUnit(draft, owner, card).id;
         break;
       case types.hero:
-        newId = createHero(draft, owner, card);
+        newId = createHero(draft, owner, card).id;
         break;
     }
   });
@@ -133,10 +133,10 @@ export class TestGame {
     const newState = produce(this.state, draft => {
       switch (cardInfo[card].type) {
         case types.unit:
-          newId = createUnit(draft, playerId, card);
+          newId = createUnit(draft, playerId, card).id;
           break;
         case types.hero:
-          newId = createHero(draft, playerId, card);
+          newId = createHero(draft, playerId, card).id;
           break;
       }
     });

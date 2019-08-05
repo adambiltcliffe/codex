@@ -1,6 +1,6 @@
 import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
-import { conferComplexAbility, conferKeyword, getName } from "../entities";
+import { conferComplexAbility, conferKeyword } from "../entities";
 import { haste, flying, invisible } from "./abilities/keywords";
 import { getAP } from "../util";
 
@@ -43,7 +43,7 @@ const finesseCardInfo = {
         triggerOnUpkeep: true,
         action: ({ state, source }) => {
           source.damage++;
-          log.add(state, `${getName(state, source.id)} takes 1 damage.`);
+          log.add(state, `${source.current.name} takes 1 damage.`);
         }
       },
       {
@@ -120,10 +120,9 @@ const finesseCardInfo = {
         state.entities[choices.targetId].damage += 2;
         log.add(
           state,
-          `${getName(state, source.id)} deals 2 damage to ${getName(
-            state,
-            choices.targetId
-          )}.`
+          `${source.current.name} deals 2 damage to ${
+            state.entities[choices.targetId].current.name
+          }.`
         );
       }
     }

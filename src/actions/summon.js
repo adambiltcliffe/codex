@@ -1,7 +1,7 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import { getCurrentValues, getName, createHero } from "../entities";
+import { createHero } from "../entities";
 import forEach from "lodash/forEach";
 
 export function checkSummonAction(state, action) {
@@ -19,14 +19,13 @@ export function doSummonAction(state, action) {
   const czIndex = ap.commandZone.indexOf(action.hero);
   ap.commandZone.splice(czIndex, 1);
   ap.gold -= cardInfo[action.hero].cost;
-  const newHeroId = createHero(state, ap.id, action.hero);
-  log.add(state, log.fmt`${ap} summons ${getName(state, newHeroId)}.`);
-  const vals = getCurrentValues(state, newHeroId);
-  forEach(vals.abilities, a => {
+  const newHero = createHero(state, ap.id, action.hero);
+  log.add(state, log.fmt`${ap} summons ${newHero.current.name}.`);
+  forEach(newHero.current.abilities, a => {
     if (a.triggerOnOwnArrival) {
       state.newTriggers.push({
         path: a.path,
-        sourceId: newHeroId
+        sourceId: newHero.id
       });
     }
   });

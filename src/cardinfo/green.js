@@ -1,5 +1,4 @@
 import { colors, types } from "./constants";
-import { getCurrentController, getName } from "../entities";
 import { givePlayerGold } from "../util";
 import log from "../log";
 
@@ -18,12 +17,8 @@ const greenCardInfo = {
         isActivatedAbility: true,
         costsExhaustSelf: true,
         action: ({ state, source }) => {
-          const gain = givePlayerGold(
-            state,
-            getCurrentController(state, source.id),
-            1
-          );
-          log.add(state, `${getName(state, source.id)} produces ${gain} gold.`);
+          const gain = givePlayerGold(state, source.current.controller, 1);
+          log.add(state, `${source.current.name} produces ${gain} gold.`);
         }
       }
     ]

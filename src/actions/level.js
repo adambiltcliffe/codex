@@ -42,7 +42,7 @@ export function doLevelAction(state, action) {
   hero.level += action.amount;
   log.add(
     state,
-    log.fmt`${ap} raises ${getName(state, hero.id)} to level ${hero.level}.`
+    log.fmt`${ap} raises ${hero.current.name} to level ${hero.level}.`
   );
   if (
     ((oldLevel < heroVals.midbandLevel &&
@@ -52,7 +52,7 @@ export function doLevelAction(state, action) {
     hero.damage > 0
   ) {
     hero.damage = 0;
-    log.add(state, log.fmt`${getName(state, hero.id)} is fully healed.`);
+    log.add(state, log.fmt`${hero.current.name} is fully healed.`);
   }
   applyStateBasedEffects(state);
 }

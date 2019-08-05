@@ -103,15 +103,14 @@ function playSpell(state) {
 
 function playUnit(state) {
   const ap = getAP(state);
-  const newUnitId = createUnit(state, ap.id, state.playedCard);
+  const newUnit = createUnit(state, ap.id, state.playedCard);
   delete state.playedCard;
-  const vals = getCurrentValues(state, newUnitId);
-  log.add(state, log.fmt`${ap} plays ${getName(state, newUnitId)}.`);
-  forEach(vals.abilities, a => {
+  log.add(state, log.fmt`${ap} plays ${newUnit.current.name}.`);
+  forEach(newUnit.current.abilities, a => {
     if (a.triggerOnOwnArrival) {
       state.newTriggers.push({
         path: a.path,
-        sourceId: newUnitId
+        sourceId: newUnit.id
       });
     }
   });

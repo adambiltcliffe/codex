@@ -1,6 +1,5 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
-import { getName } from "../entities";
 import { flying, sparkshot, overpower } from "./abilities/keywords";
 
 const bashingCardInfo = {
@@ -20,10 +19,9 @@ const bashingCardInfo = {
           state.entities[choices.targetId].damage += 2;
           log.add(
             state,
-            `Wrecking Ball deals 2 damage to ${getName(
-              state,
-              choices.targetId
-            )}.`
+            `Wrecking Ball deals 2 damage to ${
+              state.entities[choices.targetId].current.name
+            }.`
           );
         }
       }
@@ -72,10 +70,9 @@ const bashingCardInfo = {
           state.entities[choices.targetId].damage += 3;
           log.add(
             state,
-            `${getName(state, source.id)} deals 3 damage to ${getName(
-              state,
-              choices.targetId
-            )}.`
+            `${source.current.name} deals 3 damage to ${
+              state.entities[choices.targetId].current.name
+            }.`
           );
         }
       }

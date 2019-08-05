@@ -39,7 +39,7 @@ export function enterReadyPhase(state) {
   forEach(state.entities, u => {
     u.thisTurn = {};
     if (getCurrentValues(state, u.id).controller == ap.id && !u.ready) {
-      readied.push(getName(state, u.id));
+      readied.push(u.current.name);
       u.ready = true;
     }
   });

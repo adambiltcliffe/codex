@@ -23,7 +23,7 @@ export function createUnit(state, owner, card) {
   state.entities[newUnit.id] = newUnit;
   state.nextId++;
   applyStateBasedEffects(state);
-  return newUnit.id;
+  return newUnit;
 }
 
 export function createHero(state, owner, card) {
@@ -42,44 +42,38 @@ export function createHero(state, owner, card) {
   state.entities[newHero.id] = newHero;
   state.nextId++;
   applyStateBasedEffects(state);
-  return newHero.id;
+  return newHero;
 }
 
 export function killEntity(state, entityId) {
   const e = state.entities[entityId];
-  const vals = getCurrentValues(state, entityId);
-  log.add(state, log.fmt`${getName(state, entityId)} dies.`);
-  delete state.entities[entityId];
-  const pz = state.players[vals.controller].patrollerIds;
+  log.add(state, log.fmt`${e.current.name} dies.`);
+  delete state.entities[e.id];
+  const pz = state.players[e.current.controller].patrollerIds;
   pz.forEach((id, index) => {
-    if (id == entityId) {
+    if (id == e.id) {
       if (index == patrolSlots.scavenger) {
         state.newTriggers.push({
           path: "triggerInfo.scavenger",
-          playerId: vals.controller
+          playerId: e.current.controller
         });
       }
       if (index == patrolSlots.technician) {
         state.newTriggers.push({
           path: "triggerInfo.technician",
-          playerId: vals.controller
+          playerId: e.current.controller
         });
       }
       pz[index] = null;
     }
   });
-  if (vals.type == types.hero) {
+  if (e.current.type == types.hero) {
     state.players[e.owner].commandZone.push(e.card);
   } else {
     state.updateHidden(fs => {
       fs.players[e.owner].discard.push(e.card);
     });
   }
-}
-
-export function getName(state, entityId) {
-  // should be deprecated eventually
-  return state.entities[entityId].current.name;
 }
 
 export function getCurrentController(state, unitIds) {

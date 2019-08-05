@@ -245,6 +245,7 @@ test("Wither puts -1/-1 rune on a unit", () => {
   expect(s1.entities[ob].runes).toEqual(-1);
   expect(getCurrentValues(s1, ob).attack).toEqual(1);
   expect(getCurrentValues(s1, ob).hp).toEqual(1);
+  expect(s1.log).toContain("Wither adds a -1/-1 rune to Older Brother.");
 });
 
 test("Wither kills units with 1hp", () => {

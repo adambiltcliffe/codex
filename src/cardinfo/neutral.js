@@ -7,7 +7,7 @@ import {
   resist,
   flagbearer
 } from "./abilities/keywords";
-import { getName, getCurrentController } from "../entities";
+import { getCurrentController } from "../entities";
 
 const neutralCardInfo = {
   timely_messenger: {
@@ -63,10 +63,9 @@ const neutralCardInfo = {
               state.entities[choices.targetId].damage += 1;
               log.add(
                 state,
-                `${getName(state, source.id)} deals 1 damage to ${getName(
-                  state,
-                  choices.targetId
-                )}.`
+                `${source.current.name} deals 1 damage to ${
+                  state.entities[choices.targetId].current.name
+                }.`
               );
             }
           },
@@ -82,10 +81,9 @@ const neutralCardInfo = {
                 state.entities[choices.targetId].damage -= 1;
                 log.add(
                   state,
-                  `${getName(state, source.id)} repairs 1 damage from ${getName(
-                    state,
-                    choices.targetId
-                  )}.`
+                  `${source.current.name} repairs 1 damage from ${
+                    state.entities[choices.targetId].current.name
+                  }.`
                 );
               }
             }
@@ -149,7 +147,9 @@ const neutralCardInfo = {
           state.entities[choices.targetId].damage += 1;
           log.add(
             state,
-            `Spark deals 1 damage to ${getName(state, choices.targetId)}.`
+            `Spark deals 1 damage to ${
+              state.entities[choices.targetId].current.name
+            }.`
           );
         }
       }
@@ -173,7 +173,9 @@ const neutralCardInfo = {
           state.entities[choices.targetId].runes += 1;
           log.add(
             state,
-            `Bloom adds a +1/+1 rune to ${getName(state, choices.targetId)}.`
+            `Bloom adds a +1/+1 rune to ${
+              state.entities[choices.targetId].current.name
+            }.`
           );
         }
       }
@@ -196,7 +198,9 @@ const neutralCardInfo = {
           state.entities[choices.targetId].runes -= 1;
           log.add(
             state,
-            `Wither adds a -1/-1 rune to ${getName(state, choices.targetId)}.`
+            `Wither adds a -1/-1 rune to ${
+              state.entities[choices.targetId].current.name
+            }.`
           );
         }
       }

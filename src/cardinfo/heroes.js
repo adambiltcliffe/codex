@@ -102,10 +102,9 @@ const heroCardInfo = {
               base.damage += 1;
               log.add(
                 state,
-                `${getName(state, source.id)} deals 1 damage to ${getName(
-                  state,
-                  base.id
-                )}.`
+                `${source.current.name} deals 1 damage to ${
+                  state.entities[base.id].current.name
+                }.`
               );
             }
           }

@@ -73,7 +73,7 @@ Victory condition
 Change signature of canTarget on abilities
 Change signature of hasKeyword
 Put back deleted Brick Thief tests when more than 2 buildings can exist
-Deprecate the use of getCurrentValues, getName and getCurrentController
+Deprecate the use of getCurrentValues and getCurrentController
 Move the first three tests from neutral.test.js into a keyword test file
 Make suggestActions do something sensible for patrollers (not bases)
 Use a schema validation library to simplify action checking

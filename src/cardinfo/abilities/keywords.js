@@ -59,7 +59,7 @@ export function healing(n) {
           allVals[u.id].controller == allVals[source.id].controller &&
           u.damage > 0
         ) {
-          healed.push(getName(state, u.id));
+          healed.push(u.current.name);
           u.damage -= n;
           if (u.damage < 0) {
             u.damage = 0;
@@ -69,9 +69,7 @@ export function healing(n) {
       if (healed.length > 0) {
         log.add(
           state,
-          `${getName(state, source.id)} heals ${1} damage from ${andJoin(
-            healed
-          )}.`
+          `${source.current.name} heals ${1} damage from ${andJoin(healed)}.`
         );
       }
     }
