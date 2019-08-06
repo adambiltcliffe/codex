@@ -2,7 +2,7 @@ import CodexGame from "./codex";
 import pickBy from "lodash/pickby";
 import cardInfo, { types } from "./cardinfo";
 import produce from "immer";
-import { createUnit, createHero } from "./entities";
+import { createUnit, createHero, updateCurrentValues } from "./entities";
 import { fixtureNames } from "./fixtures";
 import { getLegalChoicesForCurrentTrigger } from "./triggers";
 
@@ -151,6 +151,7 @@ export class TestGame {
   modifyEntity(entityId, props) {
     const newState = produce(this.state, draft => {
       draft.entities[entityId] = { ...draft.entities[entityId], ...props };
+      updateCurrentValues(draft);
     });
     this.state = newState;
     return this;

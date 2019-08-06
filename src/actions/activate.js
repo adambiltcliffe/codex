@@ -1,6 +1,7 @@
 import { getCurrentValues } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/abilities/keywords";
 import { getAP } from "../util";
+import log from "../log";
 
 export function checkActivateAction(state, action) {
   const ap = getAP(state);
@@ -47,4 +48,8 @@ export function doActivateAction(state, action) {
   if (sourceVals.abilities[action.index].costsExhaustSelf) {
     state.entities[source.id].ready = false;
   }
+  log.add(
+    state,
+    log.fmt`${getAP(state)} activates an ability of ${source.current.name}.`
+  );
 }
