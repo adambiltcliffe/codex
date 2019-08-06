@@ -21,10 +21,8 @@ Flagbearer ability
 # Tests to write
 
 Everything involving swift strike, sparkshot and overpower (including in combination)
-Jaina abilities
 Technician trigger
 Scavenger trigger
-Spells are put in discard pile before resolving triggers they caused
 With Troq: can cast Wither, Wrecking Ball, can cast Scorch at +1 cost, can't cast Fire Dart
 With Jaina: can cast Wither, Scorch, Fire Dart, can't cast Wrecking Ball
 With no hero: can't cast Wither, Scorch, Wrecking Ball or Fire Dart
@@ -32,6 +30,11 @@ With Troq and Jaina: can cast Wither, Scorch, Fire Dart and Wrecking Ball
 Scorch and Fire Dart
 Skipping triggers with no choices
 Auto-targetting triggers with only one choice
+
+# Tests to write later
+
+Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
+Put back deleted Brick Thief tests when more than 2 buildings can exist
 
 # Game features not implemented:
 
@@ -71,8 +74,7 @@ Victory condition
 
 Change signature of canTarget on abilities
 Change signature of hasKeyword
-Put back deleted Brick Thief tests when more than 2 buildings can exist
-Deprecate the use of getCurrentValues and getCurrentController
+Deprecate the use of getCurrentValues
 Move the first three tests from neutral.test.js into a keyword test file
 Make suggestActions do something sensible for patrollers (not bases)
 Use a schema validation library to simplify action checking
