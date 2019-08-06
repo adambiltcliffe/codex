@@ -58,3 +58,41 @@ test("With a neutral hero, can cast neutral spells, plus colored minor spells at
   tg.playAction({ type: "play", card: "scorch" });
   expect(tg.state.players[testp1Id].gold).toEqual(0);
 });
+
+test("With a colored hero, can cast neutral and on-color minor spells plus own spells", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, [
+      "wither",
+      "wrecking_ball",
+      "scorch",
+      "fire_dart"
+    ])
+    .insertEntity(testp1Id, "jaina_stormborne");
+  expect(() => tg.checkAction({ type: "play", card: "wither" })).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "play", card: "wrecking_ball" })
+  ).toThrow();
+  expect(() => tg.checkAction({ type: "play", card: "scorch" })).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "play", card: "fire_dart" })
+  ).not.toThrow();
+});
+
+test("With two heroes, can cast spells belonging to either", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, [
+      "wither",
+      "wrecking_ball",
+      "scorch",
+      "fire_dart"
+    ])
+    .insertEntities(testp1Id, ["jaina_stormborne", "troq_bashar"]);
+  expect(() => tg.checkAction({ type: "play", card: "wither" })).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "play", card: "wrecking_ball" })
+  ).not.toThrow();
+  expect(() => tg.checkAction({ type: "play", card: "scorch" })).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "play", card: "fire_dart" })
+  ).not.toThrow();
+});
