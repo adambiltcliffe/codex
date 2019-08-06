@@ -7,7 +7,6 @@ import {
   resist,
   flagbearer
 } from "./abilities/keywords";
-import { getCurrentController } from "../entities";
 
 const neutralCardInfo = {
   timely_messenger: {

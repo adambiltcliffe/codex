@@ -36,3 +36,25 @@ test("Can't cast spells without a hero", () => {
   expect(() => tg.checkAction({ type: "play", card: "scorch" })).toThrow();
   expect(() => tg.checkAction({ type: "play", card: "fire_dart" })).toThrow();
 });
+
+test("With a neutral hero, can cast neutral spells, plus colored minor spells at a cost", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, [
+      "wither",
+      "wrecking_ball",
+      "scorch",
+      "fire_dart"
+    ])
+    .insertEntity(testp1Id, "troq_bashar");
+  expect(() => tg.checkAction({ type: "play", card: "wither" })).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "play", card: "wrecking_ball" })
+  ).not.toThrow();
+  expect(() => tg.checkAction({ type: "play", card: "fire_dart" })).toThrow();
+  tg.setGold(testp1Id, 3);
+  expect(() => tg.checkAction({ type: "play", card: "scorch" })).toThrow();
+  tg.setGold(testp1Id, 4);
+  expect(() => tg.checkAction({ type: "play", card: "scorch" })).not.toThrow();
+  tg.playAction({ type: "play", card: "scorch" });
+  expect(tg.state.players[testp1Id].gold).toEqual(0);
+});

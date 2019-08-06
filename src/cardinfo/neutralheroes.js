@@ -1,9 +1,9 @@
 import { colors, types, specs } from "./constants";
+import { fixtureNames } from "../fixtures";
 import { readiness } from "./abilities/keywords";
 import log from "../log";
 
 import find from "lodash/find";
-import { fixtureNames } from "../fixtures";
 
 const neutralHeroCardInfo = {
   troq_bashar: {

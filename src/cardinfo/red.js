@@ -17,7 +17,7 @@ const redCardInfo = {
         canTarget: ({ state, targetId }) =>
           state.entities[targetId].type == types.building ||
           state.players[
-            state.entities[targetId].controller
+            state.entities[targetId].current.controller
           ].patrollerIds.includes(targetId),
         action: ({ state, choices }) => {
           state.entities[choices.targetId].damage += 2;
