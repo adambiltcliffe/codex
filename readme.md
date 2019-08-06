@@ -24,9 +24,6 @@ Heroes can patrol
 Everything involving swift strike, sparkshot and overpower (including in combination)
 Technician trigger
 Scavenger trigger
-With Troq: can cast Wither, Wrecking Ball, can cast Scorch at +1 cost, can't cast Fire Dart
-With Jaina: can cast Wither, Scorch, Fire Dart, can't cast Wrecking Ball
-With Troq and Jaina: can cast Wither, Scorch, Fire Dart and Wrecking Ball
 Scorch and Fire Dart
 Skipping triggers with no choices
 Auto-targetting triggers with only one choice
