@@ -25,12 +25,14 @@ export function checkEndTurnAction(state, action) {
       if (typeof patroller != "object") {
         throw new Error("Invalid patroller ID.");
       }
-      const patrollerVals = getCurrentValues(state, patroller.id);
-      if (patrollerVals.controller != ap.id) {
+      if (patroller.current.controller != ap.id) {
         throw new Error("You don't control one of the patrollers.");
       }
-      if (patrollerVals.type != types.unit) {
-        throw new Error("Only units can patrol.");
+      if (
+        patroller.current.type != types.unit &&
+        patroller.current.type != types.hero
+      ) {
+        throw new Error("Only units and heroes can patrol.");
       }
       if (!patroller.ready) {
         throw new Error("One of the patrollers is exhausted.");
