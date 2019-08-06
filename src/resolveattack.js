@@ -1,4 +1,5 @@
-import { getCurrentValues, applyStateBasedEffects } from "./entities";
+import { targetMode } from "./cardinfo/constants";
+import { applyStateBasedEffects } from "./entities";
 import {
   hasKeyword,
   antiAir,
@@ -8,12 +9,11 @@ import {
   overpower,
   sparkshot
 } from "./cardinfo/abilities/keywords";
-import { andJoin, getAP } from "./util";
+import { andJoin } from "./util";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
 
 import partition from "lodash/partition";
-import { targetMode } from "./cardinfo";
 
 const overpowerStep = 0;
 const sparkshotStep = 1;

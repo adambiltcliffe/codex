@@ -1,10 +1,12 @@
+import { types } from "./cardinfo/constants";
 import CodexGame from "./codex";
-import pickBy from "lodash/pickby";
-import cardInfo, { types } from "./cardinfo";
-import produce from "immer";
 import { createUnit, createHero, updateCurrentValues } from "./entities";
 import { fixtureNames } from "./fixtures";
 import { getLegalChoicesForCurrentTrigger } from "./triggers";
+import cardInfo from "./cardinfo";
+
+import pickBy from "lodash/pickby";
+import produce from "immer";
 
 export const testp1Id = "test_player1";
 export const testp2Id = "test_player2";

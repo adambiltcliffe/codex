@@ -1,9 +1,9 @@
-import log from "./log";
-import cardInfo from "./cardinfo";
-import triggerInfo from "./triggerinfo";
 import { targetMode } from "./cardinfo/constants";
-import { getName, applyStateBasedEffects } from "./entities";
 import { getAP } from "./util";
+import log from "./log";
+import { applyStateBasedEffects } from "./entities";
+import triggerInfo from "./triggerinfo";
+import cardInfo from "./cardinfo";
 
 import get from "lodash/get";
 import { needsOverpowerTarget, needsSparkshotTarget } from "./resolveattack";
