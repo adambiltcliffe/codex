@@ -159,22 +159,16 @@ export function doAttackAction(state, action) {
   updateCurrentValues(state);
   const u = state.entities[action.attacker];
   const attackerVals = getCurrentValues(state, u.id);
-  let triggered = false;
   attackerVals.abilities.forEach((a, index) => {
     if (a.triggerOnAttack) {
       state.newTriggers.push({
         path: a.path,
         sourceId: u.id
       });
-      triggered = true;
     }
   });
-  if (triggered) {
-    // If nothing triggered, this message is redundant as the next one will
-    // describe the attack in detail anyway
-    log.add(
-      state,
-      log.fmt`${getAP(state)} declares an attack with ${attackerVals.name}.`
-    );
-  }
+  log.add(
+    state,
+    log.fmt`${getAP(state)} declares an attack with ${attackerVals.name}.`
+  );
 }

@@ -30,7 +30,8 @@ test("Arrival fatigue and attacking base", () => {
     { type: "attack", attacker: im, target: p2base }
   ]);
   expect(s2.entities[p2base].damage).toEqual(3);
-  expect(s2.log).toContain(`\${${testp1Id}} attacks base with Iron Man.`);
+  expect(s2.log).toContain(`\${${testp1Id}} declares an attack with Iron Man.`);
+  expect(s2.log).toContain("Iron Man attacks base.");
 });
 
 test("Base can't attack", () => {

@@ -21,7 +21,6 @@ Flagbearer ability
 # Tests to write
 
 Everything involving swift strike, sparkshot and overpower (including in combination)
-Troq abilities
 Jaina abilities
 Technician trigger
 Scavenger trigger

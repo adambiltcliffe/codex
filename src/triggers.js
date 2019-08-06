@@ -24,7 +24,7 @@ export function addTriggerToQueue(state, trigger) {
     const desc =
       "Triggered action" +
       (trigger.sourceId
-        ? `from ${state.entities[trigger.sourceId].current.name}`
+        ? ` from ${state.entities[trigger.sourceId].current.name}`
         : "");
     log.add(state, `${desc} was added to the queue.`);
   }

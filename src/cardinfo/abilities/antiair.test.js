@@ -76,7 +76,7 @@ test("Flyer takes damage when flying over patrollers with anti-air", () => {
   ]);
   expect(s1.entities[sr].damage).toEqual(4);
   expect(s1.log).toContain(
-    `\${${testp2Id}} attacks base with Spectral Roc, flying over Fox Primus and Fox Primus.`
+    "Spectral Roc attacks base, flying over Fox Primus and Fox Primus."
   );
 });
 
@@ -94,7 +94,7 @@ test("Flyer takes damage when flying over anti-air squad leader to attack anothe
   ]);
   expect(s1.entities[sr].damage).toEqual(2);
   expect(s1.log).toContain(
-    `\${${testp2Id}} attacks Older Brother with Spectral Roc, flying over Fox Primus.`
+    "Spectral Roc attacks Older Brother, flying over Fox Primus."
   );
 });
 
@@ -110,9 +110,7 @@ test("Flyer doesn't take damage when flying over patroller without anti-air", ()
     { type: "attack", attacker: sr, target: ob2 }
   ]);
   expect(s1.entities[sr].damage).toEqual(0);
-  expect(s1.log).toContain(
-    `\${${testp2Id}} attacks Older Brother with Spectral Roc.`
-  );
+  expect(s1.log).toContain("Spectral Roc attacks Older Brother.");
 });
 
 test("Flyer doesn't take damage from anti-air patroller when attacking another patroller", () => {
@@ -124,7 +122,5 @@ test("Flyer doesn't take damage from anti-air patroller when attacking another p
     { type: "attack", attacker: sr, target: fp2 }
   ]);
   expect(s1.entities[sr].damage).toEqual(2);
-  expect(s1.log).toContain(
-    `\${${testp2Id}} attacks Fox Primus with Spectral Roc.`
-  );
+  expect(s1.log).toContain("Spectral Roc attacks Fox Primus.");
 });

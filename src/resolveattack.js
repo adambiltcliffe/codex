@@ -107,8 +107,8 @@ const resolveAttackTriggers = {
               : `, flying over ${andJoin(flownOver.map(e => e.current.name))}`;
           log.add(
             state,
-            log.fmt`${getAP(state)} attacks ${target.current.name} with ${
-              attacker.current.name
+            `${attacker.current.name} attacks ${
+              target.current.name
             }${flownOverText}.`
           );
           if (!hasKeyword(attacker.current, readiness)) {

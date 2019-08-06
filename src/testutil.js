@@ -148,6 +148,13 @@ export class TestGame {
     cards.forEach(c => this.insertEntity(playerId, c));
     return this;
   }
+  modifyEntity(entityId, props) {
+    const newState = produce(this.state, draft => {
+      draft.entities[entityId] = { ...draft.entities[entityId], ...props };
+    });
+    this.state = newState;
+    return this;
+  }
   checkAction(action) {
     return CodexGame.checkAction(this.state, action);
   }

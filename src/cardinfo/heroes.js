@@ -10,7 +10,7 @@ const heroCardInfo = {
   jaina_stormborne: {
     color: colors.red,
     spec: specs.fire,
-    name: "Jaine Stormborne",
+    name: "Jaina Stormborne",
     title: "Phoenix Archer",
     type: types.hero,
     cost: 2,
