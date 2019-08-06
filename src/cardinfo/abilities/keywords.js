@@ -37,6 +37,7 @@ export const overpower = keyword("K_OVERPOWER");
 export const swiftStrike = keyword("K_SWIFTSTRIKE");
 
 export const resist = numericKeyword("KV_RESIST");
+export const obliterate = numericKeyword("KV_OBLITERATE");
 
 export function frenzy(n) {
   return {

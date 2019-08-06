@@ -27,6 +27,7 @@ Scavenger trigger
 Scorch and Fire Dart
 Skipping triggers with no choices
 Auto-targetting triggers with only one choice
+Everything about Trojan Duck
 
 # Tests to write later
 

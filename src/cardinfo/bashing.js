@@ -1,6 +1,6 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
-import { flying, sparkshot, overpower } from "./abilities/keywords";
+import { flying, sparkshot, overpower, obliterate } from "./abilities/keywords";
 
 const bashingCardInfo = {
   wrecking_ball: {
@@ -112,6 +112,36 @@ const bashingCardInfo = {
     attack: 6,
     hp: 5,
     abilities: [overpower]
+  },
+  trojan_duck: {
+    color: colors.neutral,
+    tech: 3,
+    spec: specs.bashing,
+    name: "Trojan Duck",
+    type: types.unit,
+    subtypes: ["Contraption"],
+    cost: 7,
+    attack: 8,
+    hp: 9,
+    abilities: [
+      obliterate(2),
+      {
+        triggerOnOwnArrival: true,
+        triggerOnAttack: true,
+        prompt: "Choose a building to damage",
+        targetMode: targetMode.single,
+        targetTypes: [types.building],
+        action: ({ state, source, choices }) => {
+          state.entities[choices.targetId].damage += 4;
+          log.add(
+            state,
+            `${source.current.name} deals 4 damage to ${
+              state.entities[choices.targetId].current.name
+            }.`
+          );
+        }
+      }
+    ]
   }
 };
 
