@@ -6,18 +6,14 @@ import { phases, advancePhase } from "./phases";
 import {
   addTriggerToQueue,
   canResolveCurrentTrigger,
-  currentTriggerDefinition,
   enqueueNextTrigger,
   resolveCurrentTrigger,
   getLegalChoicesForCurrentTrigger
 } from "./triggers";
-import {
-  getCurrentController,
-  getCurrentValues,
-  cacheCurrentValues
-} from "./entities";
-import { targetMode, types } from "./cardinfo/constants";
+import { getCurrentValues, cacheCurrentValues } from "./entities";
+import { types } from "./cardinfo/constants";
 import { emptyPatrolZone } from "./patrolzone";
+import { enqueueResolveAttack } from "./resolveattack";
 
 import flatMap from "lodash/flatMap";
 import flatten from "lodash/flatten";
@@ -26,7 +22,6 @@ import partition from "lodash/partition";
 import range from "lodash/range";
 import take from "lodash/take";
 import uniq from "lodash/uniq";
-import { enqueueResolveAttack } from "./resolveattack";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -206,13 +201,9 @@ class CodexGame extends Game {
       type: "summon",
       hero: h
     }));
-    const entityControllers = getCurrentController(
-      state,
-      Object.keys(state.entities)
-    );
     const [apUnits, napUnits] = partition(
       state.entities,
-      u => entityControllers[u.id] == ap.id
+      u => u.current.controller == ap.id
     );
     const attackActions = flatten(
       apUnits.map(a => napUnits.map(b => [a.id, b.id]))

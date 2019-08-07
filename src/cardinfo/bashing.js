@@ -2,6 +2,7 @@ import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { flying, sparkshot, overpower, obliterate } from "./abilities/keywords";
 import { killEntity } from "../entities";
+import { attachEffect } from "../effects";
 
 const bashingCardInfo = {
   wrecking_ball: {
@@ -34,6 +35,7 @@ const bashingCardInfo = {
     spec: specs.bashing,
     name: "The Boot",
     type: types.spell,
+    subtypes: ["Debuff"],
     cost: 3,
     abilities: [
       {
@@ -50,6 +52,35 @@ const bashingCardInfo = {
         }
       }
     ]
+  },
+  intimidate: {
+    color: colors.neutral,
+    spec: specs.bashing,
+    name: "Intimidate",
+    type: types.spell,
+    subtypes: ["Debuff"],
+    cost: 1,
+    abilities: [
+      {
+        prompt: "Choose a unit or hero to intimidate",
+        isSpellEffect: true,
+        hasTargetSymbol: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.unit, types.hero],
+        action: ({ state, choices }) => {
+          attachEffect(
+            state,
+            state.entities[choices.targetId],
+            "cardInfo.intimidate.createdEffect"
+          );
+        }
+      }
+    ],
+    createdEffect: {
+      modifySubjectValues: ({ subject }) => {
+        subject.current.attack -= 4;
+      }
+    }
   },
   iron_man: {
     color: colors.neutral,

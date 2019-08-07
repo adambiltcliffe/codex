@@ -16,9 +16,9 @@ function initialisePlayerState(state, playerIndex) {
       "nimble_fencer",
       "timely_messenger",
       "older_brother",
-      "harvest_reaper",
-      "harvest_reaper",
-      "harvest_reaper"
+      "intimidate",
+      "intimidate",
+      "intimidate"
     ];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);
@@ -28,7 +28,7 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
   state.players[player].patrollerIds = emptyPatrolZone;
-  state.players[player].commandZone = ["troq_bashar", "troq_bashar"];
+  state.players[player].commandZone = ["troq_bashar"];
   const newBase = {
     id: `e${state.nextId}`,
     fixture: fixtureNames.base,

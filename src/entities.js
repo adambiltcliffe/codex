@@ -1,9 +1,11 @@
 import produce, { createDraft, finishDraft, isDraft } from "immer";
-import cardInfo, { types } from "./cardinfo";
+
 import fixtures from "./fixtures";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
 import { triggerDefinitions } from "./triggers";
+import { getEffectDefinition } from "./effects";
+import cardInfo, { types } from "./cardinfo";
 
 import get from "lodash/get";
 import forEach from "lodash/forEach";
@@ -18,6 +20,7 @@ export function createUnit(state, owner, card) {
     ready: true,
     damage: 0,
     runes: 0,
+    effects: [],
     thisTurn: {}
   };
   state.entities[newUnit.id] = newUnit;
@@ -37,6 +40,7 @@ export function createHero(state, owner, card) {
     damage: 0,
     runes: 0,
     level: 1,
+    effects: [],
     thisTurn: {}
   };
   state.entities[newHero.id] = newHero;
@@ -74,25 +78,6 @@ export function killEntity(state, entityId) {
       fs.players[e.owner].discard.push(e.card);
     });
   }
-}
-
-export function getCurrentController(state, unitIds) {
-  console.log("getCurrentController() is deprecated");
-  console.log(new Error().stack);
-  // It turns out this should never have existed, eventually it should
-  // be deprecated
-  let shouldReturnSingleton = false;
-  if (!Array.isArray(unitIds)) {
-    unitIds = [unitIds];
-    shouldReturnSingleton = true;
-  }
-  const result = {};
-  forEach(state.entities, (u, id) => {
-    if (unitIds.includes(id)) {
-      result[id] = u.owner; // u.current.controller;
-    }
-  });
-  return shouldReturnSingleton ? result[unitIds] : result;
 }
 
 export function getCurrentValues(state, unitIds) {
@@ -195,6 +180,12 @@ export function updateCurrentValues(state) {
           state,
           self: e
         });
+      }
+    });
+    forEach(e.effects, fx => {
+      const fxDef = getEffectDefinition(fx);
+      if (fxDef.modifySubjectValues) {
+        fxDef.modifySubjectValues({ subject: e });
       }
     });
     forEach(state.entities, other => {

@@ -1,11 +1,12 @@
 import { getAP } from "./util";
 import log from "./log";
 import { applyStateBasedEffects } from "./entities";
-import triggerInfo from "./triggerinfo";
+import { getLegalChoicesForStep } from "./targets";
+
 import cardInfo from "./cardinfo";
+import triggerInfo from "./triggerinfo";
 
 import get from "lodash/get";
-import { getLegalChoicesForStep } from "./targets";
 
 export const triggerDefinitions = {
   cardInfo,
