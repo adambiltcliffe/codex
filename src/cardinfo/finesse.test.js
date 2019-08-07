@@ -10,7 +10,8 @@ import {
   getTestGame,
   withInsertedEntities,
   withGoldSetTo,
-  withCardsInHand
+  withCardsInHand,
+  TestGame
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
@@ -176,4 +177,61 @@ test("Maestro reduces cost to cast Virtuosos to 0", () => {
   const s1a = withGoldSetTo(s1, testp1Id, 10);
   const s2a = playActions(s1a, [{ type: "play", card: "tenderfoot" }]);
   expect(s2a.players[testp1Id].gold).toEqual(10);
+});
+
+test("Discord gives tech 0 and 1 units a debuff but not 2 or 3", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["discord"])
+    .insertEntity(testp1Id, "river_montoya")
+    .insertEntities(testp2Id, [
+      "older_brother",
+      "iron_man",
+      "eggship",
+      "trojan_duck"
+    ]);
+  const [river, ob, im, es, td] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "discord" });
+  expect(tg.state.log).toContain(`\${${testp1Id}} plays Discord.`);
+  expect(tg.state.log).toContain(
+    `Older Brother and Iron Man get -2/-1 this turn.`
+  );
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 0, hp: 1 });
+  expect(tg.state.entities[im].current).toMatchObject({ attack: 1, hp: 3 });
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
+  expect(tg.state.entities[im].current).toMatchObject({ attack: 3, hp: 4 });
+});
+
+test("Discord doesn't affect your own units", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["discord"])
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "older_brother",
+      "iron_man",
+      "eggship"
+    ]);
+  const [river, ob, im, es] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "discord" });
+  expect(tg.state.log).toContain(`\${${testp1Id}} plays Discord.`);
+  expect(tg.state.log).toContain("No units were affected.");
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
+  expect(tg.state.entities[im].current).toMatchObject({ attack: 3, hp: 4 });
+});
+
+test("Discord kills small units", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["discord"])
+    .insertEntity(testp1Id, "river_montoya")
+    .insertEntities(testp2Id, ["brick_thief", "timely_messenger"]);
+  const [river, bt, tm] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "discord" });
+  expect(tg.state.log).toContain(`\${${testp1Id}} plays Discord.`);
+  expect(tg.state.log).toContain(
+    "Brick Thief and Timely Messenger get -2/-1 this turn."
+  );
+  expect(tg.state.log).toContain("Brick Thief dies.");
+  expect(tg.state.log).toContain("Timely Messenger dies.");
+  expect(tg.state.entities[bt]).toBeUndefined();
+  expect(tg.state.entities[tm]).toBeUndefined();
 });

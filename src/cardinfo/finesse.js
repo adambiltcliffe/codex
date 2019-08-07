@@ -2,9 +2,53 @@ import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
 import { conferComplexAbility, conferKeyword } from "../entities";
 import { haste, flying, invisible, swiftStrike } from "./abilities/keywords";
-import { getAP } from "../util";
+import { getAP, andJoinVerb } from "../util";
+
+import forEach from "lodash/forEach";
+import { attachEffectThisTurn } from "../effects";
 
 const finesseCardInfo = {
+  discord: {
+    color: colors.neutral,
+    spec: specs.finesse,
+    name: "Discord",
+    type: types.spell,
+    subtypes: ["Debuff"],
+    cost: 2,
+    abilities: [
+      {
+        isSpellEffect: true,
+        action: ({ state, choices }) => {
+          const names = [];
+          forEach(state.entities, e => {
+            if (
+              e.current.type == types.unit &&
+              e.current.controller != getAP(state).id &&
+              e.current.tech < 2
+            ) {
+              attachEffectThisTurn(state, e, "cardInfo.discord.createdEffect");
+              names.push(e.current.name);
+            }
+          });
+          if (names.length > 0) {
+            log.add(
+              state,
+              `${andJoinVerb(names, "gets", "get")} -2/-1 this turn.`
+            );
+          } else {
+            log.add(state, "No units were affected.");
+          }
+        }
+      }
+    ],
+    createdEffect: {
+      modifySubjectValues: ({ subject }) => {
+        subject.current.attack -= 2;
+        subject.current.hp -= 1;
+      }
+    }
+  },
+
   nimble_fencer: {
     color: colors.neutral,
     tech: 1,

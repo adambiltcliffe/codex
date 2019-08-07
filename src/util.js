@@ -12,6 +12,14 @@ export function andJoin(strings) {
   }
 }
 
+export function andJoinVerb(strings, singular, plural) {
+  if (strings.length == 1) {
+    return `${strings[0]} ${singular}`;
+  } else {
+    return `${andJoin(strings)} ${plural}`;
+  }
+}
+
 export function givePlayerGold(state, playerId, amount) {
   const p = state.players[playerId];
   const oldGold = p.gold;

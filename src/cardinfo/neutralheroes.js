@@ -44,6 +44,40 @@ const neutralHeroCardInfo = {
       },
       { attack: 4, hp: 5, abilities: [readiness] }
     ]
+  },
+  river_montoya: {
+    color: colors.neutral,
+    spec: specs.finesse,
+    name: "River Montoya",
+    title: "Dancing Fencer",
+    type: types.hero,
+    cost: 2,
+    midbandLevel: 3,
+    maxbandLevel: 5,
+    bands: [
+      { attack: 2, hp: 3 },
+      {
+        attack: 2,
+        hp: 4,
+        abilities: []
+      },
+      {
+        attack: 3,
+        hp: 4,
+        abilities: [
+          {
+            modifyPlayCost({ state, sourceVals, cardInfo, currentCost }) {
+              if (getAP(state).id == sourceVals.controller) {
+                if (cardInfo.types == types.unit && cardInfo.tech == 0) {
+                  return currentCost - 1;
+                }
+              }
+              return currentCost;
+            }
+          }
+        ]
+      }
+    ]
   }
 };
 
