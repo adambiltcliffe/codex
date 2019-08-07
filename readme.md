@@ -22,7 +22,8 @@ Effects that last for the current turn
 # Tests to write
 
 Everything involving swift strike and sparkshot
-Combinations of swift strike, sparkshot and overpower
+Combinations of swift strike and sparkshot
+Combinations of sparkshot and overpower
 Overpower prompts only when needed
 Technician trigger
 Scavenger trigger
@@ -81,6 +82,7 @@ Sparkshot stacking
 
 # Other stuff to do
 
+Rewrite the core loop in CodexGame.updateState as an FSM
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities

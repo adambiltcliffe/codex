@@ -151,3 +151,18 @@ test("Heroes and units can both patrol", () => {
   tg.playAction({ type: "endTurn", patrollers: mixedPz });
   expect(tg.state.players[testp1Id].patrollerIds).toEqual(mixedPz);
 });
+
+test("Gain a gold from death of scavenger", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "older_brother")
+    .insertEntity(testp2Id, "eggship");
+  const [ob, es] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, null, ob, null, null] },
+    { type: "attack", attacker: es, target: ob }
+  ]);
+  expect(tg.state.players[testp1Id].gold).toEqual(5);
+  expect(tg.state.log).toContain(
+    `\${${testp1Id}} gains 1 gold from death of scavenger.`
+  );
+});
