@@ -73,3 +73,28 @@ test("Wrecking Ball can deal damage to base", () => {
   expect(s2.entities[p2base].damage).toEqual(2);
   expect(s2.log).toContain("Wrecking Ball deals 2 damage to base.");
 });
+
+test("The Boot can kill a tech 0 or 1 unit but not tech 2 or 3", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["the_boot"])
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, [
+      "older_brother",
+      "iron_man",
+      "eggship",
+      "trojan_duck"
+    ]);
+  const [troq, ob, im, es, td] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "the_boot" });
+  expect(tg.getLegalChoices().sort()).toEqual([ob, im].sort());
+  expect(() => tg.playAction({ type: "choice", target: es })).toThrow();
+  expect(() => tg.playAction({ type: "choice", target: td })).toThrow();
+  const tg1 = new TestGame(tg.state);
+  tg1.playAction({ type: "choice", target: ob });
+  expect(tg1.state.entities[ob]).toBeUndefined();
+  expect(tg1.state.log).toContain("Older Brother dies.");
+  const tg2 = new TestGame(tg.state);
+  tg2.playAction({ type: "choice", target: im });
+  expect(tg2.state.entities[im]).toBeUndefined();
+  expect(tg2.state.log).toContain("Iron Man dies.");
+});

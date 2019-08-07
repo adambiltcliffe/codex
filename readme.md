@@ -36,6 +36,8 @@ Put back deleted Brick Thief tests when more than 2 buildings can exist
 
 # Game features not implemented:
 
+Change target of attack if original target dies when attack declared
+
 One reshuffle per main phase limit
 
 Heroes return to command zone and go on cooldown when killed

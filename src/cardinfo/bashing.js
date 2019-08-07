@@ -1,6 +1,7 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { flying, sparkshot, overpower, obliterate } from "./abilities/keywords";
+import { killEntity } from "../entities";
 
 const bashingCardInfo = {
   wrecking_ball: {
@@ -23,6 +24,28 @@ const bashingCardInfo = {
               state.entities[choices.targetId].current.name
             }.`
           );
+        }
+      }
+    ]
+  },
+  the_boot: {
+    color: colors.neutral,
+    spec: specs.bashing,
+    name: "The Boot",
+    type: types.spell,
+    cost: 3,
+    abilities: [
+      {
+        prompt: "Choose a unit to destroy",
+        isSpellEffect: true,
+        hasTargetSymbol: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.unit],
+        canTarget: ({ state, targetId }) => {
+          return state.entities[targetId].current.tech < 2;
+        },
+        action: ({ state, source, choices }) => {
+          killEntity(state, choices.targetId);
         }
       }
     ]
