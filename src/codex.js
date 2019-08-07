@@ -218,7 +218,12 @@ class CodexGame extends Game {
       apUnits.map(a => napUnits.map(b => [a.id, b.id]))
     ).map(([a, b]) => ({ type: "attack", attacker: a, target: b }));
     const examplePatrollers = take(
-      apUnits.map(u => u.id).concat(emptyPatrolZone),
+      apUnits
+        .filter(
+          e => e.current.type == types.unit || e.current.type == types.hero
+        )
+        .map(u => u.id)
+        .concat(emptyPatrolZone),
       5
     );
     const examplePatrolAction = [

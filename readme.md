@@ -86,7 +86,6 @@ Rewrite sparkshot and overpower to not use special target modes
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Move the first three tests from neutral.test.js into a keyword test file
-Make suggestActions do something sensible for patrollers (not bases)
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
 
