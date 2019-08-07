@@ -1,4 +1,3 @@
-import { targetMode } from "./cardinfo/constants";
 import { getAP } from "./util";
 import log from "./log";
 import { applyStateBasedEffects } from "./entities";
@@ -6,7 +5,6 @@ import triggerInfo from "./triggerinfo";
 import cardInfo from "./cardinfo";
 
 import get from "lodash/get";
-import { needsOverpowerTarget, needsSparkshotTarget } from "./resolveattack";
 import { getLegalChoicesForStep } from "./targets";
 
 export const triggerDefinitions = {
@@ -67,9 +65,8 @@ export function canResolveCurrentTrigger(state) {
     return true;
   }
   if (
-    (stepDef.targetMode == targetMode.overpower &&
-      !needsOverpowerTarget(state)) ||
-    (stepDef.targetMode == targetMode.sparkshot && !needsSparkshotTarget(state))
+    stepDef.shouldSkipChoice !== undefined &&
+    stepDef.shouldSkipChoice(state)
   ) {
     return true;
   }

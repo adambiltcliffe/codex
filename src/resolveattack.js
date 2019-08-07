@@ -1,4 +1,4 @@
-import { targetMode } from "./cardinfo/constants";
+import { targetMode, types } from "./cardinfo/constants";
 import { patrolSlots } from "./patrolzone";
 import { applyStateBasedEffects } from "./entities";
 import {
@@ -14,6 +14,7 @@ import { andJoin } from "./util";
 import log from "./log";
 
 import partition from "lodash/partition";
+import { getAttackableEntityIds } from "./actions/attack";
 
 const retargetAttackStep = 0;
 const overpowerStep = 1;
@@ -86,14 +87,42 @@ const retargetAttack = {
 const chooseOverpowerTarget = {
   prompt: "Choose where to deal excess damage with overpower",
   hasTargetSymbol: false,
-  targetMode: targetMode.overpower,
+  targetTypes: [types.unit, types.hero, types.building],
+  targetMode: targetMode.single,
+  restrictTargets: state =>
+    getAttackableEntityIds(
+      state,
+      state.entities[state.currentAttack.attacker].current
+    )
+      .filter(id => id != state.currentAttack.target)
+      .map(id => state.entities[id]),
+  shouldSkipChoice: state => !needsOverpowerTarget(state),
   action: () => {}
 };
 
 const chooseSparkshotTarget = {
   prompt: "Choose a patroller to receive sparkshot damage",
   hasTargetSymbol: false,
-  targetMode: targetMode.sparkshot,
+  targetTypes: [types.unit, types.hero],
+  targetMode: targetMode.single,
+  restrictTargets: state => {
+    const result = [];
+    const attackTarget = state.entities[state.currentAttack.target];
+    if (attackTarget) {
+      const pz = state.players[attackTarget.current.controller].patrollerIds;
+      const pIndex = pz.indexOf(attackTarget.id);
+      if (pIndex != -1) {
+        if (pz[pIndex - 1] != null) {
+          result.push(pz[pIndex - 1]);
+        }
+        if (pz[pIndex + 1] != null) {
+          result.push(pz[pIndex + 1]);
+        }
+      }
+    }
+    return result.map(id => state.entities[id]);
+  },
+  shouldSkipChoice: state => !needsSparkshotTarget(state),
   action: () => {}
 };
 

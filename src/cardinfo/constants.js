@@ -41,6 +41,5 @@ export const specs = {
 
 export const targetMode = {
   single: "TM_1",
-  overpower: "TM_OVERPOWER",
-  sparkshot: "TM_SPARKSHOT"
+  obliterate: "TM_OBLITERATE"
 };
