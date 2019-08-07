@@ -1,7 +1,7 @@
 import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
 import { conferComplexAbility, conferKeyword } from "../entities";
-import { haste, flying, invisible } from "./abilities/keywords";
+import { haste, flying, invisible, swiftStrike } from "./abilities/keywords";
 import { getAP } from "../util";
 
 const finesseCardInfo = {
@@ -151,6 +151,30 @@ const finesseCardInfo = {
     attack: 3,
     hp: 2,
     abilities: [flying]
+  },
+  blademaster: {
+    color: colors.neutral,
+    tech: 3,
+    spec: specs.finesse,
+    name: "Blademaster",
+    type: types.unit,
+    subtypes: ["Virtuoso"],
+    cost: 6,
+    attack: 7,
+    hp: 5,
+    abilities: [
+      {
+        modifyGlobalValues: ({ state, self, other }) => {
+          if (
+            self.current.controller == other.current.controller &&
+            (other.current.type == types.unit ||
+              other.current.type == types.hero)
+          ) {
+            conferKeyword(other, swiftStrike);
+          }
+        }
+      }
+    ]
   }
 };
 

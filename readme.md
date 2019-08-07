@@ -20,7 +20,9 @@ Flagbearer ability
 
 # Tests to write
 
-Everything involving swift strike, sparkshot and overpower (including in combination)
+Everything involving swift strike and sparkshot
+Combinations of swift strike, sparkshot and overpower
+Overpower prompts only when needed
 Technician trigger
 Scavenger trigger
 Scorch and Fire Dart
@@ -32,6 +34,7 @@ Everything about Trojan Duck
 
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
 Put back deleted Brick Thief tests when more than 2 buildings can exist
+Flying plus overpower and legal targets to redirect to (Void Star)
 
 # Game features not implemented:
 

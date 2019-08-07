@@ -1,4 +1,5 @@
 import { targetMode } from "./cardinfo/constants";
+import { patrolSlots } from "./patrolzone";
 import { applyStateBasedEffects } from "./entities";
 import {
   hasKeyword,
@@ -11,7 +12,6 @@ import {
 } from "./cardinfo/abilities/keywords";
 import { andJoin } from "./util";
 import log from "./log";
-import { patrolSlots } from "./patrolzone";
 
 import partition from "lodash/partition";
 
