@@ -21,6 +21,7 @@ Effects that last for the current turn
 
 # Tests to write
 
+River abilities
 Everything involving swift strike and sparkshot
 Combinations of swift strike and sparkshot
 Combinations of sparkshot and overpower

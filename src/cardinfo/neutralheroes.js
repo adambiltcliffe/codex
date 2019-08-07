@@ -1,9 +1,10 @@
-import { colors, types, specs } from "./constants";
+import { colors, types, specs, targetMode } from "./constants";
 import { fixtureNames } from "../fixtures";
 import { readiness } from "./abilities/keywords";
 import log from "../log";
 
 import find from "lodash/find";
+import { isPatrolling, sideline } from "../patrolzone";
 
 const neutralHeroCardInfo = {
   troq_bashar: {
@@ -59,7 +60,23 @@ const neutralHeroCardInfo = {
       {
         attack: 2,
         hp: 4,
-        abilities: []
+        abilities: [
+          {
+            prompt: "Choose a tech 0 or tech 1 patroller to sideline",
+            isActivatedAbility: true,
+            costsExhaustSelf: true,
+            hasTargetSymbol: true,
+            targetMode: targetMode.single,
+            targetTypes: [types.unit, types.hero],
+            canTarget: ({ state, target }) =>
+              target.current.tech < 2 && isPatrolling(state, target),
+            action: ({ state, source, choices }) => {
+              const target = state.entities[choices.targetId];
+              sideline(target);
+              log.add(state, `${target.current.name} is sidelined.`);
+            }
+          }
+        ]
       },
       {
         attack: 3,
