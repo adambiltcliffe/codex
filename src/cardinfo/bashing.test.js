@@ -98,3 +98,22 @@ test("The Boot can kill a tech 0 or 1 unit but not tech 2 or 3", () => {
   expect(tg2.state.entities[im]).toBeUndefined();
   expect(tg2.state.log).toContain("Iron Man dies.");
 });
+
+test("Intimidate decreases attack by 4 for a turn", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, ["older_brother", "regularsized_rhinoceros"])
+    .putCardsInHand(testp1Id, ["intimidate", "intimidate"]);
+  const [troq, ob, rr] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "play", card: "intimidate" },
+    { type: "choice", target: ob },
+    { type: "play", card: "intimidate" },
+    { type: "choice", target: rr }
+  ]);
+  expect(tg.state.entities[ob].current.attack).toEqual(0);
+  expect(tg.state.entities[rr].current.attack).toEqual(1);
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[ob].current.attack).toEqual(2);
+  expect(tg.state.entities[rr].current.attack).toEqual(5);
+});

@@ -17,6 +17,7 @@ Patrol zone with taunt for squad leader and bonus for elite, scavenger, technici
 Spell casting including checking if you have the right hero
 Flagbearer ability
 +1/+1 and -1/-1 runes
+Effects that last for the current turn
 
 # Tests to write
 

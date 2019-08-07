@@ -2,7 +2,7 @@ import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { flying, sparkshot, overpower, obliterate } from "./abilities/keywords";
 import { killEntity } from "../entities";
-import { attachEffect } from "../effects";
+import { attachEffectThisTurn } from "../effects";
 
 const bashingCardInfo = {
   wrecking_ball: {
@@ -68,10 +68,16 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
         action: ({ state, choices }) => {
-          attachEffect(
+          attachEffectThisTurn(
             state,
             state.entities[choices.targetId],
             "cardInfo.intimidate.createdEffect"
+          );
+          log.add(
+            state,
+            `${
+              state.entities[choices.targetId].current.name
+            } gets -4 ATK this turn.`
           );
         }
       }

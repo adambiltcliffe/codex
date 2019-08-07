@@ -4,7 +4,7 @@ import fixtures from "./fixtures";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
 import { triggerDefinitions } from "./triggers";
-import { getEffectDefinition } from "./effects";
+import { getEffectDefinition, expireEffects } from "./effects";
 import cardInfo, { types } from "./cardinfo";
 
 import get from "lodash/get";
@@ -182,10 +182,10 @@ export function updateCurrentValues(state) {
         });
       }
     });
-    forEach(e.effects, fx => {
-      const fxDef = getEffectDefinition(fx);
+    forEach(e.effects, effectInfo => {
+      const fxDef = getEffectDefinition(effectInfo);
       if (fxDef.modifySubjectValues) {
-        fxDef.modifySubjectValues({ subject: e });
+        fxDef.modifySubjectValues({ subject: e, effectInfo });
       }
     });
     forEach(state.entities, other => {
@@ -226,6 +226,7 @@ export function updateCurrentValues(state) {
 }
 
 export function applyStateBasedEffects(state) {
+  expireEffects(state);
   let stable = false;
   while (!stable) {
     stable = true;
