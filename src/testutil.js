@@ -135,6 +135,12 @@ export class TestGame {
     });
     return this;
   }
+  putCardsOnTopOfDeck(playerId, cards) {
+    this.state = produce(this.state, draft => {
+      cards.forEach(c => draft.players[playerId].deck.unshift(c));
+    });
+    return this;
+  }
   insertEntity(playerId, card) {
     let newId = null;
     const newState = produce(this.state, draft => {

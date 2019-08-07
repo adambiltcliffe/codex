@@ -25,8 +25,6 @@ Everything involving swift strike and sparkshot
 Combinations of swift strike and sparkshot
 Combinations of sparkshot and overpower
 Overpower prompts only when needed
-Technician trigger
-Scavenger trigger
 Skipping triggers with no choices
 Auto-targetting triggers with only one choice
 Everything about Trojan Duck

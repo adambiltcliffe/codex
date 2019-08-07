@@ -166,3 +166,29 @@ test("Gain a gold from death of scavenger", () => {
     `\${${testp1Id}} gains 1 gold from death of scavenger.`
   );
 });
+
+test("Draw a card from death of technician", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "older_brother")
+    .insertEntity(testp2Id, "eggship");
+  const [ob, es] = tg.insertedEntityIds;
+  const tg1 = new TestGame(tg.state);
+  tg1.playActions([
+    { type: "endTurn", patrollers: [null, null, null, ob, null] },
+    { type: "attack", attacker: es, target: ob }
+  ]);
+  expect(tg1.state.players[testp1Id].hand.length).toEqual(6);
+  expect(tg1.state.log).toContain(
+    `\${${testp1Id}} reshuffles and draws 1 card from death of technician.`
+  );
+  const tg2 = new TestGame(tg.state);
+  tg2.putCardsOnTopOfDeck(testp1Id, ["bloom"]);
+  tg2.playActions([
+    { type: "endTurn", patrollers: [null, null, null, ob, null] },
+    { type: "attack", attacker: es, target: ob }
+  ]);
+  expect(tg2.state.players[testp1Id].hand.length).toEqual(6);
+  expect(tg2.state.log).toContain(
+    `\${${testp1Id}} draws 1 card from death of technician.`
+  );
+});
