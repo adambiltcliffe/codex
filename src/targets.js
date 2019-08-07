@@ -30,9 +30,8 @@ function stepCanTargetEntity(state, stepDef, target) {
     stepDef.canTarget &&
     !stepDef.canTarget({
       state,
-      triggerInfo: state.currentTrigger,
-      targetId: target.id,
-      targetVals: target.current
+      target,
+      triggerInfo: state.currentTrigger
     })
   ) {
     return false;

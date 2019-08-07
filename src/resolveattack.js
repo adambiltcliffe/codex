@@ -15,8 +15,9 @@ import { patrolSlots } from "./patrolzone";
 
 import partition from "lodash/partition";
 
-const overpowerStep = 0;
-const sparkshotStep = 1;
+const retargetAttackStep = 0;
+const overpowerStep = 1;
+const sparkshotStep = 2;
 
 function getFlownOver(state, target) {
   const playerId = target.current.controller;
@@ -77,6 +78,10 @@ export function needsSparkshotTarget(state) {
   );
 }
 
+const retargetAttack = {
+  action: () => {}
+};
+
 const chooseOverpowerTarget = {
   prompt: "Choose where to deal excess damage with overpower",
   targetMode: targetMode.overpower,
@@ -92,6 +97,7 @@ const chooseSparkshotTarget = {
 const resolveAttackTriggers = {
   beginResolveAttack: {
     steps: [
+      retargetAttack,
       chooseOverpowerTarget,
       chooseSparkshotTarget,
       {
@@ -144,6 +150,7 @@ const resolveAttackTriggers = {
   },
   finishResolveAttack: {
     steps: [
+      retargetAttack,
       chooseOverpowerTarget,
       chooseSparkshotTarget,
       {

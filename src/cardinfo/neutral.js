@@ -72,8 +72,8 @@ const neutralCardInfo = {
             prompt: "Choose a building to repair",
             targetMode: targetMode.single,
             targetTypes: [types.building],
-            canTarget: ({ state, triggerInfo, targetId }) => {
-              return targetId != triggerInfo.choices[0].targetId;
+            canTarget: ({ state, target, triggerInfo }) => {
+              return target.id != triggerInfo.choices[0].targetId;
             },
             action: ({ state, source, choices }) => {
               if (state.entities[choices.targetId].damage > 0) {
@@ -138,10 +138,10 @@ const neutralCardInfo = {
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
-        canTarget: ({ state, targetId }) =>
-          state.players[
-            state.entities[targetId].current.controller
-          ].patrollerIds.includes(targetId),
+        canTarget: ({ state, target }) =>
+          state.players[target.current.controller].patrollerIds.includes(
+            target.id
+          ),
         action: ({ state, choices }) => {
           state.entities[choices.targetId].damage += 1;
           log.add(
@@ -167,7 +167,7 @@ const neutralCardInfo = {
         isSpellEffect: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
-        canTarget: ({ state, targetId }) => state.entities[targetId].runes <= 0,
+        canTarget: ({ state, target }) => target.runes <= 0,
         action: ({ state, choices }) => {
           state.entities[choices.targetId].runes += 1;
           log.add(

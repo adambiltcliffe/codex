@@ -24,11 +24,11 @@ const fireHeroCardInfo = {
             costsExhaustSelf: true,
             targetMode: targetMode.single,
             targetTypes: [types.unit, types.building],
-            canTarget: ({ state, targetId }) =>
-              state.entities[targetId].current.type == types.building ||
-              state.players[
-                state.entities[targetId].current.controller
-              ].patrollerIds.includes(targetId),
+            canTarget: ({ state, target }) =>
+              target.current.type == types.building ||
+              state.players[target.current.controller].patrollerIds.includes(
+                target.id
+              ),
             action: ({ state, source, choices }) => {
               const target = state.entities[choices.targetId];
               target.damage += 1;

@@ -36,6 +36,8 @@ Put back deleted Brick Thief tests when more than 2 buildings can exist
 
 # Game features not implemented:
 
+Retarget attack if original target dies (do once sparkshot and overpower tests written)
+
 Change target of attack if original target dies when attack declared
 
 One reshuffle per main phase limit
@@ -72,7 +74,7 @@ Victory condition
 
 # Other stuff to do
 
-Change signature of canTarget on abilities
+Rewrite sparkshot and overpower to not use special target modes
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Move the first three tests from neutral.test.js into a keyword test file

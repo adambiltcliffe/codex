@@ -41,8 +41,8 @@ const bashingCardInfo = {
         hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit],
-        canTarget: ({ state, targetId }) => {
-          return state.entities[targetId].current.tech < 2;
+        canTarget: ({ state, target }) => {
+          return target.current.tech < 2;
         },
         action: ({ state, source, choices }) => {
           killEntity(state, choices.targetId);
