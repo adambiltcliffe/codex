@@ -56,6 +56,7 @@ const neutralCardInfo = {
         steps: [
           {
             prompt: "Choose a building to damage",
+            hasTargetSymbol: true,
             targetMode: targetMode.single,
             targetTypes: [types.building],
             action: ({ state, source, choices }) => {
@@ -70,6 +71,7 @@ const neutralCardInfo = {
           },
           {
             prompt: "Choose a building to repair",
+            hasTargetSymbol: true,
             targetMode: targetMode.single,
             targetTypes: [types.building],
             canTarget: ({ state, target, triggerInfo }) => {
@@ -136,6 +138,7 @@ const neutralCardInfo = {
       {
         prompt: "Choose a patroller to damage",
         isSpellEffect: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
         canTarget: ({ state, target }) =>
@@ -165,6 +168,7 @@ const neutralCardInfo = {
       {
         prompt: "Choose a friendly unit or hero to put a +1/+1 rune on",
         isSpellEffect: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
         canTarget: ({ state, target }) => target.runes <= 0,
@@ -191,6 +195,7 @@ const neutralCardInfo = {
       {
         prompt: "Choose a unit or hero to put a -1/-1 rune on",
         isSpellEffect: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
         action: ({ state, choices }) => {

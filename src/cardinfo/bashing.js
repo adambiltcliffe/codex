@@ -14,6 +14,7 @@ const bashingCardInfo = {
       {
         prompt: "Choose a building to damage",
         isSpellEffect: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.building],
         action: ({ state, choices }) => {
@@ -87,6 +88,7 @@ const bashingCardInfo = {
       {
         prompt: "Choose a unit to stomp",
         triggerOnOwnArrival: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit],
         action: ({ state, source, choices }) => {

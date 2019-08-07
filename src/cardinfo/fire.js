@@ -11,6 +11,7 @@ const fireCardInfo = {
       {
         prompt: "Choose a unit or building to damage",
         isSpellEffect: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.building],
         action: ({ state, choices }) => {

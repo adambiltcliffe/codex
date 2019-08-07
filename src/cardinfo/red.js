@@ -12,6 +12,7 @@ const redCardInfo = {
       {
         prompt: "Choose a patroller or building to damage",
         isSpellEffect: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.building],
         canTarget: ({ state, target }) =>

@@ -22,6 +22,7 @@ const fireHeroCardInfo = {
             prompt: "Choose a patrolling unit or building to damage",
             isActivatedAbility: true,
             costsExhaustSelf: true,
+            hasTargetSymbol: true,
             targetMode: targetMode.single,
             targetTypes: [types.unit, types.building],
             canTarget: ({ state, target }) =>
@@ -50,6 +51,7 @@ const fireHeroCardInfo = {
             prompt: "Choose a unit or building to damage",
             isActivatedAbility: true,
             costsExhaustSelf: true,
+            hasTargetSymbol: true,
             targetMode: targetMode.single,
             targetTypes: [types.unit, types.building],
             action: ({ state, source, choices }) => {

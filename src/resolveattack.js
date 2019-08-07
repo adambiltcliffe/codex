@@ -79,17 +79,20 @@ export function needsSparkshotTarget(state) {
 }
 
 const retargetAttack = {
+  hasTargetSymbol: false,
   action: () => {}
 };
 
 const chooseOverpowerTarget = {
   prompt: "Choose where to deal excess damage with overpower",
+  hasTargetSymbol: false,
   targetMode: targetMode.overpower,
   action: () => {}
 };
 
 const chooseSparkshotTarget = {
   prompt: "Choose a patroller to receive sparkshot damage",
+  hasTargetSymbol: false,
   targetMode: targetMode.sparkshot,
   action: () => {}
 };

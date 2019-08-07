@@ -5,8 +5,8 @@ import {
   sumKeyword,
   resist
 } from "./cardinfo/abilities/keywords";
+import { targetMode } from "./cardinfo/constants";
 import { getAP } from "./util";
-import { targetMode } from "./cardinfo";
 import { patrolSlots } from "./patrolzone";
 import { getAttackableEntityIds } from "./actions/attack";
 
