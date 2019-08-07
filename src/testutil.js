@@ -85,6 +85,11 @@ export function playActions(initialState, actionList) {
   actionList.forEach(a => {
     CodexGame.checkAction(state, a);
     ({ state } = CodexGame.playAction(state, a));
+    if (state.log.length == 0) {
+      throw new Error(
+        "Last action produced an empty log: " + JSON.stringify(a)
+      );
+    }
   });
   return state;
 }
