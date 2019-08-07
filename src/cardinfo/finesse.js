@@ -114,6 +114,7 @@ const finesseCardInfo = {
       prompt: "Choose a building to damage",
       isActivatedAbility: true,
       costsExhaustSelf: true,
+      hasTargetSymbol: true,
       targetMode: targetMode.single,
       targetTypes: [types.building],
       action: ({ state, source, choices }) => {

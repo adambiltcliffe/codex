@@ -129,6 +129,7 @@ const bashingCardInfo = {
         triggerOnOwnArrival: true,
         triggerOnAttack: true,
         prompt: "Choose a building to damage",
+        hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.building],
         action: ({ state, source, choices }) => {
