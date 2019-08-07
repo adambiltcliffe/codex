@@ -26,13 +26,13 @@ Combinations of swift strike, sparkshot and overpower
 Overpower prompts only when needed
 Technician trigger
 Scavenger trigger
-Scorch and Fire Dart
 Skipping triggers with no choices
 Auto-targetting triggers with only one choice
 Everything about Trojan Duck
 
 # Tests to write later
 
+Scorch and Fire Dart
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
 Put back deleted Brick Thief tests when more than 2 buildings can exist
 Flying plus overpower and legal targets to redirect to (Void Star)
@@ -41,8 +41,6 @@ Flying plus overpower and legal targets to redirect to (Void Star)
 
 Obliterate
 Retarget attack if original target dies (do once sparkshot and overpower tests written)
-
-Change target of attack if original target dies when attack declared
 
 One reshuffle per main phase limit
 
