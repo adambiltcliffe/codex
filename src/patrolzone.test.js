@@ -8,7 +8,8 @@ import {
   withInsertedEntity,
   testp2Id,
   withCardsInHand,
-  withGoldSetTo
+  withGoldSetTo,
+  TestGame
 } from "./testutil";
 import CodexGame from "./codex";
 import { fixtureNames } from "./fixtures";
@@ -138,4 +139,15 @@ test("Patrolling doesn't grant any abilities", () => {
   forEach(broVals, v => {
     expect(v.abilities.length).toEqual(0);
   });
+});
+
+test("Heroes and units can both patrol", () => {
+  const tg = new TestGame().insertEntities(testp1Id, [
+    "troq_bashar",
+    "helpful_turtle"
+  ]);
+  const [troq, ht] = tg.insertedEntityIds;
+  const mixedPz = [troq, ht, null, null, null];
+  tg.playAction({ type: "endTurn", patrollers: mixedPz });
+  expect(tg.state.players[testp1Id].patrollerIds).toEqual(mixedPz);
 });
