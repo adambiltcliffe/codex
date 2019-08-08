@@ -5,6 +5,7 @@ import neutralCardInfo from "./neutral";
 import neutralHeroCardInfo from "./neutralheroes";
 import fireCardInfo from "./fire";
 import fireHeroCardInfo from "./fireheroes";
+import balanceCardInfo from "./balance";
 import truthCardInfo from "./truth";
 import ninjutsuCardInfo from "./ninjutsu";
 import presentCardInfo from "./present";
@@ -21,6 +22,7 @@ const cardInfo = {
   ...neutralHeroCardInfo,
   ...fireCardInfo,
   ...fireHeroCardInfo,
+  ...balanceCardInfo,
   ...truthCardInfo,
   ...ninjutsuCardInfo,
   ...presentCardInfo,

@@ -8,7 +8,8 @@ import {
   haste,
   antiAir,
   invisible,
-  readiness
+  readiness,
+  stealth
 } from "../cardinfo/abilities/keywords";
 import { patrolSlots } from "../patrolzone";
 import { andJoin } from "../util";
@@ -78,7 +79,10 @@ function canIgnorePatroller(state, attackerVals, patroller, patrolSlot) {
   if (!canAttack(attackerVals, patroller.current, patrolSlot)) {
     return true;
   }
-  if (hasKeyword(attackerVals, invisible)) {
+  if (
+    hasKeyword(attackerVals, invisible) ||
+    hasKeyword(attackerVals, stealth)
+  ) {
     return true;
   }
   if (

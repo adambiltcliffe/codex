@@ -12,7 +12,7 @@ Activated abilities
 Choice of order when adding triggers to queue
 Automatic resolution of triggers when only one choice exists and skipping if none
 Passive effects on units: modify own/others' stats, add abilities, modify costs to play cards
-Frenzy, haste, flying, anti-air, invisible, healing, resist, overpower, sparkshot, readiness
+Frenzy, haste, flying, anti-air, invisible, healing, resist, overpower, sparkshot, readiness, stealth
 Patrol zone with bonuses for squad leader, elite, scavenger, technician and lookout
 Spell casting including checking if you have the right hero
 Flagbearer ability
@@ -22,6 +22,8 @@ Effects that last for the current turn
 # Tests to write
 
 River abilities
+Sneaky Pig
+Stealth
 Everything involving swift strike and sparkshot
 Combinations of swift strike and sparkshot
 Combinations of sparkshot and overpower
@@ -47,7 +49,6 @@ Heroes go on cooldown when killed
 
 Tech buildings and add-ons
 Base damage from building destruction
-Stealth
 Surplus (requires add-ons)
 Tower (requires add-ons)
 Temporary detection by tower

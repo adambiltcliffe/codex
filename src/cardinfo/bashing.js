@@ -1,7 +1,14 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
-import { flying, sparkshot, overpower, obliterate } from "./abilities/keywords";
-import { killEntity, damageEntity } from "../entities";
+import {
+  flying,
+  sparkshot,
+  overpower,
+  obliterate,
+  stealth,
+  haste
+} from "./abilities/keywords";
+import { killEntity, damageEntity, conferKeyword } from "../entities";
 import { attachEffectThisTurn } from "../effects";
 
 const bashingCardInfo = {
@@ -143,6 +150,34 @@ const bashingCardInfo = {
     cost: 4,
     attack: 5,
     hp: 6
+  },
+  sneaky_pig: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.bashing,
+    name: "Sneaky Pig",
+    type: types.unit,
+    subtypes: ["Pig"],
+    cost: 3,
+    attack: 3,
+    hp: 3,
+    abilities: [
+      haste,
+      {
+        triggerOnOwnArrival: true,
+        action: ({ state, source }) => {
+          attachEffectThisTurn(state, source, {
+            path: "cardInfo.sneaky_pig.abilities[1].createdEffect"
+          });
+          log.add(state, `${source.current.name} gains stealth this turn.`);
+        },
+        createdEffect: {
+          modifySubjectValues: ({ subject }) => {
+            conferKeyword(subject, stealth);
+          }
+        }
+      }
+    ]
   },
   eggship: {
     color: colors.neutral,

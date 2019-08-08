@@ -12,13 +12,13 @@ function initialisePlayerState(state, playerIndex) {
       "merfolk_prospector",
       "maestro",
       "revolver_ocelot",
-      "revolver_ocelot",
       "nimble_fencer",
       "timely_messenger",
       "older_brother",
       "intimidate",
-      "intimidate",
-      "intimidate"
+      "sneaky_pig",
+      "sneaky_pig",
+      "sneaky_pig"
     ];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);
