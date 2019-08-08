@@ -13,7 +13,7 @@ Choice of order when adding triggers to queue
 Automatic resolution of triggers when only one choice exists and skipping if none
 Passive effects on units: modify own/others' stats, add abilities, modify costs to play cards
 Frenzy, haste, flying, anti-air, invisible, healing, resist, overpower, sparkshot, readiness
-Patrol zone with taunt for squad leader and bonus for elite, scavenger, technician and lookout
+Patrol zone with bonuses for squad leader, elite, scavenger, technician and lookout
 Spell casting including checking if you have the right hero
 Flagbearer ability
 +1/+1 and -1/-1 runes
@@ -47,8 +47,6 @@ Heroes go on cooldown when killed
 
 Tech buildings and add-ons
 Base damage from building destruction
-Armor (requires effects)
-Armor for squad leader
 Stealth
 Surplus (requires add-ons)
 Tower (requires add-ons)
@@ -80,6 +78,7 @@ Sparkshot stacking
 
 # Other stuff to do
 
+Make damage reporting call out swift strike/overpower/sparkshot damage
 Rewrite the core loop in CodexGame.updateState as an FSM
 Fix inconsistent ordering of prompts and attack message depending on whether attacker has swift strike
 Change signature of hasKeyword
