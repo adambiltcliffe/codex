@@ -10,6 +10,24 @@ import cardInfo, { types } from "./cardinfo";
 import get from "lodash/get";
 import forEach from "lodash/forEach";
 
+export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
+  const newBuilding = {
+    id: `e${state.nextId}`,
+    fixture,
+    owner,
+    damage: 0,
+    ready: true,
+    effects: []
+  };
+  state.entities[newBuilding.id] = newBuilding;
+  state.nextId++;
+  if (!state.started || !suppressUpdate) {
+    // We can't do this when creating bases during initialisation
+    applyStateBasedEffects(state);
+  }
+  return newBuilding;
+}
+
 export function createUnit(state, owner, card) {
   const newUnit = {
     id: `e${state.nextId}`,

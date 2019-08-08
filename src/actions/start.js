@@ -3,7 +3,7 @@ import { enterReadyPhase } from "../phases";
 import log from "../log";
 import { fixtureNames } from "../fixtures";
 import { emptyPatrolZone } from "../patrolzone";
-import { updateCurrentValues } from "../entities";
+import { updateCurrentValues, createBuildingFixture } from "../entities";
 
 function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
@@ -29,16 +29,7 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].gold = 0;
   state.players[player].patrollerIds = emptyPatrolZone;
   state.players[player].commandZone = ["troq_bashar"];
-  const newBase = {
-    id: `e${state.nextId}`,
-    fixture: fixtureNames.base,
-    owner: player,
-    damage: 0,
-    ready: true,
-    effects: []
-  };
-  state.entities[newBase.id] = newBase;
-  state.nextId++;
+  createBuildingFixture(state, player, fixtureNames.base, true);
 }
 
 export function checkStartAction(state, action) {
