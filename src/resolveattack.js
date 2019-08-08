@@ -214,7 +214,9 @@ function dealAttackerDamage(state, attacker, target) {
   const lethal = target.current.hp - target.damage;
   if (
     hasKeyword(attacker.current, overpower) &&
-    attacker.current.attack > lethal
+    attacker.current.attack > lethal &&
+    // It's possible no overpower target was chosen because there were no choices
+    !state.currentTrigger.choices[overpowerStep].skipped
   ) {
     target.damage += lethal;
     state.entities[

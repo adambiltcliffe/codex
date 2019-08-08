@@ -82,3 +82,17 @@ test("Overpower functions correctly when the unit has swift strike", () => {
   expect(tg.state.log).not.toContain("Harvest Reaper dies.");
   expect(tg.state.entities[hr].damage).toEqual(0);
 });
+
+test("Overpower doesn't redirect damage if there are no other targets", () => {
+  const tg = new TestGame().insertEntity(testp2Id, "harvest_reaper");
+  const [hr] = tg.insertedEntityIds;
+  const p1base = tg.findBaseId(testp1Id);
+  tg.modifyEntity(p1base, { damage: 19 }).playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: hr, target: p1base }
+  ]);
+  expect(tg.state.log).toContain(
+    "Choose where to deal excess damage with overpower: No legal choices."
+  );
+  expect(tg.state.entities[p1base].damage).toEqual(25);
+});

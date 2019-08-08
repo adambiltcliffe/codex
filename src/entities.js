@@ -1,6 +1,6 @@
 import produce, { createDraft, finishDraft, isDraft } from "immer";
 
-import fixtures from "./fixtures";
+import fixtures, { fixtureNames } from "./fixtures";
 import log from "./log";
 import { patrolSlots } from "./patrolzone";
 import { triggerDefinitions } from "./triggers";
@@ -51,6 +51,9 @@ export function createHero(state, owner, card) {
 
 export function killEntity(state, entityId) {
   const e = state.entities[entityId];
+  if (e.fixture == fixtureNames.base) {
+    return false;
+  }
   log.add(state, log.fmt`${e.current.name} dies.`);
   delete state.entities[e.id];
   const pz = state.players[e.current.controller].patrollerIds;
@@ -71,13 +74,16 @@ export function killEntity(state, entityId) {
       pz[index] = null;
     }
   });
-  if (e.current.type == types.hero) {
+  if (e.fixture !== undefined) {
+    // do nothing for now?
+  } else if (e.current.type == types.hero) {
     state.players[e.owner].commandZone.push(e.card);
   } else {
     state.updateHidden(fs => {
       fs.players[e.owner].discard.push(e.card);
     });
   }
+  return true;
 }
 
 export function getCurrentValues(state, unitIds) {
@@ -233,8 +239,8 @@ export function applyStateBasedEffects(state) {
     updateCurrentValues(state);
     forEach(state.entities, u => {
       if (u.damage >= u.current.hp) {
-        killEntity(state, u.id);
-        stable = false;
+        const wasKilled = killEntity(state, u.id);
+        stable = !wasKilled;
       }
     });
   }
