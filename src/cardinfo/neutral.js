@@ -7,6 +7,7 @@ import {
   resist,
   flagbearer
 } from "./abilities/keywords";
+import { damageEntity } from "../entities";
 
 const neutralCardInfo = {
   timely_messenger: {
@@ -60,13 +61,11 @@ const neutralCardInfo = {
             targetMode: targetMode.single,
             targetTypes: [types.building],
             action: ({ state, source, choices }) => {
-              state.entities[choices.targetId].damage += 1;
-              log.add(
-                state,
-                `${source.current.name} deals 1 damage to ${
-                  state.entities[choices.targetId].current.name
-                }.`
-              );
+              damageEntity(state, state.entities[choices.targetId], {
+                amount: 1,
+                source,
+                isAbilityDamage: true
+              });
             }
           },
           {
@@ -146,13 +145,10 @@ const neutralCardInfo = {
             target.id
           ),
         action: ({ state, choices }) => {
-          state.entities[choices.targetId].damage += 1;
-          log.add(
-            state,
-            `Spark deals 1 damage to ${
-              state.entities[choices.targetId].current.name
-            }.`
-          );
+          damageEntity(state, state.entities[choices.targetId], {
+            amount: 1,
+            isSpellDamage: true
+          });
         }
       }
     ]

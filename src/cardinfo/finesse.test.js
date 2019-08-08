@@ -52,7 +52,7 @@ test("Star-Crossed Starlet buffs her attack with damage and kills herself after 
   const s2 = playActions(s1, [{ type: "endTurn" }, { type: "endTurn" }]);
   expect(s2.entities[scs].damage).toEqual(1);
   expect(getCurrentValues(s2, scs).attack).toEqual(4);
-  expect(s2.log).toContain("Star-Crossed Starlet takes 1 damage.");
+  expect(s2.log).toContain("Star-Crossed Starlet deals 1 damage to itself.");
   const s3 = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
   expect(s3.entities[scs]).toBeUndefined();
   expect(s3.log).toContain("Star-Crossed Starlet dies.");

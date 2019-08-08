@@ -5,6 +5,7 @@ import log from "../log";
 
 import find from "lodash/find";
 import { isPatrolling, sideline } from "../patrolzone";
+import { damageEntity } from "../entities";
 
 const neutralHeroCardInfo = {
   troq_bashar: {
@@ -32,13 +33,11 @@ const neutralHeroCardInfo = {
                 ([id, e]) =>
                   e.fixture == fixtureNames.base && e.owner == defendingPlayer
               )[1];
-              base.damage += 1;
-              log.add(
-                state,
-                `${source.current.name} deals 1 damage to ${
-                  state.entities[base.id].current.name
-                }.`
-              );
+              damageEntity(state, base, {
+                amount: 1,
+                source,
+                isAbilityDamage: true
+              });
             }
           }
         ]

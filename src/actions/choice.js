@@ -1,6 +1,7 @@
 import { currentTriggerDefinition } from "../triggers";
 import { getAP, andJoin } from "../util";
 import { getResistCost, getLegalChoicesForStep } from "../targets";
+import log from "../log";
 
 export function checkChoiceAction(state, action) {
   if (state.currentTrigger === null) {
@@ -24,10 +25,14 @@ export function doChoiceAction(state, action) {
   const choices = def.steps
     ? state.currentTrigger.choices[state.currentTrigger.stepIndex]
     : state.currentTrigger.choices;
+  const prompt = def.steps
+    ? def.steps[state.currentTrigger.stepIndex].prompt
+    : def.prompt;
   choices.targetId = action.target;
   const target = state.entities[action.target];
   if (target.current.controller != getAP(state).id) {
     const resistCost = getResistCost(state, target);
     getAP(state).gold -= resistCost;
   }
+  log.add(state, log.fmt`${getAP(state)} chooses ${target.current.name}.`);
 }

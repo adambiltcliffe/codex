@@ -16,6 +16,7 @@ export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
     fixture,
     owner,
     damage: 0,
+    armor: 0,
     ready: true,
     effects: []
   };
@@ -37,6 +38,7 @@ export function createUnit(state, owner, card) {
     controlledSince: state.turn,
     ready: true,
     damage: 0,
+    armor: 0,
     runes: 0,
     effects: [],
     thisTurn: {}
@@ -56,6 +58,7 @@ export function createHero(state, owner, card) {
     controlledSince: state.turn,
     ready: true,
     damage: 0,
+    armor: 0,
     runes: 0,
     level: 1,
     effects: [],
@@ -65,6 +68,26 @@ export function createHero(state, owner, card) {
   state.nextId++;
   applyStateBasedEffects(state);
   return newHero;
+}
+
+export function damageEntity(state, entity, damage) {
+  const sourceName = damage.isSpellDamage
+    ? cardInfo[state.playedCard].name
+    : damage.source.current.name;
+  if (damage.source && damage.source == entity) {
+    log.add(state, `${sourceName} deals ${damage.amount} damage to itself.`);
+  } else {
+    log.add(
+      state,
+      `${sourceName} deals ${damage.amount} damage to ${entity.current.name}.`
+    );
+  }
+  if (damage.amount > entity.armor) {
+    entity.damage += damage.amount - entity.armor;
+    entity.armor = 0;
+  } else {
+    entity.armor -= damage.amount;
+  }
 }
 
 export function killEntity(state, entityId) {

@@ -1,6 +1,6 @@
 import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
-import { conferComplexAbility, conferKeyword } from "../entities";
+import { conferComplexAbility, conferKeyword, damageEntity } from "../entities";
 import { haste, flying, invisible, swiftStrike } from "./abilities/keywords";
 import { getAP, andJoinVerb } from "../util";
 
@@ -26,7 +26,9 @@ const finesseCardInfo = {
               e.current.controller != getAP(state).id &&
               e.current.tech < 2
             ) {
-              attachEffectThisTurn(state, e, "cardInfo.discord.createdEffect");
+              attachEffectThisTurn(state, e, {
+                path: "cardInfo.discord.createdEffect"
+              });
               names.push(e.current.name);
             }
           });
@@ -86,8 +88,11 @@ const finesseCardInfo = {
       {
         triggerOnUpkeep: true,
         action: ({ state, source }) => {
-          source.damage++;
-          log.add(state, `${source.current.name} takes 1 damage.`);
+          damageEntity(state, source, {
+            amount: 1,
+            source,
+            isAbilityDamage: true
+          });
         }
       },
       {
@@ -162,13 +167,11 @@ const finesseCardInfo = {
       targetMode: targetMode.single,
       targetTypes: [types.building],
       action: ({ state, source, choices }) => {
-        state.entities[choices.targetId].damage += 2;
-        log.add(
-          state,
-          `${source.current.name} deals 2 damage to ${
-            state.entities[choices.targetId].current.name
-          }.`
-        );
+        damageEntity(state, state.entities[choices.targetId], {
+          amount: 2,
+          source,
+          isAbilityDamage: true
+        });
       }
     }
   },

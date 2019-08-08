@@ -1,7 +1,7 @@
 import { types, colors, specs, targetMode } from "./constants";
 import log from "../log";
 import { flying, sparkshot, overpower, obliterate } from "./abilities/keywords";
-import { killEntity } from "../entities";
+import { killEntity, damageEntity } from "../entities";
 import { attachEffectThisTurn } from "../effects";
 
 const bashingCardInfo = {
@@ -19,13 +19,10 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.building],
         action: ({ state, choices }) => {
-          state.entities[choices.targetId].damage += 2;
-          log.add(
-            state,
-            `Wrecking Ball deals 2 damage to ${
-              state.entities[choices.targetId].current.name
-            }.`
-          );
+          damageEntity(state, state.entities[choices.targetId], {
+            amount: 2,
+            isSpellDamage: true
+          });
         }
       }
     ]
@@ -68,11 +65,9 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
         action: ({ state, choices }) => {
-          attachEffectThisTurn(
-            state,
-            state.entities[choices.targetId],
-            "cardInfo.intimidate.createdEffect"
-          );
+          attachEffectThisTurn(state, state.entities[choices.targetId], {
+            path: "cardInfo.intimidate.createdEffect"
+          });
           log.add(
             state,
             `${
@@ -129,13 +124,11 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.unit],
         action: ({ state, source, choices }) => {
-          state.entities[choices.targetId].damage += 3;
-          log.add(
-            state,
-            `${source.current.name} deals 3 damage to ${
-              state.entities[choices.targetId].current.name
-            }.`
-          );
+          damageEntity(state, state.entities[choices.targetId], {
+            amount: 3,
+            source,
+            isAbilityDamage: true
+          });
         }
       }
     ]
@@ -195,13 +188,11 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.building],
         action: ({ state, source, choices }) => {
-          state.entities[choices.targetId].damage += 4;
-          log.add(
-            state,
-            `${source.current.name} deals 4 damage to ${
-              state.entities[choices.targetId].current.name
-            }.`
-          );
+          damageEntity(state, state.entities[choices.targetId], {
+            amount: 4,
+            source,
+            isAbilityDamage: true
+          });
         }
       }
     ]

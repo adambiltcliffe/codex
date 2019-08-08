@@ -192,3 +192,43 @@ test("Draw a card from death of technician", () => {
     `\${${testp1Id}} draws 1 card from death of technician.`
   );
 });
+
+test("Squad Leader has 1 armor while patrolling", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "iron_man")
+    .insertEntities(testp2Id, ["older_brother", "older_brother"]);
+  const [im, ob1, ob2] = tg.insertedEntityIds;
+  tg.playAction({ type: "endTurn", patrollers: [im, null, null, null, null] });
+  expect(tg.state.entities[im].armor).toEqual(1);
+  tg.playAction({ type: "attack", attacker: ob1, target: im });
+  expect(tg.state.entities[im].armor).toEqual(0);
+  expect(tg.state.entities[im].damage).toEqual(1);
+  tg.playAction({ type: "attack", attacker: ob2, target: im });
+  expect(tg.state.entities[im].armor).toEqual(0);
+  expect(tg.state.entities[im].damage).toEqual(3);
+});
+
+test("Squad Leader armor disappears at end of turn", () => {
+  const tg = new TestGame().insertEntity(testp1Id, "iron_man");
+  const [im] = tg.insertedEntityIds;
+  tg.playAction({ type: "endTurn", patrollers: [im, null, null, null, null] });
+  expect(tg.state.entities[im].armor).toEqual(1);
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[im].armor).toEqual(0);
+});
+
+test("Squad Leader armor protects against ability damage", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "iron_man")
+    .insertEntity(testp2Id, "jaina_stormborne");
+  const [im, jaina] = tg.insertedEntityIds;
+  tg.modifyEntity(jaina, { level: 7 });
+  tg.playAction({ type: "endTurn", patrollers: [im, null, null, null, null] });
+  expect(tg.state.entities[im].armor).toEqual(1);
+  tg.playActions([
+    { type: "activate", source: jaina, index: 2 },
+    { type: "choice", target: im }
+  ]);
+  expect(tg.state.entities[im].armor).toEqual(0);
+  expect(tg.state.entities[im].damage).toEqual(2);
+});

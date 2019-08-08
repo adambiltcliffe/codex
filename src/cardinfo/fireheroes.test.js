@@ -7,7 +7,7 @@ test("Jaina at level 1 has sparkshot", () => {
   const [ob, tm, jaina] = tg.insertedEntityIds;
   expect(tg.state.entities[jaina].current.abilities.length).toEqual(1);
   tg.playActions([
-    { type: "endTurn", patrollers: [ob, tm, null, null, null] },
+    { type: "endTurn", patrollers: [null, tm, ob, null, null] },
     { type: "attack", attacker: jaina, target: ob }
   ]);
   expect(tg.state.log).toContain("Older Brother dies.");
@@ -28,7 +28,7 @@ test("Jaina's level 4 ability can deal 1 to patrolling unit or building", () => 
   tg.modifyEntity(jaina, { level: 4 });
   expect(tg.state.entities[jaina].current.abilities.length).toEqual(2);
   tg.playActions([
-    { type: "endTurn", patrollers: [ob, troq, null, null, null] },
+    { type: "endTurn", patrollers: [null, ob, troq, null, null] },
     { type: "activate", source: jaina, index: 1 }
   ]);
   expect(tg.getLegalChoices().sort()).toEqual([ob, p1base, p2base].sort());
@@ -54,7 +54,7 @@ test("Jaina's level 7 ability can deal 3 to unit or building", () => {
   tg.modifyEntity(jaina, { level: 7 });
   expect(tg.state.entities[jaina].current.abilities.length).toEqual(3);
   tg.playActions([
-    { type: "endTurn", patrollers: [im, troq, null, null, null] },
+    { type: "endTurn", patrollers: [null, im, troq, null, null] },
     { type: "activate", source: jaina, index: 2 }
   ]);
   expect(tg.getLegalChoices().sort()).toEqual([im, tm, p1base, p2base].sort());

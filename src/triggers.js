@@ -5,12 +5,14 @@ import { getLegalChoicesForStep } from "./targets";
 
 import cardInfo from "./cardinfo";
 import triggerInfo from "./triggerinfo";
+import effectInfo from "./effectinfo";
 
 import get from "lodash/get";
 
 export const triggerDefinitions = {
   cardInfo,
-  triggerInfo
+  triggerInfo,
+  effectInfo
 };
 
 export function addSpellToQueue(state, trigger) {

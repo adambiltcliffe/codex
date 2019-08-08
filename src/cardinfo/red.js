@@ -21,11 +21,10 @@ const redCardInfo = {
             target.id
           ),
         action: ({ state, choices }) => {
-          state.entities[choices.targetId].damage += 2;
-          log.add(
-            state,
-            `Scorch deals 2 damage to ${getName(state, choices.targetId)}.`
-          );
+          damageEntity(state, state.entities[choices.targetId], {
+            amount: 2,
+            isSpellDamage: true
+          });
         }
       }
     ]

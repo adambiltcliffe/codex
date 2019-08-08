@@ -1,6 +1,6 @@
 import { targetMode, types } from "./cardinfo/constants";
 import { patrolSlots } from "./patrolzone";
-import { applyStateBasedEffects } from "./entities";
+import { applyStateBasedEffects, damageEntity } from "./entities";
 import {
   hasKeyword,
   antiAir,
@@ -171,7 +171,11 @@ const resolveAttackTriggers = {
             hasKeyword(e.current, swiftStrike)
           );
           swiftDefenders.forEach(e => {
-            attacker.damage += e.current.attack;
+            damageEntity(state, attacker, {
+              amount: e.current.attack,
+              source: e,
+              isCombatDamage: true
+            });
           });
           state.currentAttack.begun = true;
           state.currentAttack.slowDefenderIds = slowDefenders.map(e => e.id);
@@ -196,7 +200,12 @@ const resolveAttackTriggers = {
             }
             state.currentAttack.slowDefenderIds.forEach(id => {
               if (state.entities[id] != undefined) {
-                attacker.damage += state.entities[id].current.attack;
+                const e = state.entities[id];
+                damageEntity(state, attacker, {
+                  amount: e.current.attack,
+                  source: e,
+                  isCombatDamage: true
+                });
               }
             });
             state.currentAttack = null;
@@ -218,17 +227,34 @@ function dealAttackerDamage(state, attacker, target) {
     // It's possible no overpower target was chosen because there were no choices
     !state.currentTrigger.choices[overpowerStep].skipped
   ) {
-    target.damage += lethal;
-    state.entities[
-      state.currentTrigger.choices[overpowerStep].targetId
-    ].damage += attacker.current.attack - lethal;
+    damageEntity(state, target, {
+      amount: lethal,
+      source: attacker,
+      isCombatDamage: true
+    });
+    const overpowerTarget =
+      state.entities[state.currentTrigger.choices[overpowerStep].targetId];
+    damageEntity(state, overpowerTarget, {
+      amount: attacker.current.attack - lethal,
+      source: attacker,
+      isCombatDamage: true
+    });
   } else {
-    target.damage += attacker.current.attack;
+    damageEntity(state, target, {
+      amount: attacker.current.attack,
+      source: attacker,
+      isCombatDamage: true
+    });
   }
   if (hasKeyword(attacker.current, sparkshot)) {
-    state.entities[
-      state.currentTrigger.choices[sparkshotStep].targetId
-    ].damage += 1;
+    const sparkshotTarget =
+      state.entities[state.currentTrigger.choices[sparkshotStep].targetId];
+    damageEntity(state, sparkshotTarget, {
+      amount: 1,
+      source: attacker,
+      isCombatDamage: true,
+      isAbilityDamage: true
+    });
   }
 }
 

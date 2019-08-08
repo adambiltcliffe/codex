@@ -1,4 +1,5 @@
 import { specs, colors, types, targetMode } from "./constants";
+import { damageEntity } from "../entities";
 
 const fireCardInfo = {
   fire_dart: {
@@ -17,14 +18,7 @@ const fireCardInfo = {
         action: ({ state, choices }) => {
           const target = state.entities[choices.targetId];
           const amount = target.type == types.unit ? 3 : 2;
-          target.damage += amount;
-          log.add(
-            state,
-            `Fire Dart deals ${amount} damage to ${getName(
-              state,
-              choices.targetId
-            )}.`
-          );
+          damageEntity(state, target, { amount, isSpellDamage: true });
         }
       }
     ]

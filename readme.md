@@ -81,6 +81,7 @@ Sparkshot stacking
 # Other stuff to do
 
 Rewrite the core loop in CodexGame.updateState as an FSM
+Fix inconsistent ordering of prompts and attack message depending on whether attacker has swift strike
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities

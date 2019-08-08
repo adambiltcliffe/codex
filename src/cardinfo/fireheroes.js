@@ -1,6 +1,7 @@
 import { colors, types, specs, targetMode } from "./constants";
 import { sparkshot } from "./abilities/keywords";
 import log from "../log";
+import { damageEntity } from "../entities";
 
 const fireHeroCardInfo = {
   jaina_stormborne: {
@@ -31,14 +32,11 @@ const fireHeroCardInfo = {
                 target.id
               ),
             action: ({ state, source, choices }) => {
-              const target = state.entities[choices.targetId];
-              target.damage += 1;
-              log.add(
-                state,
-                `${source.current.name} deals 1 damage to ${
-                  target.current.name
-                }.`
-              );
+              damageEntity(state, state.entities[choices.targetId], {
+                amount: 1,
+                source,
+                isAbilityDamage: true
+              });
             }
           }
         ]
@@ -55,14 +53,11 @@ const fireHeroCardInfo = {
             targetMode: targetMode.single,
             targetTypes: [types.unit, types.building],
             action: ({ state, source, choices }) => {
-              const target = state.entities[choices.targetId];
-              target.damage += 3;
-              log.add(
-                state,
-                `${source.current.name} deals 3 damage to ${
-                  target.current.name
-                }.`
-              );
+              damageEntity(state, state.entities[choices.targetId], {
+                amount: 3,
+                source,
+                isAbilityDamage: true
+              });
             }
           }
         ]

@@ -15,7 +15,7 @@ test("Hired Stomper must kill itself with own trigger if no other units", () => 
   putCardInHand(s0, testp1Id, "hired_stomper");
   expect(s0.currentTrigger).toBeNull();
   const s1 = playActions(s0, [{ type: "play", card: "hired_stomper" }]);
-  expect(s1.log).toContain("Hired Stomper deals 3 damage to Hired Stomper.");
+  expect(s1.log).toContain("Hired Stomper deals 3 damage to itself.");
 });
 
 test("Hired Stomper can kill itself with own trigger even if other options available", () => {
@@ -28,7 +28,7 @@ test("Hired Stomper can kill itself with own trigger even if other options avail
   const hs = findEntityIds(s1, e => e.card == "hired_stomper")[0];
   const s2 = playActions(s1, [{ type: "choice", target: hs }]);
   expect(s2.entities[hs]).toBeUndefined();
-  expect(s2.log).toContain("Hired Stomper deals 3 damage to Hired Stomper.");
+  expect(s2.log).toContain("Hired Stomper deals 3 damage to itself.");
 });
 
 test("Hired Stomper can target your own units or the opponent's", () => {
