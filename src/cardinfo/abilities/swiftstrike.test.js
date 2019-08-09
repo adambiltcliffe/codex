@@ -61,5 +61,26 @@ test("Attacker with flying and swift strike takes damage from anti-air afterward
   expect(tg.state.entities[es].damage).toEqual(2);
 });
 
-//Attacker dies before dealing damage if defender has swift strike
-//Attacker dies before dealing damage if flown-over with swift strike
+test("Attacker dies before dealing damage if defender has swift strike", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "timely_messenger")
+    .insertEntity(testp2Id, "blademaster");
+  const [tm, bm] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: tm, target: bm });
+  expect(tg.state.log).toContain("Timely Messenger dies.");
+  expect(tg.state.entities[bm].damage).toEqual(0);
+});
+
+test("Attacker dies before dealing damage if flying over swift strike AA patroller", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["leaping_lizard", "blademaster"])
+    .insertEntity(testp2Id, "eggship");
+  const [ll, bm, es] = tg.insertedEntityIds;
+  const p1base = tg.findBaseId(testp1Id);
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, null, ll, null, null] },
+    { type: "attack", attacker: es, target: p1base }
+  ]);
+  expect(tg.state.entities[p1base].damage).toEqual(0);
+  expect(tg.state.entities[es]).toBeUndefined();
+});
