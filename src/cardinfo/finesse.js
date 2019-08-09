@@ -1,7 +1,13 @@
 import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
 import { conferComplexAbility, conferKeyword, damageEntity } from "../entities";
-import { haste, flying, invisible, swiftStrike } from "./abilities/keywords";
+import {
+  haste,
+  flying,
+  invisible,
+  swiftStrike,
+  antiAir
+} from "./abilities/keywords";
 import { getAP, andJoinVerb } from "../util";
 
 import forEach from "lodash/forEach";
@@ -198,6 +204,18 @@ const finesseCardInfo = {
     attack: 3,
     hp: 2,
     abilities: [flying]
+  },
+  leaping_lizard: {
+    color: colors.neutral,
+    tech: 2,
+    spec: specs.finesse,
+    name: "Leaping Lizard",
+    type: types.unit,
+    subtypes: ["Lizardman"],
+    cost: 1,
+    attack: 3,
+    hp: 5,
+    abilities: [antiAir]
   },
   blademaster: {
     color: colors.neutral,

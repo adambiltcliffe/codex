@@ -68,14 +68,18 @@ function attackerAboutToDealDamage(state) {
 export function needsOverpowerTarget(state) {
   const attacker = state.entities[state.currentAttack.attacker];
   return (
-    hasKeyword(attacker.current, overpower) && attackerAboutToDealDamage(state)
+    attacker !== undefined &&
+    hasKeyword(attacker.current, overpower) &&
+    attackerAboutToDealDamage(state)
   );
 }
 
 export function needsSparkshotTarget(state) {
   const attacker = state.entities[state.currentAttack.attacker];
   return (
-    hasKeyword(attacker.current, sparkshot) && attackerAboutToDealDamage(state)
+    attacker !== undefined &&
+    hasKeyword(attacker.current, sparkshot) &&
+    attackerAboutToDealDamage(state)
   );
 }
 
@@ -208,11 +212,11 @@ const resolveAttackTriggers = {
                 });
               }
             });
-            state.currentAttack = null;
-            // Do this after setting currentAttack to null to remove
-            // "X when attacking" type buffs
-            applyStateBasedEffects(state);
           }
+          state.currentAttack = null;
+          // Do this after setting currentAttack to null to remove
+          // "X when attacking" type buffs
+          applyStateBasedEffects(state);
         }
       }
     ]
