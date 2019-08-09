@@ -26,7 +26,6 @@ Everything involving sparkshot
 Combinations of swift strike and sparkshot
 Combinations of sparkshot and overpower
 Overpower prompts only when needed
-Skipping triggers with no choices
 Everything about Trojan Duck
 
 # Tests to write later
