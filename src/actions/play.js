@@ -63,8 +63,9 @@ export function checkPlayAction(state, action) {
   if (ap.hand.indexOf(action.card) == -1) {
     throw new Error("Card not in hand");
   }
-  if (ap.gold < getPlayCost(state, cardInfo[action.card])) {
-    throw new Error("Not enough gold");
+  const playCost = getPlayCost(state, cardInfo[action.card]);
+  if (ap.gold < playCost) {
+    throw new Error(`Not enough gold, cost is ${playCost}`);
   }
   const ci = cardInfo[action.card];
   const heroSpecs = getHeroSpecs(state);

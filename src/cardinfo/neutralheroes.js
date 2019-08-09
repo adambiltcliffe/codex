@@ -6,6 +6,7 @@ import log from "../log";
 import find from "lodash/find";
 import { isPatrolling, sideline } from "../patrolzone";
 import { damageEntity } from "../entities";
+import { getAP } from "../util";
 
 const neutralHeroCardInfo = {
   troq_bashar: {
@@ -84,7 +85,7 @@ const neutralHeroCardInfo = {
           {
             modifyPlayCost({ state, sourceVals, cardInfo, currentCost }) {
               if (getAP(state).id == sourceVals.controller) {
-                if (cardInfo.types == types.unit && cardInfo.tech == 0) {
+                if (cardInfo.type == types.unit && cardInfo.tech == 0) {
                   return currentCost - 1;
                 }
               }

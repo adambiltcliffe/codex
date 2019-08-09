@@ -111,3 +111,36 @@ test("River's level 3 ability can target tech 0 or 1 but not 2 or 3 units", () =
   ]);
   expect(tg.getLegalChoices().sort()).toEqual([ob, im].sort());
 });
+
+test("River at level 5 gives cost reduction on Tech 0 units", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "river_montoya")
+    .putCardsInHand(testp1Id, ["older_brother", "tiger_cub", "nimble_fencer"])
+    .setGold(testp1Id, 1);
+  const [river] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { level: 5 });
+  expect(() =>
+    tg.checkAction({ type: "play", card: "older_brother" })
+  ).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "play", card: "tiger_cub" })
+  ).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "play", card: "nimble_fencer" })
+  ).toThrow();
+  tg.playAction({ type: "play", card: "older_brother" });
+  expect(tg.state.players[testp1Id].gold).toEqual(0);
+});
+
+test("River at level 5 doesn't give cost reduction to the opponent", () => {
+  const tg = new TestGame()
+    .insertEntity(testp2Id, "river_montoya")
+    .putCardsInHand(testp1Id, ["older_brother", "tiger_cub", "nimble_fencer"])
+    .setGold(testp1Id, 1);
+  const [river] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { level: 5 });
+  expect(() =>
+    tg.checkAction({ type: "play", card: "older_brother" })
+  ).toThrow();
+  expect(() => tg.checkAction({ type: "play", card: "tiger_cub" })).toThrow();
+});

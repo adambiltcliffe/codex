@@ -28,8 +28,7 @@ Sparkshot: can attack patroller in SL and auto hit adjacent
 Sparkshot: can attack patroller in LO and auto hit adjacent
 Swift strike attacker still deals its sparkshot damage
 Swift strike flying attacker can kill the SL it flew over and not get hit
-River maxband ability
-Everything about Trojan Duck
+Everything about Blademaster and Trojan Duck
 
 # Tests to write later
 
