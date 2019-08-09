@@ -96,3 +96,33 @@ test("Overpower doesn't redirect damage if there are no other targets", () => {
   );
   expect(tg.state.entities[p1base].damage).toEqual(25);
 });
+
+test("Overpower doesn't create a prompt if attacker damage < lethal", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "regularsized_rhinoceros")
+    .insertEntity(testp2Id, "harvest_reaper");
+  const [rr, hr] = tg.insertedEntityIds;
+  tg.modifyEntity(rr, { runes: 1 }).playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: hr, target: rr }
+  ]);
+  expect(tg.state.currentAttack).toBeNull();
+  expect(tg.state.currentTrigger).toBeNull();
+  expect(tg.state.entities[rr].damage).toEqual(6);
+  expect(tg.state.log).toContain("Harvest Reaper dies.");
+});
+
+test("Overpower doesn't create a prompt if attacker damage = lethal", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "regularsized_rhinoceros")
+    .insertEntity(testp2Id, "harvest_reaper");
+  const [rr, hr] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: hr, target: rr }
+  ]);
+  expect(tg.state.currentAttack).toBeNull();
+  expect(tg.state.currentTrigger).toBeNull();
+  expect(tg.state.log).toContain("Regular-sized Rhinoceros dies.");
+  expect(tg.state.log).toContain("Harvest Reaper dies.");
+});

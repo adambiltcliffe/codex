@@ -21,11 +21,14 @@ Effects that last for the current turn
 
 # Tests to write
 
+Sparkshot: can attack patroller in middle slot and choose one of two adjacent to hit
+Sparkshot: can attack patroller in middle slot and auto hit only adjacent
+Sparkshot: can attack solitary patroller and nothing happens
+Sparkshot: can attack patroller in SL and auto hit adjacent
+Sparkshot: can attack patroller in LO and auto hit adjacent
+Swift strike attacker still deals its sparkshot damage
+Swift strike flying attacker can kill the SL it flew over and not get hit
 River abilities
-Everything involving sparkshot
-Combinations of swift strike and sparkshot
-Combinations of sparkshot and overpower
-Overpower prompts only when needed
 Everything about Trojan Duck
 
 # Tests to write later
@@ -34,6 +37,7 @@ Scorch and Fire Dart
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
 Put back deleted Brick Thief tests when more than 2 buildings can exist
 Flying plus overpower and legal targets to redirect to (Void Star)
+Sparkshot/overpower unit can't kill only additional patroller with SS and overpower to base (Blooming Elm)
 
 # Game features not implemented:
 
