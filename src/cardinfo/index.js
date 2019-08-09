@@ -1,10 +1,10 @@
 import redCardInfo from "./red";
+import redHeroCardInfo from "./redheroes";
 import greenCardInfo from "./green";
 import whiteCardInfo from "./white";
 import neutralCardInfo from "./neutral";
 import neutralHeroCardInfo from "./neutralheroes";
 import fireCardInfo from "./fire";
-import fireHeroCardInfo from "./fireheroes";
 import balanceCardInfo from "./balance";
 import truthCardInfo from "./truth";
 import ninjutsuCardInfo from "./ninjutsu";
@@ -16,12 +16,12 @@ export * from "./constants";
 
 const cardInfo = {
   ...redCardInfo,
+  ...redHeroCardInfo,
   ...greenCardInfo,
   ...whiteCardInfo,
   ...neutralCardInfo,
   ...neutralHeroCardInfo,
   ...fireCardInfo,
-  ...fireHeroCardInfo,
   ...balanceCardInfo,
   ...truthCardInfo,
   ...ninjutsuCardInfo,
