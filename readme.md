@@ -22,7 +22,6 @@ Effects that last for the current turn
 # Tests to write
 
 River abilities
-Sneaky Pig
 Everything involving sparkshot
 Combinations of swift strike and sparkshot
 Combinations of sparkshot and overpower

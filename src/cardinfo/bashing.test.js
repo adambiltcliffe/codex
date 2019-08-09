@@ -9,6 +9,7 @@ import {
   TestGame
 } from "../testutil";
 import { fixtureNames } from "../fixtures";
+import { hasKeyword, stealth } from "./abilities/keywords";
 
 test("Hired Stomper must kill itself with own trigger if no other units", () => {
   const s0 = getNewGame();
@@ -116,4 +117,31 @@ test("Intimidate decreases attack by 4 for a turn", () => {
   tg.playAction({ type: "endTurn" });
   expect(tg.state.entities[ob].current.attack).toEqual(2);
   expect(tg.state.entities[rr].current.attack).toEqual(5);
+});
+
+test("Sneaky Pig has stealth on first turn but not later", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "iron_man")
+    .putCardsInHand(testp2Id, ["sneaky_pig"]);
+  const [im] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [im, null, null, null, null] },
+    { type: "play", card: "sneaky_pig" }
+  ]);
+  const sp = findEntityIds(tg.state, e => e.card == "sneaky_pig")[0];
+  const p1base = tg.findBaseId(testp1Id);
+  expect(tg.state.entities[sp].effects.length).toEqual(1);
+  expect(hasKeyword(tg.state.entities[sp].current, stealth)).toBeTruthy();
+  expect(() =>
+    tg.checkAction({ type: "attack", attacker: sp, target: p1base })
+  ).not.toThrow();
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "endTurn", patrollers: [im, null, null, null, null] }
+  ]);
+  expect(tg.state.entities[sp].effects.length).toEqual(0);
+  expect(hasKeyword(tg.state.entities[sp].current, stealth)).toBeFalsy();
+  expect(() =>
+    tg.checkAction({ type: "attack", attacker: sp, target: p1base })
+  ).toThrow();
 });
