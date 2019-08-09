@@ -23,8 +23,7 @@ Effects that last for the current turn
 
 River abilities
 Sneaky Pig
-Stealth
-Everything involving swift strike and sparkshot
+Everything involving sparkshot
 Combinations of swift strike and sparkshot
 Combinations of sparkshot and overpower
 Overpower prompts only when needed
@@ -85,7 +84,6 @@ Fix inconsistent ordering of prompts and attack message depending on whether att
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities
-Move the first three tests from neutral.test.js into a keyword test file
 Move suggest into a module and write tests for it
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
