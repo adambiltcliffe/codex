@@ -32,7 +32,7 @@ export function isPatrolling(state, entity) {
 export function sideline(state, patroller) {
   const slot = currentPatrolSlot(state, patroller);
   if (slot != -1) {
-    state.players[entity.current.controller].patrollerIds[slot] = null;
+    state.players[patroller.current.controller].patrollerIds[slot] = null;
   }
 }
 

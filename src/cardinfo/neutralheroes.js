@@ -71,7 +71,7 @@ const neutralHeroCardInfo = {
               target.current.tech < 2 && isPatrolling(state, target),
             action: ({ state, source, choices }) => {
               const target = state.entities[choices.targetId];
-              sideline(target);
+              sideline(state, target);
               log.add(state, `${target.current.name} is sidelined.`);
             }
           }
