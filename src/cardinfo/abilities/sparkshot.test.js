@@ -106,5 +106,25 @@ test("Choosing a sparkshot target doesn't make you pay resist", () => {
   expect(tg.state.players[testp2Id].gold).toEqual(5);
 });
 
-//Swift strike attacker still deals its sparkshot damage
+test("Unit with sparkshot still deals its damage if it has swift strike", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "older_brother",
+      "timely_messenger",
+      "brick_thief"
+    ])
+    .insertEntities(testp2Id, ["revolver_ocelot", "blademaster"]);
+  const [ob, tm, bt, ro, bm] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, bt, ob, tm, null] },
+    { type: "attack", attacker: ro, target: ob }
+  ]);
+  expect(tg.getLegalChoices().sort()).toEqual([bt, tm].sort());
+  tg.playAction({ type: "choice", target: bt });
+  expect(tg.state.log).toContain("Older Brother dies.");
+  expect(tg.state.log).toContain("Brick Thief dies.");
+  expect(tg.state.log).not.toContain("Revolver Ocelot dies.");
+  expect(tg.state.entities[ro].damage).toEqual(0);
+});
+
 //Swift strike flying attacker can kill the SL it flew over and not get hit

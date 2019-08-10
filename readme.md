@@ -21,8 +21,6 @@ Effects that last for the current turn
 
 # Tests to write
 
-Swift strike attacker still deals its sparkshot damage
-Swift strike flying attacker can kill the SL it flew over and not get hit
 Everything about Blademaster and Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests
@@ -34,6 +32,7 @@ Spells are put in discard pile before resolving triggers they caused (need somet
 Put back deleted Brick Thief tests when more than 2 buildings can exist
 Flying plus overpower and legal targets to redirect to (Void Star)
 Sparkshot/overpower unit can't kill only additional patroller with SS and overpower to base (Blooming Elm)
+Swift strike flying attacker can kill the SL it flew over and not get hit (needs unit with sparkshot+flying)
 
 # Game features not implemented:
 
