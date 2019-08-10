@@ -19,9 +19,10 @@ import partition from "lodash/partition";
 import { getAttackableEntityIds } from "./actions/attack";
 import { fixtureNames } from "./fixtures";
 
-const retargetAttackStep = 0;
-const overpowerStep = 1;
-const sparkshotStep = 2;
+const findDefendersStep = 0;
+const retargetAttackStep = 1;
+const overpowerStep = 2;
+const sparkshotStep = 3;
 
 function canEvadeTower(attacker) {
   return (
@@ -93,9 +94,34 @@ export function needsSparkshotTarget(state) {
   );
 }
 
+const doNothing = { action: () => {} };
+
 const retargetAttack = {
   hasTargetSymbol: false,
   action: () => {}
+};
+
+const findDefenders = {
+  action: ({ state }) => {
+    const attacker = state.entities[state.currentAttack.attacker];
+    const target = state.entities[state.currentAttack.target];
+    const flownOver = hasKeyword(attacker.current, flying)
+      ? getFlownOver(state, target)
+      : [];
+    const flownOverText =
+      flownOver.length == 0
+        ? ""
+        : `, flying over ${andJoin(flownOver.map(e => e.current.name))}`;
+    log.add(
+      state,
+      `${attacker.current.name} attacks ${target.current.name}${flownOverText}.`
+    );
+    if (!hasKeyword(attacker.current, readiness)) {
+      attacker.ready = false;
+    }
+    attacker.thisTurn.attacks = 1 + (attacker.thisTurn.attacks || 0);
+    state.currentAttack.flownOverIds = flownOver.map(e => e.id);
+  }
 };
 
 const chooseOverpowerTarget = {
@@ -144,30 +170,16 @@ const resolveAttackTriggers = {
   beginResolveAttack: {
     steps: [
       retargetAttack,
+      findDefenders,
       chooseOverpowerTarget,
       chooseSparkshotTarget,
       {
         action: ({ state }) => {
           const attacker = state.entities[state.currentAttack.attacker];
           const target = state.entities[state.currentAttack.target];
-          const flownOver = hasKeyword(attacker.current, flying)
-            ? getFlownOver(state, target)
-            : [];
-          const flownOverText =
-            flownOver.length == 0
-              ? ""
-              : `, flying over ${andJoin(flownOver.map(e => e.current.name))}`;
-          log.add(
-            state,
-            `${attacker.current.name} attacks ${
-              target.current.name
-            }${flownOverText}.`
+          const defenders = state.currentAttack.flownOverIds.map(
+            id => state.entities[id]
           );
-          if (!hasKeyword(attacker.current, readiness)) {
-            attacker.ready = false;
-          }
-          attacker.thisTurn.attacks = 1 + (attacker.thisTurn.attacks || 0);
-          const defenders = flownOver;
           const attackerReceivesDamage =
             !hasKeyword(attacker.current, flying) ||
             hasKeyword(target.current, flying) ||
@@ -200,7 +212,8 @@ const resolveAttackTriggers = {
   },
   finishResolveAttack: {
     steps: [
-      retargetAttack,
+      doNothing,
+      doNothing,
       chooseOverpowerTarget,
       chooseSparkshotTarget,
       {
