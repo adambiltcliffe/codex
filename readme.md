@@ -24,11 +24,7 @@ Effects that last for the current turn
 Everything about Blademaster and Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests
-Building tech buildings, requirements enforced
-Rebuilding tech buildings is free
-Buildings constructed after one turn
 Can only have one add-on at a time
-Attacking/destroying/rebuilding tech buildings
 
 # Tests to write later
 

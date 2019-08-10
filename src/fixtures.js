@@ -1,4 +1,7 @@
 import { types } from "./cardinfo/constants";
+import log from "./log";
+import { getAP } from "./util";
+import { drawCards } from "./draw";
 
 export const fixtureNames = {
   base: "base",
@@ -47,7 +50,7 @@ const fixtures = {
     freeRebuild: true,
     requiresWorkers: 8,
     requiresFixture: fixtureNames.tech1,
-    cost: 1,
+    cost: 4,
     attack: 0,
     hp: 5
   },
@@ -57,7 +60,7 @@ const fixtures = {
     freeRebuild: true,
     requiresWorkers: 10,
     requiresFixture: fixtureNames.tech2,
-    cost: 1,
+    cost: 5,
     attack: 0,
     hp: 5
   }

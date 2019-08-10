@@ -6,10 +6,11 @@ import {
   createBuildingFixture
 } from "./entities";
 import { emptyPatrolZone, applyPatrolzoneEffects } from "./patrolzone";
-import fixtures from "./fixtures";
+import fixtures, { fixtureNames } from "./fixtures";
 
 import forEach from "lodash/forEach";
 import upperFirst from "lodash/upperFirst";
+import { drawCards } from "./draw";
 
 export const phases = {
   ready: "P_READY",
@@ -62,6 +63,9 @@ export function enterUpkeepPhase(state) {
   const ap = getAP(state);
   const workerGold = givePlayerGold(state, ap.id, ap.workers);
   log.add(state, log.fmt`${ap} gains ${workerGold} gold from workers.`);
+  if (ap.current.fixtures[fixtureNames.surplus]) {
+    drawCards(state, ap.id, 1, " from surplus");
+  }
   forEach(state.entities, u => {
     const vals = getCurrentValues(state, u.id);
     if (vals.controller == ap.id) {
