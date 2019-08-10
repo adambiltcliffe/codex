@@ -8,8 +8,14 @@ import {
   stealth,
   haste
 } from "./abilities/keywords";
-import { killEntity, damageEntity, conferKeyword } from "../entities";
+import {
+  killEntity,
+  damageEntity,
+  conferKeyword,
+  bounceEntity
+} from "../entities";
 import { attachEffectThisTurn } from "../effects";
+import { getAP } from "../util";
 
 const bashingCardInfo = {
   wrecking_ball: {
@@ -89,6 +95,61 @@ const bashingCardInfo = {
         subject.current.attack -= 4;
       }
     }
+  },
+  final_smash: {
+    color: colors.neutral,
+    spec: specs.bashing,
+    name: "Final Smash",
+    type: types.spell,
+    ultimate: true,
+    subtypes: ["Debuff"],
+    cost: 6,
+    abilities: [
+      {
+        isSpellEffect: true,
+        steps: [
+          {
+            prompt: "Choose a tech 0 unit to destroy",
+            hasTargetSymbol: true,
+            targetMode: targetMode.single,
+            targetTypes: [types.unit],
+            canTarget: ({ state, target }) => {
+              return target.current.tech == 0;
+            },
+            action: ({ state, choices }) => {
+              killEntity(state, choices.targetId);
+            }
+          },
+          {
+            prompt: "Choose a tech 1 unit to return to its owner's hand",
+            hasTargetSymbol: true,
+            targetMode: targetMode.single,
+            targetTypes: [types.unit],
+            canTarget: ({ state, target }) => {
+              return target.current.tech == 1;
+            },
+            action: ({ state, choices }) => {
+              bounceEntity(state, choices.targetId);
+            }
+          },
+          {
+            prompt: "Choose a tech 2 unit to gain control of",
+            hasTargetSymbol: true,
+            targetMode: targetMode.single,
+            targetTypes: [types.unit],
+            canTarget: ({ state, target }) => {
+              return target.current.tech == 2;
+            },
+            action: ({ state, choices }) => {
+              const ap = getAP(state);
+              const target = state.entities[choices.targetId];
+              target.defaultController = ap.id;
+              log.add(state, log.fmt`${ap} gains control of ${target}.`);
+            }
+          }
+        ]
+      }
+    ]
   },
   iron_man: {
     color: colors.neutral,

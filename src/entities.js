@@ -15,6 +15,7 @@ export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
     id: `e${state.nextId}`,
     fixture,
     owner,
+    defaultController: owner,
     damage: 0,
     armor: 0,
     ready: true,
@@ -34,6 +35,7 @@ export function createUnit(state, owner, card) {
     id: `e${state.nextId}`,
     card,
     owner,
+    defaultController: owner,
     lastControlledBy: owner,
     controlledSince: state.turn,
     ready: true,
@@ -54,6 +56,7 @@ export function createHero(state, owner, card) {
     id: `e${state.nextId}`,
     card,
     owner,
+    defaultController: owner,
     lastControlledBy: owner,
     controlledSince: state.turn,
     ready: true,
@@ -90,6 +93,26 @@ export function damageEntity(state, entity, damage) {
   }
 }
 
+export function bounceEntity(state, entityId) {
+  const e = state.entities[entityId];
+  const ci = cardInfo[e.card];
+  const dest = ci.type == types.hero ? "command zone" : "hand";
+  log.add(
+    state,
+    log.fmt`${e.current.name} is returned to ${
+      state.players[e.owner]
+    }'s ${dest}.`
+  );
+  delete state.entities[e.id];
+  if (ci.type == types.hero) {
+    state.players[e.owner].commandZone.push(e.card);
+  } else {
+    state.updateHidden(fs => {
+      fs.players[e.owner].hand.push(e.card);
+    });
+  }
+}
+
 export function killEntity(state, entityId) {
   const e = state.entities[entityId];
   if (e.fixture == fixtureNames.base) {
@@ -117,7 +140,7 @@ export function killEntity(state, entityId) {
   });
   if (e.fixture !== undefined) {
     // do nothing for now?
-  } else if (e.current.type == types.hero) {
+  } else if (cardInfo[e.card].type == types.hero) {
     state.players[e.owner].commandZone.push(e.card);
   } else {
     state.updateHidden(fs => {
@@ -182,6 +205,9 @@ export function clearCurrentValues(state) {
   forEach(state.entities, e => {
     e.current = undefined;
   });
+  forEach(state.players, p => {
+    p.current = undefined;
+  });
   state.currentCache = undefined;
 }
 
@@ -193,6 +219,9 @@ export function cacheCurrentValues(state) {
 
 export function updateCurrentValues(state) {
   state.currentCache = true;
+  forEach(state.players, p => {
+    p.current = { heroColors: [], heroSpecs: [], ultimateSpecs: [] };
+  });
   // 1. Start with a draft based on each entity's printed values
   forEach(state.entities, e => {
     let printedValues =
@@ -202,7 +231,7 @@ export function updateCurrentValues(state) {
       printedValues = getLevelValuesForHero(e, printedValues);
     }
     e.current = createDraft(printedValues);
-    e.current.controller = e.owner;
+    e.current.controller = e.defaultController;
     e.current.subtypes = e.current.subtypes || [];
     e.current.abilities = e.current.abilities || [];
     if (e.current.type != types.hero) {
@@ -268,6 +297,14 @@ export function updateCurrentValues(state) {
     if (e.current.controller != e.lastControlledBy) {
       e.controlledSince = state.turn;
       e.lastControlledBy = e.current.controller;
+    }
+    if (e.current.type == types.hero) {
+      const pc = state.players[e.current.controller].current;
+      pc.heroColors.push(e.current.color);
+      pc.heroSpecs.push(e.current.spec);
+      if (e.controlledSince < state.turn && e.maxedSince < state.turn) {
+        pc.ultimateSpecs.push(e.current.spec);
+      }
     }
   });
 }

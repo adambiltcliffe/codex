@@ -16,17 +16,19 @@ import forEach from "lodash/forEach";
 import filter from "lodash/filter";
 
 function getHeroColors(state) {
-  return filter(
+  /*return filter(
     getCurrentValues(state, Object.keys(state.entities)),
     v => v.controller == getAP(state).id && v.type == types.hero
-  ).map(v => v.color);
+  ).map(v => v.color);*/
+  return getAP(state).current.heroColors;
 }
 
 function getHeroSpecs(state) {
-  return filter(
+  /*return filter(
     getCurrentValues(state, Object.keys(state.entities)),
     v => v.controller == getAP(state).id && v.type == types.hero
-  ).map(v => v.spec);
+  ).map(v => v.spec);*/
+  return getAP(state).current.heroSpecs;
 }
 
 function getPlayCost(state, cardInfo) {
@@ -68,12 +70,14 @@ export function checkPlayAction(state, action) {
     throw new Error(`Not enough gold, cost is ${playCost}`);
   }
   const ci = cardInfo[action.card];
-  const heroSpecs = getHeroSpecs(state);
-  if (
-    ci.type == types.spell &&
-    ((!ci.minor && !heroSpecs.includes(ci.spec)) || heroSpecs.length == 0)
-  ) {
-    throw new Error("Don't have the right hero to cast that spell");
+  if (ci.type == types.spell) {
+    const heroSpecs = getHeroSpecs(state);
+    if ((!ci.minor && !heroSpecs.includes(ci.spec)) || heroSpecs.length == 0) {
+      throw new Error("Don't have the right hero to cast that spell");
+    }
+    if (ci.ultimate && !ap.current.ultimateSpecs.includes(ci.spec)) {
+      throw new Error("Your hero was not max level at the start of the turn");
+    }
   }
 }
 

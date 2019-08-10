@@ -145,3 +145,27 @@ test("Sneaky Pig has stealth on first turn but not later", () => {
     tg.checkAction({ type: "attack", attacker: sp, target: p1base })
   ).toThrow();
 });
+
+test("Final Smash can do all three of its effects", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, ["tenderfoot", "nimble_fencer", "leaping_lizard"])
+    .setGold(testp1Id, 6)
+    .putCardsInHand(testp1Id, ["final_smash"]);
+  const [troq, tf, nf, ll] = tg.insertedEntityIds;
+  tg.modifyEntity(troq, { level: 8, controlledSince: -1, maxedSince: -1 });
+  tg.playAction({ type: "play", card: "final_smash" });
+  expect(tg.state.log).toEqual([
+    "${test_player1} plays Final Smash.",
+    "Choose a tech 0 unit to destroy: Only one legal choice.",
+    "Tenderfoot dies.",
+    "Choose a tech 1 unit to return to its owner's hand: Only one legal choice.",
+    "Nimble Fencer is returned to ${test_player2}'s hand.",
+    "Choose a tech 2 unit to gain control of: Only one legal choice.",
+    "${test_player1} gains control of ${e6}."
+  ]);
+  expect(tg.state.entities[tf]).toBeUndefined();
+  expect(tg.state.entities[nf]).toBeUndefined();
+  expect(tg.state.entities[ll].current.controller).toEqual(testp1Id);
+  expect(tg.state.players[testp2Id].hand).toContain("nimble_fencer");
+});

@@ -14,7 +14,7 @@ Automatic resolution of triggers when only one choice exists and skipping if non
 Passive effects on units: modify own/others' stats, add abilities, modify costs to play cards
 Frenzy, haste, flying, anti-air, invisible, healing, resist, overpower, sparkshot, readiness, stealth
 Patrol zone with bonuses for squad leader, elite, scavenger, technician and lookout
-Spell casting including checking if you have the right hero
+Spell casting including checking if you have the right hero and ultimate spells
 Flagbearer ability
 +1/+1 and -1/-1 runes
 Effects that last for the current turn
@@ -29,6 +29,8 @@ Sparkshot: can attack patroller in LO and auto hit adjacent
 Swift strike attacker still deals its sparkshot damage
 Swift strike flying attacker can kill the SL it flew over and not get hit
 Everything about Blademaster and Trojan Duck
+More thorough tests for Final Smash
+Ultimate spell casting condition tests
 
 # Tests to write later
 
@@ -79,8 +81,9 @@ Sparkshot stacking
 
 # Other stuff to do
 
+Tidy up the way making choices and queuing triggers is reported
 Make damage reporting call out swift strike/overpower/sparkshot damage
-Rewrite the core loop in CodexGame.updateState as an FSM
+Rewrite the core loop in CodexGame.updateState as an FSM or other better way
 Fix inconsistent ordering of prompts and attack message depending on whether attacker has swift strike
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues

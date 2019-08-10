@@ -54,5 +54,8 @@ export function doLevelAction(state, action) {
     hero.damage = 0;
     log.add(state, log.fmt`${hero.current.name} is fully healed.`);
   }
+  if (oldLevel < heroVals.maxbandLevel && hero.level == heroVals.maxbandLevel) {
+    hero.maxedSince = state.turn;
+  }
   applyStateBasedEffects(state);
 }
