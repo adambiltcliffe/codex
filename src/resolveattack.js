@@ -253,12 +253,14 @@ function dealAttackerDamage(state, attacker, target) {
   if (hasKeyword(attacker.current, sparkshot)) {
     const sparkshotTarget =
       state.entities[state.currentTrigger.choices[sparkshotStep].targetId];
-    damageEntity(state, sparkshotTarget, {
-      amount: 1,
-      source: attacker,
-      isCombatDamage: true,
-      isAbilityDamage: true
-    });
+    if (sparkshotTarget !== undefined) {
+      damageEntity(state, sparkshotTarget, {
+        amount: 1,
+        source: attacker,
+        isCombatDamage: true,
+        isAbilityDamage: true
+      });
+    }
   }
 }
 

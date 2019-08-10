@@ -21,11 +21,6 @@ Effects that last for the current turn
 
 # Tests to write
 
-Sparkshot: can attack patroller in middle slot and choose one of two adjacent to hit
-Sparkshot: can attack patroller in middle slot and auto hit only adjacent
-Sparkshot: can attack solitary patroller and nothing happens
-Sparkshot: can attack patroller in SL and auto hit adjacent
-Sparkshot: can attack patroller in LO and auto hit adjacent
 Swift strike attacker still deals its sparkshot damage
 Swift strike flying attacker can kill the SL it flew over and not get hit
 Everything about Blademaster and Trojan Duck
