@@ -129,6 +129,12 @@ export class TestGame {
     });
     return this;
   }
+  setWorkers(playerId, amount) {
+    this.state = produce(this.state, draft => {
+      draft.players[playerId].workers = amount;
+    });
+    return this;
+  }
   putCardsInHand(playerId, cards) {
     this.state = produce(this.state, draft => {
       cards.forEach(c => draft.players[playerId].hand.push(c));

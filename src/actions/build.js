@@ -1,5 +1,6 @@
 import fixtures from "../fixtures";
 import { getAP } from "../util";
+import log from "../log";
 
 export function checkBuildAction(state, action) {
   const fixture = fixtures[action.fixture];
@@ -34,10 +35,16 @@ export function doBuildAction(state, action) {
   const fixture = fixtures[action.fixture];
   const ap = getAP(state);
   state.constructing.push(action.fixture);
+  let paid = false;
   if (!fixture.freeRebuild || !ap.paidFixtures.includes(action.fixture)) {
     ap.gold -= fixture.cost;
+    paid = true;
   }
   if (fixture.freeRebuild && !ap.paidFixtures.includes(action.fixture)) {
     ap.paidFixtures.push(action.fixture);
   }
+  log.add(
+    state,
+    log.fmt`${ap} begins ${paid ? "" : "re"}construction of ${fixture.name}.`
+  );
 }

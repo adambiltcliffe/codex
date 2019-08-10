@@ -27,6 +27,7 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].id = player;
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
   state.players[player].gold = 0;
+  state.players[player].paidFixtures = [];
   state.players[player].patrollerIds = emptyPatrolZone;
   state.players[player].commandZone = ["troq_bashar"];
   createBuildingFixture(state, player, fixtureNames.base, true);

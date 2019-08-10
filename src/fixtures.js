@@ -1,12 +1,12 @@
 import { types } from "./cardinfo/constants";
 
 export const fixtureNames = {
-  base: "F_BASE",
-  surplus: "F_SURPLUS",
-  tower: "F_TOWER",
-  tech1: "F_T1",
-  tech2: "F_T2",
-  tech3: "F_T3"
+  base: "base",
+  surplus: "surplus",
+  tower: "tower",
+  tech1: "tech1",
+  tech2: "tech2",
+  tech3: "tech3"
 };
 
 const fixtures = {
