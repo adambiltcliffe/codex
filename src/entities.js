@@ -9,6 +9,7 @@ import cardInfo, { types } from "./cardinfo";
 
 import get from "lodash/get";
 import forEach from "lodash/forEach";
+import upperFirst from "lodash/upperFirst";
 
 export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
   const newBuilding = {
@@ -74,9 +75,14 @@ export function createHero(state, owner, card) {
 }
 
 export function damageEntity(state, entity, damage) {
-  const sourceName = damage.isSpellDamage
-    ? cardInfo[state.playedCard].name
-    : damage.source.current.name;
+  if (damage.amount < 1) {
+    return;
+  }
+  const sourceName = upperFirst(
+    damage.isSpellDamage
+      ? cardInfo[state.playedCard].name
+      : damage.source.current.name
+  );
   if (damage.source && damage.source == entity) {
     log.add(state, `${sourceName} deals ${damage.amount} damage to itself.`);
   } else {

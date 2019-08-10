@@ -8,17 +8,27 @@ import {
   readiness,
   swiftStrike,
   overpower,
-  sparkshot
+  sparkshot,
+  stealth,
+  invisible
 } from "./cardinfo/abilities/keywords";
 import { andJoin } from "./util";
 import log from "./log";
 
 import partition from "lodash/partition";
 import { getAttackableEntityIds } from "./actions/attack";
+import { fixtureNames } from "./fixtures";
 
 const retargetAttackStep = 0;
 const overpowerStep = 1;
 const sparkshotStep = 2;
+
+function canEvadeTower(attacker) {
+  return (
+    hasKeyword(attacker.current, stealth) ||
+    hasKeyword(attacker.current, invisible)
+  );
+}
 
 function getFlownOver(state, target) {
   const playerId = target.current.controller;
@@ -261,6 +271,19 @@ function dealAttackerDamage(state, attacker, target) {
         isAbilityDamage: true
       });
     }
+  }
+  const tower =
+    state.entities[
+      state.players[target.current.controller].current.fixtures[
+        fixtureNames.tower
+      ]
+    ];
+  if (tower !== undefined && !canEvadeTower(attacker)) {
+    damageEntity(state, attacker, {
+      amount: 1,
+      source: tower,
+      isCombatDamage: true
+    });
   }
 }
 

@@ -25,6 +25,8 @@ Everything about Blademaster and Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests
 Can only have one add-on at a time
+Tower deals damage to each attacker
+Tower damages first stealth attacker but not subsequent
 
 # Tests to write later
 
@@ -46,8 +48,6 @@ Heroes go on cooldown when killed
 
 Base damage from building destruction
 Restriction to one add-on
-Surplus does stuff
-Tower does stuff
 Temporary detection by tower
 Requirement to have tech buildings/unlocked specs to play units
 
