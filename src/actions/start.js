@@ -9,16 +9,16 @@ function initialisePlayerState(state, playerIndex) {
   const player = state.playerList[playerIndex];
   state.updateHidden(fs => {
     const deck = [
-      "merfolk_prospector",
-      "maestro",
-      "revolver_ocelot",
-      "nimble_fencer",
       "timely_messenger",
+      "tenderfoot",
       "older_brother",
-      "intimidate",
-      "sneaky_pig",
-      "sneaky_pig",
-      "sneaky_pig"
+      "brick_thief",
+      "helpful_turtle",
+      "granfalloon_flagbearer",
+      "fruit_ninja",
+      "spark",
+      "bloom",
+      "wither"
     ];
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);
