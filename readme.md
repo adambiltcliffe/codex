@@ -24,6 +24,11 @@ Effects that last for the current turn
 Everything about Blademaster and Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests
+Building tech buildings, requirements enforced
+Rebuilding tech buildings is free
+Buildings constructed after one turn
+Can only have one add-on at a time
+Attacking/destroying/rebuilding tech buildings
 
 # Tests to write later
 
@@ -43,16 +48,15 @@ One reshuffle per main phase limit
 
 Heroes go on cooldown when killed
 
-Tech buildings and add-ons
 Base damage from building destruction
-Surplus (requires add-ons)
-Tower (requires add-ons)
+Restriction to one add-on
+Surplus does stuff
+Tower does stuff
 Temporary detection by tower
 Requirement to have tech buildings/unlocked specs to play units
 
 Hero level up on death
 Hero cooldown
-Ultimate spell requirements
 
 Avoid leaking minor information when workering
 Codex and tech phase

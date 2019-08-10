@@ -1,8 +1,15 @@
 import { andJoin, getAP, givePlayerGold } from "./util";
 import log from "./log";
-import forEach from "lodash/forEach";
-import { getCurrentValues, applyStateBasedEffects } from "./entities";
+import {
+  getCurrentValues,
+  applyStateBasedEffects,
+  createBuildingFixture
+} from "./entities";
 import { emptyPatrolZone, applyPatrolzoneEffects } from "./patrolzone";
+import fixtures from "./fixtures";
+
+import forEach from "lodash/forEach";
+import upperFirst from "lodash/upperFirst";
 
 export const phases = {
   ready: "P_READY",
@@ -31,6 +38,7 @@ export function advancePhase(state) {
 export function enterReadyPhase(state) {
   state.phase = phases.ready;
   state.madeWorkerThisTurn = false;
+  state.constructing = [];
   const ap = getAP(state);
   ap.patrollerIds = emptyPatrolZone;
   // this covers "X while patrolling" effects
@@ -71,4 +79,12 @@ export function enterUpkeepPhase(state) {
 
 export function enterMainPhase(state) {
   state.phase = phases.main;
+}
+
+export function doEndOfTurnEffects(state) {
+  const ap = getAP(state);
+  state.constructing.forEach(f => {
+    createBuildingFixture(state, ap.id, f);
+    log.add(state, `${upperFirst(fixtures[f].name)} finishes construction.`);
+  });
 }

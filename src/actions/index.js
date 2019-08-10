@@ -2,6 +2,7 @@ export { checkStartAction, doStartAction } from "./start";
 export { checkQueueAction, doQueueAction } from "./queue";
 export { checkChoiceAction, doChoiceAction } from "./choice";
 export { checkWorkerAction, doWorkerAction } from "./worker";
+export { checkBuildAction, doBuildAction } from "./build";
 export { checkPlayAction, doPlayAction } from "./play";
 export { checkSummonAction, doSummonAction } from "./summon";
 export { checkLevelAction, doLevelAction } from "./level";

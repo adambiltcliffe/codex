@@ -1,4 +1,4 @@
-import { phases, advanceTurn } from "../phases";
+import { phases, advanceTurn, doEndOfTurnEffects } from "../phases";
 import { getCurrentValues, applyStateBasedEffects } from "../entities";
 import { andJoin, getAP } from "../util";
 import { types } from "../cardinfo/constants";
@@ -66,5 +66,6 @@ export function doEndTurnAction(state, action) {
   state.phase = phases.draw;
   // draw phase
   doDrawPhase(state);
+  doEndOfTurnEffects(state);
   advanceTurn(state);
 }

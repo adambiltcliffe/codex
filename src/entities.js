@@ -220,7 +220,12 @@ export function cacheCurrentValues(state) {
 export function updateCurrentValues(state) {
   state.currentCache = true;
   forEach(state.players, p => {
-    p.current = { heroColors: [], heroSpecs: [], ultimateSpecs: [] };
+    p.current = {
+      heroColors: [],
+      heroSpecs: [],
+      ultimateSpecs: [],
+      fixtures: {}
+    };
   });
   // 1. Start with a draft based on each entity's printed values
   forEach(state.entities, e => {
@@ -298,12 +303,18 @@ export function updateCurrentValues(state) {
       e.controlledSince = state.turn;
       e.lastControlledBy = e.current.controller;
     }
+    // Cache summary info
+    const pc = state.players[e.current.controller].current;
     if (e.current.type == types.hero) {
-      const pc = state.players[e.current.controller].current;
       pc.heroColors.push(e.current.color);
       pc.heroSpecs.push(e.current.spec);
       if (e.controlledSince < state.turn && e.maxedSince < state.turn) {
         pc.ultimateSpecs.push(e.current.spec);
+      }
+    } else if (e.fixture) {
+      pc.fixtures[e.fixture] = e.id;
+      if (fixtures[e.fixture].isAddOn) {
+        pc.addOn = e.id;
       }
     }
   });

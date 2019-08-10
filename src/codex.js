@@ -65,6 +65,9 @@ class CodexGame extends Game {
       case "worker":
         actions.doWorkerAction(state, action);
         break;
+      case "build":
+        actions.doBuildAction(state, action);
+        break;
       case "play":
         actions.doPlayAction(state, action);
         break;
@@ -155,6 +158,8 @@ class CodexGame extends Game {
         return actions.checkChoiceAction(state, action);
       case "worker":
         return actions.checkWorkerAction(state, action);
+      case "build":
+        return actions.checkBuildAction(state, action);
       case "play":
         return actions.checkPlayAction(state, action);
       case "summon":
