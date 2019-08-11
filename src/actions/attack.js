@@ -9,7 +9,8 @@ import {
   antiAir,
   invisible,
   readiness,
-  stealth
+  stealth,
+  unstoppable
 } from "../cardinfo/abilities/keywords";
 import { patrolSlots } from "../patrolzone";
 import { andJoin } from "../util";
@@ -79,12 +80,8 @@ function canIgnorePatroller(state, attackerVals, patroller, patrolSlot) {
   if (!canAttack(attackerVals, patroller.current, patrolSlot)) {
     return true;
   }
-  if (
-    hasKeyword(attackerVals, invisible) ||
-    hasKeyword(attackerVals, stealth)
-  ) {
-    return true;
-  }
+  // Note we don't check stealth/invisible/unstoppable or "unstoppable when
+  // attacking X" here (but we do need to check "unstoppable by X")
   if (
     hasKeyword(attackerVals, antiAir) &&
     hasKeyword(patroller.current, flying)
@@ -117,6 +114,17 @@ export function getAttackableEntityIdsControlledBy(
   attackerVals,
   playerId
 ) {
+  if (
+    hasKeyword(attackerVals, stealth) ||
+    hasKeyword(attackerVals, invisible) ||
+    hasKeyword(attackerVals, unstoppable)
+  ) {
+    return getFullAttackableEntitiesControlledBy(
+      state,
+      attackerVals,
+      playerId
+    ).map(e => e.id);
+  }
   const player = state.players[playerId];
   const squadLeaderId = player.patrollerIds[patrolSlots.squadLeader];
   if (squadLeaderId != null) {
