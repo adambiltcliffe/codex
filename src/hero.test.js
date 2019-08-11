@@ -65,12 +65,12 @@ test("Levelling up a hero to mid/maxband heals all damage", () => {
   const troq = findEntityIds(s1, e => e.card == "troq_bashar")[0];
   const ob = findEntityIds(s1, e => e.card == "older_brother")[0];
   const im = findEntityIds(s1, e => e.card == "iron_man")[0];
-  const s2 = playActions(s1, [
+  const s1a = playActions(s1, [
     { type: "endTurn" },
     { type: "endTurn" },
-    { type: "attack", attacker: troq, target: ob },
-    { type: "level", hero: troq, amount: 4 }
+    { type: "attack", attacker: troq, target: ob }
   ]);
+  const s2 = playActions(s1a, [{ type: "level", hero: troq, amount: 4 }]);
   expect(s2.entities[troq].damage).toEqual(0);
   expect(s2.log).toContain("Troq Bashar is fully healed.");
   const s3 = playActions(s2, [

@@ -97,14 +97,36 @@ export function needsSparkshotTarget(state) {
 const doNothing = { action: () => {} };
 
 const retargetAttack = {
+  prompt: "Choose a new attack target",
   hasTargetSymbol: false,
-  action: () => {}
+  targetTypes: [types.unit, types.hero, types.building],
+  targetMode: targetMode.single,
+  restrictTargets: state =>
+    getAttackableEntityIds(
+      state,
+      state.entities[state.currentAttack.attacker].current
+    )
+      .filter(id => id != state.currentAttack.target)
+      .map(id => state.entities[id]),
+  shouldSkipChoice: state => {
+    const attacker = state.entities[state.currentAttack.attacker];
+    const target = state.entities[state.currentAttack.target];
+    return attacker === undefined || target !== undefined;
+  },
+  action: ({ state, choices }) => {
+    if (choices.targetId !== undefined) {
+      state.currentAttack.target = choices.targetId;
+    }
+  }
 };
 
 const findDefenders = {
   action: ({ state }) => {
     const attacker = state.entities[state.currentAttack.attacker];
     const target = state.entities[state.currentAttack.target];
+    if (attacker === undefined || target === undefined) {
+      return;
+    }
     const flownOver = hasKeyword(attacker.current, flying)
       ? getFlownOver(state, target)
       : [];
@@ -177,34 +199,36 @@ const resolveAttackTriggers = {
         action: ({ state }) => {
           const attacker = state.entities[state.currentAttack.attacker];
           const target = state.entities[state.currentAttack.target];
-          const defenders = state.currentAttack.flownOverIds.map(
-            id => state.entities[id]
-          );
-          const attackerReceivesDamage =
-            !hasKeyword(attacker.current, flying) ||
-            hasKeyword(target.current, flying) ||
-            hasKeyword(target.current, antiAir);
-          if (attackerReceivesDamage) {
-            defenders.push(target);
-          }
-          if (hasKeyword(attacker.current, swiftStrike)) {
-            dealAttackerDamage(state, attacker, target);
-            state.currentAttack.attackerDealtDamage = true;
-          } else {
-            state.currentAttack.attackerDealtDamage = false;
-          }
-          const [swiftDefenders, slowDefenders] = partition(defenders, e =>
-            hasKeyword(e.current, swiftStrike)
-          );
-          swiftDefenders.forEach(e => {
-            damageEntity(state, attacker, {
-              amount: e.current.attack,
-              source: e,
-              isCombatDamage: true
+          if (attacker !== undefined && target !== undefined) {
+            const defenders = state.currentAttack.flownOverIds.map(
+              id => state.entities[id]
+            );
+            const attackerReceivesDamage =
+              !hasKeyword(attacker.current, flying) ||
+              hasKeyword(target.current, flying) ||
+              hasKeyword(target.current, antiAir);
+            if (attackerReceivesDamage) {
+              defenders.push(target);
+            }
+            if (hasKeyword(attacker.current, swiftStrike)) {
+              dealAttackerDamage(state, attacker, target);
+              state.currentAttack.attackerDealtDamage = true;
+            } else {
+              state.currentAttack.attackerDealtDamage = false;
+            }
+            const [swiftDefenders, slowDefenders] = partition(defenders, e =>
+              hasKeyword(e.current, swiftStrike)
+            );
+            swiftDefenders.forEach(e => {
+              damageEntity(state, attacker, {
+                amount: e.current.attack,
+                source: e,
+                isCombatDamage: true
+              });
             });
-          });
+            state.currentAttack.slowDefenderIds = slowDefenders.map(e => e.id);
+          }
           state.currentAttack.begun = true;
-          state.currentAttack.slowDefenderIds = slowDefenders.map(e => e.id);
           applyStateBasedEffects(state);
         }
       }
@@ -220,6 +244,7 @@ const resolveAttackTriggers = {
         action: ({ state }) => {
           const attacker = state.entities[state.currentAttack.attacker];
           // It's possible the attacker died during swift strike damage
+          // If attacker is alive, target may be dead only if attackerDealtDamage is true
           if (attacker != undefined) {
             const target = state.entities[state.currentAttack.target];
             if (!state.currentAttack.attackerDealtDamage) {

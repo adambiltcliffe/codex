@@ -5,9 +5,14 @@ import {
   playActions,
   putCardInHand,
   testp1Id,
-  testp2Id
+  testp2Id,
+  TestGame
 } from "../testutil";
 import { fixtureNames } from "../fixtures";
+import { killEntity } from "../entities";
+import { triggerDefinitions } from "../triggers";
+import { colors, types } from "../cardinfo";
+import { haste } from "../cardinfo/abilities/keywords";
 
 test("Arrival fatigue and attacking base", () => {
   const s0 = getNewGame();
@@ -96,4 +101,38 @@ test("Attacking 1/2s with other 1/2s", () => {
   expect(s3.entities[attackerIds[1]].damage).toEqual(1);
   expect(s3.entities[targetIds[0]]).toBeUndefined();
   expect(s3.players[testp2Id].discard.length).toEqual(oldDiscardSize + 1);
+});
+
+test("Can retarget attack if original target dies", () => {
+  triggerDefinitions.cardInfo["_test_kill_attack_target"] = {
+    color: colors.neutral,
+    tech: 0,
+    name: "Test Unit (Kill Attack Target)",
+    type: types.unit,
+    cost: 2,
+    attack: 2,
+    hp: 2,
+    abilities: [
+      haste,
+      {
+        triggerOnAttack: true,
+        action: ({ state }) => {
+          killEntity(state, state.currentAttack.target);
+        }
+      }
+    ]
+  };
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "_test_kill_attack_target")
+    .insertEntities(testp2Id, ["iron_man", "tenderfoot"]);
+  const [tk, im, tf] = tg.insertedEntityIds;
+  const p2base = tg.findBaseId(testp2Id);
+  tg.playAction({ type: "attack", attacker: tk, target: im });
+  expect(tg.getLegalChoices().sort()).toEqual([tf, p2base].sort());
+  tg.playAction({ type: "choice", target: tf });
+  expect(tg.state.log).toContain(
+    "Test Unit (Kill Attack Target) attacks Tenderfoot."
+  );
+  expect(tg.state.entities[tk].damage).toEqual(1);
+  expect(tg.state.entities[tf]).toBeUndefined();
 });
