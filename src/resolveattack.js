@@ -244,10 +244,14 @@ const resolveAttackTriggers = {
         action: ({ state }) => {
           const attacker = state.entities[state.currentAttack.attacker];
           // It's possible the attacker died during swift strike damage
-          // If attacker is alive, target may be dead only if attackerDealtDamage is true
+          // If attacker is alive, theoretically target can be dead only if attackerDealtDamage is true
           if (attacker != undefined) {
             const target = state.entities[state.currentAttack.target];
-            if (!state.currentAttack.attackerDealtDamage) {
+            // ... but check anyway to protect against some really obscure situations
+            if (
+              !state.currentAttack.attackerDealtDamage &&
+              target !== undefined
+            ) {
               dealAttackerDamage(state, attacker, target);
             }
             state.currentAttack.slowDefenderIds.forEach(id => {

@@ -41,11 +41,11 @@ Flying plus overpower and legal targets to redirect to (Void Star)
 Sparkshot/overpower unit can't kill only additional patroller with SS and overpower to base (Blooming Elm)
 Swift strike flying attacker can kill the SL it flew over and not get hit (needs unit with sparkshot+flying)
 Flying plus stealth/invisible/unstoppable etc. and not taking AA damage if not using flying to evade
+Declare an attack that destroys all possible attack targets with triggers (obliterate vs Lawbringer Gryphon)
 
 # Game features not implemented:
 
 Obliterate
-Retarget attack if original target dies
 
 Heroes go on cooldown when killed
 

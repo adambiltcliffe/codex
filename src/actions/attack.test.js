@@ -103,7 +103,7 @@ test("Attacking 1/2s with other 1/2s", () => {
   expect(s3.players[testp2Id].discard.length).toEqual(oldDiscardSize + 1);
 });
 
-test("Can retarget attack if original target dies", () => {
+beforeAll(() => {
   triggerDefinitions.cardInfo["_test_kill_attack_target"] = {
     color: colors.neutral,
     tech: 0,
@@ -122,6 +122,9 @@ test("Can retarget attack if original target dies", () => {
       }
     ]
   };
+});
+
+test("Can retarget attack if original target dies", () => {
   const tg = new TestGame()
     .insertEntity(testp1Id, "_test_kill_attack_target")
     .insertEntities(testp2Id, ["iron_man", "tenderfoot"]);
@@ -135,4 +138,15 @@ test("Can retarget attack if original target dies", () => {
   );
   expect(tg.state.entities[tk].damage).toEqual(1);
   expect(tg.state.entities[tf]).toBeUndefined();
+});
+
+test("Automatically retarget attack if original target dies and only one option left", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "_test_kill_attack_target")
+    .insertEntity(testp2Id, "iron_man");
+  const [tk, im] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: tk, target: im });
+  expect(tg.state.log).toContain(
+    "Test Unit (Kill Attack Target) attacks base."
+  );
 });
