@@ -40,16 +40,17 @@ Put back deleted Brick Thief tests when more than 2 buildings can exist
 Flying plus overpower and legal targets to redirect to (Void Star)
 Sparkshot/overpower unit can't kill only additional patroller with SS and overpower to base (Blooming Elm)
 Swift strike flying attacker can kill the SL it flew over and not get hit (needs unit with sparkshot+flying)
+Flying plus stealth/invisible/unstoppable etc. and not taking AA damage if not using flying to evade
 
 # Game features not implemented:
 
 Obliterate
-Retarget attack if original target dies (do once sparkshot and overpower tests written)
+Retarget attack if original target dies
 
 Heroes go on cooldown when killed
 
-Restriction to one add-on
-Temporary detection by tower
+Temporary detection by tower on opponent's turn
+Temporary detection by tower on own turn
 Requirement to have tech buildings/unlocked specs to play units
 
 Hero level up on death
