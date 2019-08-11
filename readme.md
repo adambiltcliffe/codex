@@ -6,6 +6,7 @@ Units
 Base
 Combat
 Heroes
+Tech buildings and add-ons with base damage when they die
 Ability to level up heroes
 Upkeep/arrival/attack triggers
 Activated abilities
@@ -24,12 +25,15 @@ Effects that last for the current turn
 Everything about Blademaster and Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests
-Can only have one add-on at a time
+Can only have one add-on at a time (deals damage when replaced)
+Can't start constructing two add-ons in the same turn
+Base damage from building destruction
 Tower deals damage to each attacker
 Tower damages first stealth attacker but not subsequent
 
 # Tests to write later
 
+Unstoppable
 Scorch and Fire Dart
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
 Put back deleted Brick Thief tests when more than 2 buildings can exist
@@ -42,11 +46,8 @@ Swift strike flying attacker can kill the SL it flew over and not get hit (needs
 Obliterate
 Retarget attack if original target dies (do once sparkshot and overpower tests written)
 
-One reshuffle per main phase limit
-
 Heroes go on cooldown when killed
 
-Base damage from building destruction
 Restriction to one add-on
 Temporary detection by tower
 Requirement to have tech buildings/unlocked specs to play units
@@ -56,10 +57,11 @@ Hero cooldown
 
 Avoid leaking minor information when workering
 Codex and tech phase
-
 Victory condition
 
 # Game features not implemented, not needed for BvF:
+
+One reshuffle per main phase limit
 
 Multicolour tax
 Proper continuous effects ordering
@@ -75,6 +77,7 @@ Sparkshot stacking
 
 # Other stuff to do
 
+Make stealth and invisible work more efficiently
 Tidy up the way making choices and queuing triggers is reported
 Make damage reporting call out swift strike/overpower/sparkshot damage
 Rewrite the core loop in CodexGame.updateState as an FSM or other better way
@@ -82,6 +85,7 @@ Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities
 Move suggest into a module and write tests for it
+Add suggestions for building fixtures
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
 

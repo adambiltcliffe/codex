@@ -146,15 +146,20 @@ export function getAttackableEntityIdsControlledBy(
     return attackablePatrollerIds;
   }
   // There are no patrollers, so all attackable entities are valid targets
-  const allVals = getCurrentValues(state, Object.keys(state.entities));
-  return Object.entries(allVals)
-    .filter(
-      ([_ek, ev]) =>
-        ev.controller == playerId &&
-        isAttackableType(ev.type) &&
-        canAttack(attackerVals, ev, null)
-    )
-    .map(([ek, _ev]) => ek);
+  return getFullAttackableEntitiesControlledBy(
+    state,
+    attackerVals,
+    playerId
+  ).map(e => e.id);
+}
+
+function getFullAttackableEntitiesControlledBy(state, attackerVals, playerId) {
+  return Object.values(state.entities).filter(
+    e =>
+      e.current.controller == playerId &&
+      isAttackableType(e.current.type) &&
+      canAttack(attackerVals, e.current, null)
+  );
 }
 
 export function doAttackAction(state, action) {

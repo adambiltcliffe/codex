@@ -124,7 +124,17 @@ export function killEntity(state, entityId) {
   if (e.fixture == fixtureNames.base) {
     return false;
   }
-  log.add(state, log.fmt`${e.current.name} dies.`);
+  if (e.current.type == types.building) {
+    log.add(state, `${upperFirst(e.current.name)} is destroyed.`);
+    const base =
+      state.entities[
+        state.players[e.current.controller].current.fixtures[fixtureNames.base]
+      ];
+    log.add(state, `${upperFirst(base.current.name)} takes 2 damage.`);
+    base.damage += 2;
+  } else {
+    log.add(state, log.fmt`${e.current.name} dies.`);
+  }
   delete state.entities[e.id];
   const pz = state.players[e.current.controller].patrollerIds;
   pz.forEach((id, index) => {
@@ -144,14 +154,14 @@ export function killEntity(state, entityId) {
       pz[index] = null;
     }
   });
-  if (e.fixture !== undefined) {
-    // do nothing for now?
-  } else if (cardInfo[e.card].type == types.hero) {
-    state.players[e.owner].commandZone.push(e.card);
-  } else {
-    state.updateHidden(fs => {
-      fs.players[e.owner].discard.push(e.card);
-    });
+  if (e.fixture === undefined) {
+    if (cardInfo[e.card].type == types.hero) {
+      state.players[e.owner].commandZone.push(e.card);
+    } else {
+      state.updateHidden(fs => {
+        fs.players[e.owner].discard.push(e.card);
+      });
+    }
   }
   return true;
 }

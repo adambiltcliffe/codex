@@ -1,6 +1,9 @@
 import fixtures from "../fixtures";
 import { getAP } from "../util";
 import log from "../log";
+import { killEntity } from "../entities";
+
+import some from "lodash/some";
 
 export function checkBuildAction(state, action) {
   const fixture = fixtures[action.fixture];
@@ -29,6 +32,11 @@ export function checkBuildAction(state, action) {
   ) {
     throw new Error("Previous tech building required first.");
   }
+  if (fixture.isAddOn) {
+    if (some(state.constructing, fn => fixtures[fn].isAddOn)) {
+      throw new Error("Already constructing an add-on.");
+    }
+  }
 }
 
 export function doBuildAction(state, action) {
@@ -42,6 +50,9 @@ export function doBuildAction(state, action) {
   }
   if (fixture.freeRebuild && !ap.paidFixtures.includes(action.fixture)) {
     ap.paidFixtures.push(action.fixture);
+  }
+  if (fixture.isAddOn && ap.current.addOn !== undefined) {
+    killEntity(state, ap.current.addOn);
   }
   log.add(
     state,
