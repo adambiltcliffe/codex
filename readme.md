@@ -25,18 +25,14 @@ Effects that last for the current turn
 Everything about Blademaster and Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests
-Can only have one add-on at a time (deals damage when replaced)
-Can't start constructing two add-ons in the same turn
-Base damage from building destruction
-Tower deals damage to each attacker
-Tower damages first stealth attacker but not subsequent
 
 # Tests to write later
 
-Unstoppable
+*Tower damages first stealth attacker but not subsequent
+*Unstoppable
+\*Put back deleted Brick Thief tests when more than 2 buildings can exist
 Scorch and Fire Dart
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
-Put back deleted Brick Thief tests when more than 2 buildings can exist
 Flying plus overpower and legal targets to redirect to (Void Star)
 Sparkshot/overpower unit can't kill only additional patroller with SS and overpower to base (Blooming Elm)
 Swift strike flying attacker can kill the SL it flew over and not get hit (needs unit with sparkshot+flying)

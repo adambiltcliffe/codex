@@ -1,5 +1,6 @@
 import { TestGame, testp1Id, testp2Id } from "./testutil";
 import { hasKeyword, haste } from "./cardinfo/abilities/keywords";
+import { fixtureNames } from "./fixtures";
 
 test("Destroying an entity with a 'destroy' effect updates state", () => {
   const tg = new TestGame()
@@ -13,4 +14,18 @@ test("Destroying an entity with a 'destroy' effect updates state", () => {
     { type: "choice", target: nf }
   ]);
   expect(hasKeyword(tg.state.entities[tf].current, haste)).toBeFalsy();
+});
+
+test("Destroying a building deals 2 damage to base", () => {
+  const tg = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.surplus)
+    .insertEntity(testp2Id, "regularsized_rhinoceros");
+  const p1base = tg.findBaseId(testp1Id);
+  const [surp, rr] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: rr, target: surp }
+  ]);
+  expect(tg.state.entities[p1base].damage).toEqual(2);
+  expect(tg.state.log).toContain("Base takes 2 damage.");
 });

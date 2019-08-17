@@ -139,3 +139,58 @@ test("Worker thresholds for tech buildings", () => {
   tg.setWorkers(testp1Id, 10);
   tg.playAction({ type: "build", fixture: fixtureNames.tech3 });
 });
+
+test("Can build a surplus", () => {
+  const tg = new TestGame().setGold(testp1Id, 5).playAction({
+    type: "build",
+    fixture: fixtureNames.surplus
+  });
+  expect(
+    findEntityIds(tg.state.entities, e => e.fixture == fixtureNames.surplus)
+      .length
+  ).toEqual(0);
+  expect(tg.state.log).toContain(
+    `\${${testp1Id}} begins construction of surplus.`
+  );
+  tg.playAction({ type: "endTurn" });
+  expect(
+    findEntityIds(tg.state.entities, e => e.fixture == fixtureNames.surplus)
+      .length
+  ).toEqual(0);
+  expect(tg.state.log).toContain("Surplus finishes construction.");
+});
+
+test("Can't start constructing two different add-ons in the same turn", () => {
+  const tg = new TestGame()
+    .setGold(testp1Id, 20)
+    .playAction({ type: "build", fixture: fixtureNames.surplus });
+  expect(() =>
+    tg.checkAction({ type: "build", fixture: fixtureNames.tower })
+  ).toThrow("Already constructing an add-on.");
+});
+
+test("Can't start constructing two identical add-ons in the same turn", () => {
+  const tg = new TestGame()
+    .setGold(testp1Id, 20)
+    .playAction({ type: "build", fixture: fixtureNames.surplus });
+  expect(() =>
+    tg.checkAction({ type: "build", fixture: fixtureNames.surplus })
+  ).toThrow("Already under construction.");
+});
+
+test("Can replace existing add-on, dealing 2 damage to base", () => {
+  const tg = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.surplus)
+    .playAction({ type: "build", fixture: fixtureNames.tower });
+  const p1base = tg.findBaseId(testp1Id);
+  expect(tg.state.log).toContain("Surplus is destroyed.");
+  expect(tg.state.entities[p1base].damage).toEqual(2);
+  expect(tg.state.constructing).toContain(fixtureNames.tower);
+});
+
+test("Can't replace existing add-on with the same add-on", () => {
+  const tg = new TestGame().insertFixture(testp1Id, fixtureNames.tower);
+  expect(() =>
+    tg.checkAction({ type: "build", fixture: fixtureNames.tower })
+  ).toThrow("Already built.");
+});

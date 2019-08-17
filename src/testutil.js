@@ -1,6 +1,11 @@
 import { types } from "./cardinfo/constants";
 import CodexGame from "./codex";
-import { createUnit, createHero, updateCurrentValues } from "./entities";
+import {
+  createUnit,
+  createHero,
+  updateCurrentValues,
+  createBuildingFixture
+} from "./entities";
 import { fixtureNames } from "./fixtures";
 import { getLegalChoicesForCurrentTrigger } from "./triggers";
 import cardInfo from "./cardinfo";
@@ -145,6 +150,15 @@ export class TestGame {
     this.state = produce(this.state, draft => {
       cards.forEach(c => draft.players[playerId].deck.unshift(c));
     });
+    return this;
+  }
+  insertFixture(playerId, fixture) {
+    let newId = null;
+    const newState = produce(this.state, draft => {
+      newId = createBuildingFixture(draft, playerId, fixture).id;
+    });
+    this.state = newState;
+    this.insertedEntityIds.push(newId);
     return this;
   }
   insertEntity(playerId, card) {
