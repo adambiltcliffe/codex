@@ -39,42 +39,39 @@ export const stealth = keyword("K_STEALTH");
 export const unstoppable = keyword("K_UNSTOPPABLE");
 
 export const resist = numericKeyword("KV_RESIST");
-export const obliterate = numericKeyword("KV_OBLITERATE");
 
-export function frenzy(n) {
-  return {
-    modifyOwnValues: ({ state, self }) => {
-      if (self.current.controller == getAP(state).id) {
-        self.current.attack += n;
-      }
+export const obliterate = n => ({});
+
+export const frenzy = n => ({
+  modifyOwnValues: ({ state, self }) => {
+    if (self.current.controller == getAP(state).id) {
+      self.current.attack += n;
     }
-  };
-}
+  }
+});
 
-export function healing(n) {
-  return {
-    triggerOnUpkeep: true,
-    action: ({ state, source }) => {
-      const healed = [];
-      const allVals = getCurrentValues(state, Object.keys(state.entities));
-      forEach(state.entities, u => {
-        if (
-          allVals[u.id].controller == allVals[source.id].controller &&
-          u.damage > 0
-        ) {
-          healed.push(u.current.name);
-          u.damage -= n;
-          if (u.damage < 0) {
-            u.damage = 0;
-          }
+export const healing = n => ({
+  triggerOnUpkeep: true,
+  action: ({ state, source }) => {
+    const healed = [];
+    const allVals = getCurrentValues(state, Object.keys(state.entities));
+    forEach(state.entities, u => {
+      if (
+        allVals[u.id].controller == allVals[source.id].controller &&
+        u.damage > 0
+      ) {
+        healed.push(u.current.name);
+        u.damage -= n;
+        if (u.damage < 0) {
+          u.damage = 0;
         }
-      });
-      if (healed.length > 0) {
-        log.add(
-          state,
-          `${source.current.name} heals ${1} damage from ${andJoin(healed)}.`
-        );
       }
+    });
+    if (healed.length > 0) {
+      log.add(
+        state,
+        `${source.current.name} heals ${1} damage from ${andJoin(healed)}.`
+      );
     }
-  };
-}
+  }
+});
