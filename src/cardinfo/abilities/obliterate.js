@@ -6,12 +6,10 @@ import log from "../../log";
 import { andJoinVerb } from "../../util";
 
 export function getObliterateTargets(state, playerId, n) {
-  return partitionObliterateTargets(
-    Object.values(state.entities).filter(
-      e => e.current.types == types.unit && e.current.controller == playerId
-    ),
-    n
+  const defendersUnits = Object.values(state.entities).filter(
+    e => e.current.type == types.unit && e.current.controller == playerId
   );
+  return partitionObliterateTargets(defendersUnits, n);
 }
 
 export function partitionObliterateTargets(units, n) {
@@ -46,7 +44,9 @@ export const obliterate = n => ({
   action: ({ state, source, choices }) => {
     const dpId = state.currentAttack.defendingPlayer;
     const [definitely, maybe] = getObliterateTargets(state, dpId, n);
-    const victims = definitely.map(e => e.id).concat(choices.targetIds);
+    const victims = definitely.concat(
+      (choices.targetIds || []).map(id => state.entities[id])
+    );
     log.add(
       state,
       `${andJoinVerb(

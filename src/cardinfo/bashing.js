@@ -144,7 +144,10 @@ const bashingCardInfo = {
               const ap = getAP(state);
               const target = state.entities[choices.targetId];
               target.defaultController = ap.id;
-              log.add(state, log.fmt`${ap} gains control of ${target}.`);
+              log.add(
+                state,
+                log.fmt`${ap} gains control of ${target.current.name}.`
+              );
             }
           }
         ]

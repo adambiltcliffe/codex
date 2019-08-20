@@ -171,12 +171,15 @@ function getFullAttackableEntitiesControlledBy(state, attackerVals, playerId) {
 }
 
 export function doAttackAction(state, action) {
-  state.currentAttack = { ...action, begun: false };
+  state.currentAttack = {
+    ...action,
+    begun: false,
+    defendingPlayer: state.entities[action.target].current.controller
+  };
   // have to do this here because of "X while attacking" effects
   updateCurrentValues(state);
   const u = state.entities[action.attacker];
-  const attackerVals = getCurrentValues(state, u.id);
-  attackerVals.abilities.forEach((a, index) => {
+  u.current.abilities.forEach((a, index) => {
     if (a.triggerOnAttack) {
       state.newTriggers.push({
         path: a.path,
@@ -186,6 +189,6 @@ export function doAttackAction(state, action) {
   });
   log.add(
     state,
-    log.fmt`${getAP(state)} declares an attack with ${attackerVals.name}.`
+    log.fmt`${getAP(state)} declares an attack with ${u.current.name}.`
   );
 }

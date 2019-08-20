@@ -5,6 +5,8 @@ import log from "../log";
 import { targetMode } from "../cardinfo";
 import { getObliterateTargets } from "../cardinfo/abilities/obliterate";
 
+import some from "lodash/some";
+
 export function checkChoiceAction(state, action) {
   if (state.currentTrigger === null) {
     throw new Error("Can't make choices when a trigger isn't resolving");

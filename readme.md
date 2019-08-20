@@ -25,7 +25,6 @@ Effects that last for the current turn
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
 Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice
-Obliterate: if not enough units, everything is obliterated
 Everything about Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests
@@ -35,6 +34,7 @@ Ultimate spell casting condition tests
 *Tower damages first stealth attacker but not subsequent
 *Unstoppable
 \*Put back deleted Brick Thief tests when more than 2 buildings can exist
+Long-range
 Scorch and Fire Dart
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
 Flying plus overpower and legal targets to redirect to (Void Star)
@@ -45,7 +45,13 @@ Declare an attack that destroys all possible attack targets with triggers (oblit
 
 # Game features not implemented:
 
-Obliterate
+Modal choice on spell resolution (> Appel Stomp)
+Replacement card destination after spell resolution (> Appel Stomp)
+Ongoing spell & channelling (> Harmony)
+Tokens (> Harmony)
+When-you-play trigger (> Harmony)
+Two targets (> Two-step)
+State trigger (> Two-step)
 
 Heroes go on cooldown when killed
 
@@ -75,6 +81,7 @@ Permanent detector
 Damage modification effects
 
 Sparkshot stacking
+Make Flagbearer not an ability (to support Vortoss Emblem)
 
 # Other stuff to do
 
@@ -86,6 +93,7 @@ Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities
 Move suggest into a module and write tests for it
 Add suggestions for building fixtures
+Move abilities/ out of cardinfo/ to untangle some imports
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
 

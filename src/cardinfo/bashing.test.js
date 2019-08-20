@@ -156,13 +156,13 @@ test("Final Smash can do all three of its effects", () => {
   tg.modifyEntity(troq, { level: 8, controlledSince: -1, maxedSince: -1 });
   tg.playAction({ type: "play", card: "final_smash" });
   expect(tg.state.log).toEqual([
-    "${test_player1} plays Final Smash.",
+    `\${${testp1Id}} plays Final Smash.`,
     "Choose a tech 0 unit to destroy: Only one legal choice.",
     "Tenderfoot dies.",
     "Choose a tech 1 unit to return to its owner's hand: Only one legal choice.",
-    "Nimble Fencer is returned to ${test_player2}'s hand.",
+    `Nimble Fencer is returned to \${${testp2Id}}'s hand.`,
     "Choose a tech 2 unit to gain control of: Only one legal choice.",
-    "${test_player1} gains control of ${e6}."
+    `\${${testp1Id}} gains control of Leaping Lizard.`
   ]);
   expect(tg.state.entities[tf]).toBeUndefined();
   expect(tg.state.entities[nf]).toBeUndefined();

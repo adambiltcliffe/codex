@@ -8,6 +8,7 @@ import triggerInfo from "./triggerinfo";
 import effectInfo from "./effectinfo";
 
 import get from "lodash/get";
+import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
 export const triggerDefinitions = {
   cardInfo,

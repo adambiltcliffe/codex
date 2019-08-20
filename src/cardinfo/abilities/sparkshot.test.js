@@ -126,5 +126,3 @@ test("Unit with sparkshot still deals its damage if it has swift strike", () => 
   expect(tg.state.log).not.toContain("Revolver Ocelot dies.");
   expect(tg.state.entities[ro].damage).toEqual(0);
 });
-
-//Swift strike flying attacker can kill the SL it flew over and not get hit

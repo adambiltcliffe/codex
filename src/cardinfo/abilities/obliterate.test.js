@@ -41,19 +41,84 @@ test("Correct behaviour of (internal) function partitionObliterateTargets", () =
   ).toEqual([[fakeTf, fakeIm], [fakeEs, fakeLl, fakeSp]]);
 });
 
-/*test("Testing the fake version of obliterate", () => {
+test("Obliterate destroys correct number of targets when choice is forced", () => {
   const tg = new TestGame()
-    .insertEntities(testp1Id, ["tenderfoot", "iron_man", "sneaky_pig"])
-    .insertEntity(testp2Id, "trojan_duck");
-  const p1base = tg.findBaseId(testp1Id);
-  const [tf, im, sp, td] = tg.insertedEntityIds;
-  tg.playActions([
-    { type: "endTurn" },
-    { type: "attack", attacker: td, target: p1base }
-  ]);
-  tg.queueByPath("cardInfo.trojan_duck.abilities[0]");
-  expect(tg.getLegalChoices().sort()).toEqual([tf, im, sp, td].sort());
-  tg.playAction({ type: "choice", target: sp });
-  expect(tg.state.entities[sp]).toBeUndefined();
-  expect(tg.state.log).toContain("Sneaky Pig dies.");
-});*/
+    .insertEntity(testp1Id, "pirate_gunship")
+    .insertEntities(testp2Id, [
+      "tenderfoot",
+      "eggship",
+      "iron_man",
+      "blademaster"
+    ]);
+  const p2base = tg.findBaseId(testp2Id);
+  const [pg, tf, es, im, bm] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: pg, target: p2base });
+  expect(tg.state.log).toContain("Tenderfoot and Iron Man are obliterated.");
+  expect(tg.state.log).toContain("Tenderfoot dies.");
+  expect(tg.state.log).toContain("Iron Man dies.");
+});
+
+test("Obliterate destroys as much as possible if not enough targets exist", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "pirate_gunship")
+    .insertEntity(testp2Id, "eggship");
+  const p2base = tg.findBaseId(testp2Id);
+  const [pg, es] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: pg, target: p2base });
+  expect(tg.state.log).toContain("Eggship is obliterated.");
+  expect(tg.state.log).toContain("Eggship dies.");
+});
+
+test("Obliterate lets you choose targets if there are several options", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "pirate_gunship")
+    .insertEntities(testp2Id, [
+      "tenderfoot",
+      "older_brother",
+      "brick_thief",
+      "eggship"
+    ]);
+  const p2base = tg.findBaseId(testp2Id);
+  const [pg, tf, ob, bt, es] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: pg, target: p2base });
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [tf, ob, bt] })
+  ).toThrow("Wrong number");
+  expect(() => tg.checkAction({ type: "choice", targets: [tf, es] })).toThrow(
+    "not among valid choices"
+  );
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [tf, bt] })
+  ).not.toThrow();
+  tg.playAction({ type: "choice", targets: [tf, bt] });
+  expect(tg.state.log).toContain("Tenderfoot and Brick Thief are obliterated.");
+  expect(tg.state.log).toContain("Tenderfoot dies.");
+  expect(tg.state.log).toContain("Brick Thief dies.");
+});
+
+test("Only have to choose to unforced ones if some units must die", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "pirate_gunship")
+    .insertEntities(testp2Id, [
+      "iron_man",
+      "tenderfoot",
+      "sneaky_pig",
+      "revolver_ocelot"
+    ]);
+  const p2base = tg.findBaseId(testp2Id);
+  const [pg, im, tf, sp, ro] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: pg, target: p2base });
+  expect(() => tg.checkAction({ type: "choice", targets: [tf, im] })).toThrow(
+    "Wrong number"
+  );
+  expect(() => tg.checkAction({ type: "choice", targets: [sp] })).toThrow(
+    "not among valid choices"
+  );
+  expect(() => tg.checkAction({ type: "choice", targets: [ro] })).not.toThrow();
+  tg.playAction({ type: "choice", targets: [ro] });
+  expect(tg.state.log).toContain(
+    "Tenderfoot and Revolver Ocelot are obliterated."
+  );
+  expect(tg.state.log).toContain("Tenderfoot dies.");
+  expect(tg.state.log).toContain("Revolver Ocelot dies.");
+});
