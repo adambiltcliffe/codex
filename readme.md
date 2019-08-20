@@ -25,6 +25,7 @@ Effects that last for the current turn
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
 Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice
+Obliterate: if not enough units, everything is obliterated
 Everything about Trojan Duck
 More thorough tests for Final Smash
 Ultimate spell casting condition tests

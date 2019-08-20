@@ -189,6 +189,10 @@ export class TestGame {
     this.state = newState;
     return this;
   }
+  queueByPath(path) {
+    const index = this.findTriggerIndex(t => t.path == path);
+    this.playAction({ type: "queue", index });
+  }
   checkAction(action) {
     return CodexGame.checkAction(this.state, action);
   }

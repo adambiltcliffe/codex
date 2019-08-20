@@ -8,7 +8,7 @@ import {
 import { targetMode } from "./cardinfo/constants";
 import { getAP } from "./util";
 import { patrolSlots } from "./patrolzone";
-import { getAttackableEntityIds } from "./actions/attack";
+import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
 export function getResistCost(state, entity) {
   const bonusResist =
@@ -70,5 +70,13 @@ export function getLegalChoicesForStep(state, stepDef) {
       } else {
         return targets.map(e => e.id);
       }
+    case targetMode.obliterate:
+      const dpId = state.currentAttack.defendingPlayer;
+      const [definitely, maybe] = getObliterateTargets(
+        state,
+        dpId,
+        stepDef.targetCount
+      );
+      return maybe.map(e => e.id);
   }
 }

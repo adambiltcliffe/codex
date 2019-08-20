@@ -1,9 +1,11 @@
 import log from "../../log";
 import { andJoin, getAP } from "../../util";
-import { getName, getCurrentValues } from "../../entities";
+import { getCurrentValues } from "../../entities";
 
 import forEach from "lodash/forEach";
 import sum from "lodash/sum";
+
+export { obliterate } from "./obliterate";
 
 function keyword(k) {
   return { keyword: k };
@@ -37,10 +39,9 @@ export const overpower = keyword("K_OVERPOWER");
 export const swiftStrike = keyword("K_SWIFTSTRIKE");
 export const stealth = keyword("K_STEALTH");
 export const unstoppable = keyword("K_UNSTOPPABLE");
+export const longRange = keyword("K_LONGRANGE");
 
 export const resist = numericKeyword("KV_RESIST");
-
-export const obliterate = n => ({});
 
 export const frenzy = n => ({
   modifyOwnValues: ({ state, self }) => {

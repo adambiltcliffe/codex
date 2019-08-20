@@ -3,7 +3,7 @@ import log from "./log";
 import { applyStateBasedEffects } from "./entities";
 import { getLegalChoicesForStep } from "./targets";
 
-import cardInfo from "./cardinfo";
+import cardInfo, { targetMode } from "./cardinfo";
 import triggerInfo from "./triggerinfo";
 import effectInfo from "./effectinfo";
 
@@ -73,22 +73,35 @@ export function canResolveCurrentTrigger(state) {
   ) {
     return true;
   }
-  // all remaining possibilities require choices.targetId to be set
-  if (choices.targetId !== undefined) {
-    return true;
-  }
-  const possibleChoices = getLegalChoicesForStep(state, stepDef);
-  switch (possibleChoices.length) {
-    case 0:
-      log.add(state, `${stepDef.prompt}: No legal choices.`);
-      choices.skipped = true;
-      return true;
-    case 1:
-      log.add(state, `${stepDef.prompt}: Only one legal choice.`);
-      choices.targetId = possibleChoices[0];
-      return true;
-    default:
-      return false;
+  switch (stepDef.targetMode) {
+    case targetMode.single:
+      if (choices.targetId !== undefined) {
+        return true;
+      }
+      const possibleChoices = getLegalChoicesForStep(state, stepDef);
+      switch (possibleChoices.length) {
+        case 0:
+          log.add(state, `${stepDef.prompt}: No legal choices.`);
+          choices.skipped = true;
+          return true;
+        case 1:
+          log.add(state, `${stepDef.prompt}: Only one legal choice.`);
+          choices.targetId = possibleChoices[0];
+          return true;
+        default:
+          return false;
+      }
+    case targetMode.obliterate:
+      if (choices.targetIds !== undefined) {
+        return true;
+      }
+      const dpId = state.currentAttack.defendingPlayer;
+      const [definitely, maybe] = getObliterateTargets(
+        state,
+        dpId,
+        stepDef.targetCount
+      );
+      return maybe.length == 0;
   }
 }
 
