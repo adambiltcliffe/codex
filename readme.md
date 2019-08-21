@@ -99,6 +99,7 @@ Refactor getAttackableEntityIds into getAttackableEntities
 Move suggest into a module and write tests for it
 Add suggestions for building fixtures
 Move abilities/ out of cardinfo/ to untangle some imports
+Store 'patrolSlot' in entity.current to simplify attack logic
 Use a schema validation library to simplify action checking
 Make sure it works out of the box, i.e. without npm linking playground
 

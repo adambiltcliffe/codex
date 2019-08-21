@@ -31,8 +31,7 @@ test("Non-flying unit can't attack flyers even if patrolling, but can get past",
       patrollers: [es1, es2, null, null, null]
     }
   ]);
-  const imv = getCurrentValues(s1, im);
-  expect(getAttackableEntityIds(s1, imv)).toEqual([p1base]);
+  expect(getAttackableEntityIds(s1, s1.entities[im])).toEqual([p1base]);
 });
 
 test("Non-flying unit can't attack patrolling flyers but is blocked by ground unit", () => {
@@ -49,8 +48,7 @@ test("Non-flying unit can't attack patrolling flyers but is blocked by ground un
       patrollers: [es1, es2, ob, null, null]
     }
   ]);
-  const imv = getCurrentValues(s1, im);
-  expect(getAttackableEntityIds(s1, imv)).toEqual([ob]);
+  expect(getAttackableEntityIds(s1, s1.entities[im])).toEqual([ob]);
 });
 
 test("Flying attacker can attack past non-flying patrollers", () => {
@@ -70,8 +68,7 @@ test("Flying attacker can attack past non-flying patrollers", () => {
       patrollers: [im1, im2, null, null, null]
     }
   ]);
-  const esv = getCurrentValues(s1, es);
-  expect(getAttackableEntityIds(s1, esv).sort()).toEqual(
+  expect(getAttackableEntityIds(s1, s1.entities[es]).sort()).toEqual(
     [p1base, im1, im2, im3].sort()
   );
 });
@@ -87,6 +84,7 @@ test("Flying attacker can attack past non-flying squad leader but not flying pat
       patrollers: [im, cs, null, null, null]
     }
   ]);
-  const esv = getCurrentValues(s1, es);
-  expect(getAttackableEntityIds(s1, esv).sort()).toEqual([im, cs].sort());
+  expect(getAttackableEntityIds(s1, s1.entities[es]).sort()).toEqual(
+    [im, cs].sort()
+  );
 });

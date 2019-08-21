@@ -90,7 +90,7 @@ test("River at level 3 can sideline a patroller", () => {
   );
   expect(isPatrolling(tg.state, tg.state.entities[ob])).toBeFalsy();
   expect(
-    getAttackableEntityIds(tg.state, tg.state.entities[river].current).sort()
+    getAttackableEntityIds(tg.state, tg.state.entities[river]).sort()
   ).toEqual([ob, p1base].sort());
 });
 

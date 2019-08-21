@@ -23,8 +23,7 @@ test("Invisible unit can sneak past patrollers", () => {
   const s1 = playActions(s0, [
     { type: "endTurn", patrollers: [im1, im2, null, null, null] }
   ]);
-  const bsv = getCurrentValues(s1, bs);
-  expect(getAttackableEntityIds(s1, bsv).sort()).toEqual(
+  expect(getAttackableEntityIds(s1, s1.entities[bs]).sort()).toEqual(
     [im1, im2, p1base].sort()
   );
 });

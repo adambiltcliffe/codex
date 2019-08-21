@@ -23,8 +23,7 @@ test("Anti-air unit can attack patrolling flyers or ignore them", () => {
   const s1 = playActions(s0, [
     { type: "endTurn", patrollers: [cs1, cs2, null, null, null] }
   ]);
-  const fpv = getCurrentValues(s1, fp);
-  expect(getAttackableEntityIds(s1, fpv).sort()).toEqual(
+  expect(getAttackableEntityIds(s1, s1.entities[fp]).sort()).toEqual(
     [p1base, cs1, cs2, cs3].sort()
   );
 });
@@ -37,13 +36,13 @@ test("Anti-air unit can attack past flying squad leader but not non-flying squad
   const s1a = playActions(s0, [
     { type: "endTurn", patrollers: [cs, im, null, null, null] }
   ]);
-  const fpva = getCurrentValues(s1a, fp);
-  expect(getAttackableEntityIds(s1a, fpva).sort()).toEqual([cs, im].sort());
+  expect(getAttackableEntityIds(s1a, s1a.entities[fp]).sort()).toEqual(
+    [cs, im].sort()
+  );
   const s1b = playActions(s0, [
     { type: "endTurn", patrollers: [im, cs, null, null, null] }
   ]);
-  const fpvb = getCurrentValues(s1b, fp);
-  expect(getAttackableEntityIds(s1b, fpvb)).toEqual([im]);
+  expect(getAttackableEntityIds(s1b, s1b.entities[fp])).toEqual([im]);
 });
 
 test("Anti-air unit deals damage to flyers when attacking them", () => {

@@ -29,28 +29,33 @@ export function checkAttackAction(state, action) {
   if (typeof attacker != "object") {
     throw new Error("Invalid attacker ID.");
   }
-  const attackerVals = getCurrentValues(state, attacker.id);
-  if (attackerVals.controller != ap.id) {
+  if (attacker.current.controller != ap.id) {
     throw new Error("You don't control the attacker.");
   }
-  if (attackerVals.type != types.unit && attackerVals.type != types.hero) {
+  if (
+    attacker.current.type != types.unit &&
+    attacker.current.type != types.hero
+  ) {
     throw new Error("Only units and heroes can attack.");
   }
   if (
     attacker.controlledSince == state.turn &&
-    !hasKeyword(attackerVals, haste)
+    !hasKeyword(attacker.current, haste)
   ) {
     throw new Error("Attacker has arrival fatigue.");
   }
   if (!attacker.ready) {
     throw new Error("Attacker is exhausted.");
   }
-  if (hasKeyword(attackerVals, readiness) && attacker.thisTurn.attacks > 0) {
+  if (
+    hasKeyword(attacker.current, readiness) &&
+    attacker.thisTurn.attacks > 0
+  ) {
     throw new Error(
       "Attacker has readiness but has already attacked this turn."
     );
   }
-  const attackable = getAttackableEntityIds(state, attackerVals);
+  const attackable = getAttackableEntityIds(state, attacker);
   if (!attackable.includes(action.target)) {
     throw new Error(
       `Not a legal target, legal target IDs are: ${andJoin(attackable)}`
@@ -59,37 +64,37 @@ export function checkAttackAction(state, action) {
   return true;
 }
 
-function canAttack(attackerVals, targetVals, patrolSlot) {
-  if (hasKeyword(targetVals, invisible) && patrolSlot == null) {
+function canAttack(attacker, target, patrolSlot) {
+  if (hasKeyword(target.current, invisible) && patrolSlot == null) {
     return false;
   }
   return (
-    hasKeyword(attackerVals, flying) ||
-    hasKeyword(attackerVals, antiAir) ||
-    !hasKeyword(targetVals, flying)
+    hasKeyword(attacker.current, flying) ||
+    hasKeyword(attacker.current, antiAir) ||
+    !hasKeyword(target.current, flying)
   );
 }
 
-function canIgnorePatroller(state, attackerVals, patroller, patrolSlot) {
+function canIgnorePatroller(state, attacker, patroller, patrolSlot) {
   // If this is called in the middle of an attack, we're choosing an overpower
   // target, so we can ignore the thing we're actually attacking
   if (state.currentAttack && state.currentAttack.target == patroller.id) {
     return true;
   }
   // Now the normal rules for when you can really ignore a patroller
-  if (!canAttack(attackerVals, patroller.current, patrolSlot)) {
+  if (!canAttack(attacker, patroller, patrolSlot)) {
     return true;
   }
   // Note we don't check stealth/invisible/unstoppable or "unstoppable when
   // attacking X" here (but we do need to check "unstoppable by X")
   if (
-    hasKeyword(attackerVals, antiAir) &&
+    hasKeyword(attacker.current, antiAir) &&
     hasKeyword(patroller.current, flying)
   ) {
     return true;
   }
   if (
-    hasKeyword(attackerVals, flying) &&
+    hasKeyword(attacker.current, flying) &&
     !hasKeyword(patroller.current, flying)
   ) {
     return true;
@@ -97,40 +102,43 @@ function canIgnorePatroller(state, attackerVals, patroller, patrolSlot) {
   return false;
 }
 
-export function getAttackableEntityIds(state, attackerVals) {
+function hasUsableStealthAbility(state, attacker, defendingPlayerId) {
+  return (
+    hasKeyword(attacker.current, stealth) ||
+    hasKeyword(attacker.current, invisible)
+  );
+}
+
+export function getAttackableEntityIds(state, attacker) {
+  if (attacker.current == undefined) {
+    console.log(new Error().stack);
+  }
   let result = [];
   state.playerList.forEach(playerId => {
-    if (playerId != attackerVals.controller) {
+    if (playerId != attacker.current.controller) {
       result = result.concat(
-        getAttackableEntityIdsControlledBy(state, attackerVals, playerId)
+        getAttackableEntityIdsControlledBy(state, attacker, playerId)
       );
     }
   });
   return result;
 }
 
-export function getAttackableEntityIdsControlledBy(
-  state,
-  attackerVals,
-  playerId
-) {
+export function getAttackableEntityIdsControlledBy(state, attacker, playerId) {
   if (
-    hasKeyword(attackerVals, stealth) ||
-    hasKeyword(attackerVals, invisible) ||
-    hasKeyword(attackerVals, unstoppable)
+    hasUsableStealthAbility(state, attacker, playerId) ||
+    hasKeyword(attacker.current, unstoppable)
   ) {
-    return getFullAttackableEntitiesControlledBy(
-      state,
-      attackerVals,
-      playerId
-    ).map(e => e.id);
+    return getFullAttackableEntitiesControlledBy(state, attacker, playerId).map(
+      e => e.id
+    );
   }
   const player = state.players[playerId];
   const squadLeaderId = player.patrollerIds[patrolSlots.squadLeader];
   if (squadLeaderId != null) {
     const canIgnoreSquadLeader = canIgnorePatroller(
       state,
-      attackerVals,
+      attacker,
       state.entities[squadLeaderId],
       patrolSlots.squadLeader
     );
@@ -144,29 +152,26 @@ export function getAttackableEntityIdsControlledBy(
   const patrollerIds = player.patrollerIds.filter(id => id !== null);
   const patrollerVals = getCurrentValues(state, patrollerIds);
   const attackablePatrollerIds = patrollerIds.filter(id =>
-    canAttack(attackerVals, patrollerVals[id], slots[id])
+    canAttack(attacker, state.entities[id], slots[id])
   );
   const blockingPatrollerIds = patrollerIds.filter(
-    id =>
-      !canIgnorePatroller(state, attackerVals, state.entities[id], slots[id])
+    id => !canIgnorePatroller(state, attacker, state.entities[id], slots[id])
   );
   if (blockingPatrollerIds.length > 0) {
     return attackablePatrollerIds;
   }
   // There are no patrollers, so all attackable entities are valid targets
-  return getFullAttackableEntitiesControlledBy(
-    state,
-    attackerVals,
-    playerId
-  ).map(e => e.id);
+  return getFullAttackableEntitiesControlledBy(state, attacker, playerId).map(
+    e => e.id
+  );
 }
 
-function getFullAttackableEntitiesControlledBy(state, attackerVals, playerId) {
+function getFullAttackableEntitiesControlledBy(state, attacker, playerId) {
   return Object.values(state.entities).filter(
     e =>
       e.current.controller == playerId &&
       isAttackableType(e.current.type) &&
-      canAttack(attackerVals, e.current, null)
+      canAttack(attacker, e, null)
   );
 }
 

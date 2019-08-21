@@ -102,10 +102,7 @@ const retargetAttack = {
   targetTypes: [types.unit, types.hero, types.building],
   targetMode: targetMode.single,
   restrictTargets: state =>
-    getAttackableEntityIds(
-      state,
-      state.entities[state.currentAttack.attacker].current
-    )
+    getAttackableEntityIds(state, state.entities[state.currentAttack.attacker])
       .filter(id => id != state.currentAttack.target)
       .map(id => state.entities[id]),
   shouldSkipChoice: state => {
@@ -152,10 +149,7 @@ const chooseOverpowerTarget = {
   targetTypes: [types.unit, types.hero, types.building],
   targetMode: targetMode.single,
   restrictTargets: state =>
-    getAttackableEntityIds(
-      state,
-      state.entities[state.currentAttack.attacker].current
-    )
+    getAttackableEntityIds(state, state.entities[state.currentAttack.attacker])
       .filter(id => id != state.currentAttack.target)
       .map(id => state.entities[id]),
   shouldSkipChoice: state => !needsOverpowerTarget(state),

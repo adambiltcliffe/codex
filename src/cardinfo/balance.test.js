@@ -18,6 +18,6 @@ test("Chameleon can sneak past patrollers", () => {
     tg.checkAction({ type: "attack", attacker: cm, target: p1base })
   ).not.toThrow();
   expect(
-    getAttackableEntityIds(tg.state, tg.state.entities[cm].current).sort()
+    getAttackableEntityIds(tg.state, tg.state.entities[cm]).sort()
   ).toEqual([im1, im2, p1base].sort());
 });
