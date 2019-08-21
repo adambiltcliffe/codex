@@ -14,10 +14,14 @@ import {
 } from "./cardinfo/abilities/keywords";
 import { andJoin } from "./util";
 import log from "./log";
+import {
+  getAttackableEntityIds,
+  detectAttackerWithTower,
+  hasUsableStealthAbility
+} from "./actions/attack";
+import { fixtureNames } from "./fixtures";
 
 import partition from "lodash/partition";
-import { getAttackableEntityIds } from "./actions/attack";
-import { fixtureNames } from "./fixtures";
 
 const findDefendersStep = 0;
 const retargetAttackStep = 1;
@@ -113,6 +117,11 @@ const retargetAttack = {
   action: ({ state, choices }) => {
     if (choices.targetId !== undefined) {
       state.currentAttack.target = choices.targetId;
+      detectAttackerWithTower(
+        state,
+        state.entities[state.currentAttack.attacker],
+        state.currentAttack.defendingPlayerId
+      );
     }
   }
 };
@@ -124,9 +133,15 @@ const findDefenders = {
     if (attacker === undefined || target === undefined) {
       return;
     }
-    const flownOver = hasKeyword(attacker.current, flying)
-      ? getFlownOver(state, target)
-      : [];
+    const flownOver =
+      hasKeyword(attacker.current, flying) &&
+      !hasUsableStealthAbility(
+        state,
+        attacker,
+        state.currentAttack.defendingPlayerId
+      )
+        ? getFlownOver(state, target)
+        : [];
     const flownOverText =
       flownOver.length == 0
         ? ""
@@ -308,13 +323,10 @@ function dealAttackerDamage(state, attacker, target) {
       });
     }
   }
+  const dpId = target.current.controller;
   const tower =
-    state.entities[
-      state.players[target.current.controller].current.fixtures[
-        fixtureNames.tower
-      ]
-    ];
-  if (tower !== undefined && !canEvadeTower(attacker)) {
+    state.entities[state.players[dpId].current.fixtures[fixtureNames.tower]];
+  if (tower !== undefined && !hasUsableStealthAbility(state, attacker, dpId)) {
     damageEntity(state, attacker, {
       amount: 1,
       source: tower,

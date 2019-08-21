@@ -1,7 +1,7 @@
-import { getAP } from "../util";
+import { andJoin, getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
-import { getCurrentValues, updateCurrentValues } from "../entities";
+import { updateCurrentValues } from "../entities";
 import {
   hasKeyword,
   flying,
@@ -13,7 +13,8 @@ import {
   unstoppable
 } from "../cardinfo/abilities/keywords";
 import { patrolSlots } from "../patrolzone";
-import { andJoin } from "../util";
+import { fixtureNames } from "../fixtures";
+
 import invert from "lodash/invert";
 
 function isAttackableType(t) {
@@ -102,10 +103,43 @@ function canIgnorePatroller(state, attacker, patroller, patrolSlot) {
   return false;
 }
 
-function hasUsableStealthAbility(state, attacker, defendingPlayerId) {
-  return (
-    hasKeyword(attacker.current, stealth) ||
-    hasKeyword(attacker.current, invisible)
+function hasStealthAbility(attacker) {
+  if (
+    !hasKeyword(attacker.current, stealth) &&
+    !hasKeyword(attacker.current, invisible)
+  ) {
+    return false;
+  }
+  return !attacker.thisTurn.detected;
+}
+
+export function hasUsableStealthAbility(state, attacker, defendingPlayerId) {
+  if (!hasStealthAbility(attacker)) {
+    return false;
+  }
+  const tower =
+    state.entities[
+      state.players[defendingPlayerId].current.fixtures[fixtureNames.tower]
+    ];
+  return !tower || tower.thisTurn.usedDetector;
+}
+
+export function detectAttackerWithTower(state, attacker, defendingPlayerId) {
+  if (!hasStealthAbility(attacker)) {
+    return;
+  }
+  const tower =
+    state.entities[
+      state.players[defendingPlayerId].current.fixtures[fixtureNames.tower]
+    ];
+  if (!tower || tower.thisTurn.usedDetector) {
+    return;
+  }
+  tower.thisTurn.usedDetector = true;
+  attacker.thisTurn.detected = true;
+  log.add(
+    state,
+    `${attacker.current.name} is detected by ${tower.current.name}.`
   );
 }
 
@@ -150,7 +184,6 @@ export function getAttackableEntityIdsControlledBy(state, attacker, playerId) {
   // Squad leader will still be included if it was present but ignorable
   const slots = invert(player.patrollerIds);
   const patrollerIds = player.patrollerIds.filter(id => id !== null);
-  const patrollerVals = getCurrentValues(state, patrollerIds);
   const attackablePatrollerIds = patrollerIds.filter(id =>
     canAttack(attacker, state.entities[id], slots[id])
   );
@@ -176,10 +209,11 @@ function getFullAttackableEntitiesControlledBy(state, attacker, playerId) {
 }
 
 export function doAttackAction(state, action) {
+  const defendingPlayer = state.entities[action.target].current.controller;
   state.currentAttack = {
     ...action,
     begun: false,
-    defendingPlayer: state.entities[action.target].current.controller
+    defendingPlayer
   };
   // have to do this here because of "X while attacking" effects
   updateCurrentValues(state);
@@ -196,4 +230,5 @@ export function doAttackAction(state, action) {
     state,
     log.fmt`${getAP(state)} declares an attack with ${u.current.name}.`
   );
+  detectAttackerWithTower(state, u, defendingPlayer);
 }

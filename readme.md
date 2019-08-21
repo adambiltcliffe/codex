@@ -36,11 +36,13 @@ Ultimate spell casting: can cast with maxed hero from previous turn
 Ultimate spell casting: can't cast without maxed hero
 Ultimate spell casting: can't cast with hero who maxed this turn
 Put back deleted Brick Thief tests when more than 2 buildings can exist
+Stealth unit can't attack backline if tower has unused detector
+Stealth unit can't attack backline if tower detected it previously
+Stealth unit can attack backline if tower has used detector
 
 # Tests to write later
 
-*Tower damages first stealth attacker but not subsequent
-*Unstoppable
+\*Unstoppable
 Long-range
 Scorch and Fire Dart
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
@@ -49,6 +51,8 @@ Sparkshot/overpower unit can't kill only additional patroller with SS and overpo
 Swift strike flying attacker can kill the SL it flew over and not get hit (needs unit with sparkshot+flying)
 Flying plus stealth/invisible/unstoppable etc. and not taking AA damage if not using flying to evade
 Declare an attack that destroys all possible attack targets with triggers (obliterate vs Lawbringer Gryphon)
+Check stealth abilities vs tower still work correctly when retarget after initial target dies
+Flyer with stealth abilities doesn't fly over AA units
 
 # Game features not implemented:
 
@@ -60,7 +64,6 @@ When-you-play trigger (> Harmony)
 Two targets (> Two-step)
 State trigger (> Two-step)
 
-Temporary detection by tower on opponent's turn
 Temporary detection by tower on own turn
 Requirement to have tech buildings/unlocked specs to play units
 
@@ -87,6 +90,8 @@ Damage modification effects
 
 Sparkshot stacking
 Make Flagbearer not an ability (to support Vortoss Emblem)
+
+Make hero level up on death happen faster than other death triggers
 
 # Other stuff to do
 
