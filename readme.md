@@ -22,18 +22,25 @@ Effects that last for the current turn
 
 # Tests to write
 
+Obliterate doesn't destroy heroes or buildings
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
 Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice
-Everything about Trojan Duck
-More thorough tests for Final Smash
-Ultimate spell casting condition tests
+Trojan Duck: obliterate 4 units
+Trojan Duck: attack trigger can damage building
+Trojan Duck: if kill attack target with trigger, choose new one
+Final Smash: if no tech 0 unit exists, can still do the tech 1 and 2 bits
+Final Smash: if 2 targets for each tech level, have to choose for each
+Final Smash: if only one choice for tech 0 and tech 2, still choose tech 1
+Ultimate spell casting: can cast with maxed hero from previous turn
+Ultimate spell casting: can't cast without maxed hero
+Ultimate spell casting: can't cast with hero who maxed this turn
+Put back deleted Brick Thief tests when more than 2 buildings can exist
 
 # Tests to write later
 
 *Tower damages first stealth attacker but not subsequent
 *Unstoppable
-\*Put back deleted Brick Thief tests when more than 2 buildings can exist
 Long-range
 Scorch and Fire Dart
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
