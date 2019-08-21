@@ -26,7 +26,7 @@ Obliterate doesn't destroy heroes or buildings
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
 Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice
-Trojan Duck: obliterate 4 units
+Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
 Final Smash: if no tech 0 unit exists, can still do the tech 1 and 2 bits
@@ -59,8 +59,6 @@ Tokens (> Harmony)
 When-you-play trigger (> Harmony)
 Two targets (> Two-step)
 State trigger (> Two-step)
-
-Heroes go on cooldown when killed
 
 Temporary detection by tower on opponent's turn
 Temporary detection by tower on own turn
@@ -108,6 +106,9 @@ Make sure it works out of the box, i.e. without npm linking playground
 
 Hotter Fire (Red/Fire)
 Master Midori (Green/Balance)
+Stalking Tiger (Green/Feral)
+Rampaging Elephant (Green/Feral)
+Polymorph: Squirrel (Green/Growth)
 Manufactured Truth (Blue/starter)
 Jail (Blue/starter)
 Reteller of Truths (Blue/Truth)
