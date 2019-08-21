@@ -39,6 +39,12 @@ Put back deleted Brick Thief tests when more than 2 buildings can exist
 Stealth unit can't attack backline if tower has unused detector
 Stealth unit can't attack backline if tower detected it previously
 Stealth unit can attack backline if tower has used detector
+Hero death on own turn: choice of two opposing heroes to gain levels
+Hero death on own turn: have to give levels to non-maxed opposing hero
+Opponent's hero death: no own hero, trigger skipped
+Opponent's hero death: own single hero automatically gains 2 levels
+Opponent's hero death: own single hero gains 1 level if that reaches max
+Opponent's hero death: choice of own heroes to gain level
 
 # Tests to write later
 
@@ -67,7 +73,6 @@ State trigger (> Two-step)
 Temporary detection by tower on own turn
 Requirement to have tech buildings/unlocked specs to play units
 
-Hero level up on death
 Hero cooldown
 
 Avoid leaking minor information when workering

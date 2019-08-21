@@ -1,7 +1,8 @@
 import log from "./log";
-import { givePlayerGold } from "./util";
+import { givePlayerGold, getAP } from "./util";
 import { drawCards } from "./draw";
 import resolveAttackTriggers from "./resolveattack";
+import { types, targetMode } from "./cardinfo";
 
 const triggerInfo = {
   ...resolveAttackTriggers,
@@ -22,6 +23,31 @@ const triggerInfo = {
         state.currentTrigger.playerId,
         1,
         " from death of technician"
+      );
+    }
+  },
+  heroDeath: {
+    prompt: "Choose a hero to gain 2 levels",
+    hasTargetSymbol: false,
+    targetMode: targetMode.single,
+    targetTypes: [types.hero],
+    canTarget: ({ state, target }) => {
+      return (
+        target.current.controller != getAP(state).id &&
+        target.level < target.current.maxbandLevel
+      );
+    },
+    action: ({ state, choices }) => {
+      const hero = state.entities[choices.targetId];
+      const oldLevel = hero.level;
+      hero.level += 2;
+      if (hero.level > hero.current.maxbandLevel) {
+        hero.level = hero.current.maxbandLevel;
+      }
+      const gain = hero.level - oldLevel;
+      log.add(
+        state,
+        `${hero.current.name} gains ${gain} level${gain == 1 ? "" : "s"}.`
       );
     }
   }

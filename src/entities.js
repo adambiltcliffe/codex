@@ -154,6 +154,13 @@ export function killEntity(state, entityId) {
       pz[index] = null;
     }
   });
+  if (e.current.type == types.hero) {
+    state.newTriggers.push({
+      path: "triggerInfo.heroDeath",
+      playerId: e.current.controller
+    });
+  }
+  // Now put the card in the appropriate place
   if (e.fixture === undefined) {
     if (cardInfo[e.card].type == types.hero) {
       state.players[e.owner].commandZone.push(e.card);
