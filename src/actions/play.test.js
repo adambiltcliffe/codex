@@ -96,3 +96,54 @@ test("With two heroes, can cast spells belonging to either", () => {
     tg.checkAction({ type: "play", card: "fire_dart" })
   ).not.toThrow();
 });
+
+test("Can cast an ultimate spell with a hero who maxed last turn", () => {
+  const tg = new TestGame().insertEntity(testp1Id, "river_montoya");
+  const [river] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "level", hero: river, amount: 4 },
+    { type: "endTurn" },
+    { type: "endTurn" }
+  ]);
+  tg.putCardsInHand(testp1Id, ["appel_stomp"]);
+  expect(() =>
+    tg.checkAction({ type: "play", card: "appel_stomp" })
+  ).not.toThrow();
+});
+
+test("Can't cast an ultimate spell with a hero who is not maxed", () => {
+  const tg = new TestGame().insertEntity(testp1Id, "river_montoya");
+  tg.putCardsInHand(testp1Id, ["appel_stomp"]);
+  expect(() => tg.checkAction({ type: "play", card: "appel_stomp" })).toThrow(
+    "max"
+  );
+});
+
+test("Can't cast an ultimate spell with a hero who maxed this turn", () => {
+  const tg = new TestGame().insertEntity(testp1Id, "river_montoya");
+  const [river] = tg.insertedEntityIds;
+  tg.setGold(testp1Id, 5);
+  tg.playActions([{ type: "level", hero: river, amount: 4 }]);
+  tg.putCardsInHand(testp1Id, ["appel_stomp"]);
+  expect(() => tg.checkAction({ type: "play", card: "appel_stomp" })).toThrow(
+    "max"
+  );
+});
+
+test("Can't cast an ultimate spell unless correct hero is maxed", () => {
+  const tg = new TestGame().insertEntities(testp1Id, [
+    "river_montoya",
+    "troq_bashar"
+  ]);
+  const [river, troq] = tg.insertedEntityIds;
+  tg.setGold(testp1Id, 10);
+  tg.playActions([
+    { type: "level", hero: river, amount: 4 },
+    { type: "endTurn" },
+    { type: "endTurn" }
+  ]);
+  tg.putCardsInHand(testp1Id, ["final_smash"]);
+  expect(() => tg.checkAction({ type: "play", card: "final_smash" })).toThrow(
+    "max"
+  );
+});

@@ -56,7 +56,21 @@ const finesseCardInfo = {
       }
     }
   },
-
+  appel_stomp: {
+    color: colors.neutral,
+    spec: specs.finesse,
+    name: "Appel Stomp",
+    type: types.spell,
+    ultimate: true,
+    subtypes: ["Debuff"],
+    cost: 1,
+    abilities: [
+      {
+        isSpellEffect: true,
+        steps: []
+      }
+    ]
+  },
   nimble_fencer: {
     color: colors.neutral,
     tech: 1,
