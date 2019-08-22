@@ -33,7 +33,7 @@ const triggerInfo = {
     targetTypes: [types.hero],
     canTarget: ({ state, target }) => {
       return (
-        target.current.controller != getAP(state).id &&
+        target.current.controller != state.currentTrigger.playerId &&
         target.level < target.current.maxbandLevel
       );
     },

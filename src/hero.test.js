@@ -165,14 +165,76 @@ test("Own hero dies on your turn with maxed and unmaxed opposing heroes", () => 
   expect(tg.state.entities[river].level).toEqual(3);
 });
 
-/*
-Hero death on own turn: choice of two opposing heroes to gain levels
-Hero death on own turn: have to give levels to non-maxed opposing hero
-Opponent's hero death: no own hero, trigger skipped
-Opponent's hero death: own single hero automatically gains 2 levels
-Opponent's hero death: own single hero gains 1 level if that reaches max
-Opponent's hero death: choice of own heroes to gain level
-*/
+test("Kill opponent's hero when you don't have your own", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntity(testp2Id, "iron_man");
+  const [troq, im] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: im, target: troq }
+  ]);
+  expect(tg.state.currentTrigger).toBeNull();
+  expect(tg.state.log).toContain(
+    "Choose a hero to gain 2 levels: No legal choices."
+  );
+});
+
+test("Kill opponent's hero when you have one of your own", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, ["iron_man", "river_montoya"]);
+  const [troq, im, river] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: im, target: troq }
+  ]);
+  expect(tg.state.currentTrigger).toBeNull();
+  expect(tg.state.log).toContain(
+    "Choose a hero to gain 2 levels: Only one legal choice."
+  );
+  expect(tg.state.log).toContain("River Montoya gains 2 levels.");
+  expect(tg.state.entities[river].level).toEqual(3);
+});
+
+test("Kill opponent's hero when you have two of your own", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, [
+      "iron_man",
+      "river_montoya",
+      "jaina_stormborne"
+    ]);
+  const [troq, im, river, jaina] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: im, target: troq }
+  ]);
+  expect(tg.state.currentTrigger).not.toBeNull();
+  expect(tg.state.entities[river].level).toEqual(1);
+  expect(tg.getLegalChoices().sort()).toEqual([river, jaina].sort());
+  tg.playAction({ type: "choice", target: river });
+  expect(tg.state.log).toContain("River Montoya gains 2 levels.");
+  expect(tg.state.entities[river].level).toEqual(3);
+});
+
+test("Kill opponent's hero when yours is 1 level off max", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, ["iron_man", "river_montoya"]);
+  const [troq, im, river] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { level: 4 });
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: im, target: troq }
+  ]);
+  expect(tg.state.currentTrigger).toBeNull();
+  expect(tg.state.log).toContain(
+    "Choose a hero to gain 2 levels: Only one legal choice."
+  );
+  expect(tg.state.log).toContain("River Montoya gains 1 level.");
+  expect(tg.state.entities[river].level).toEqual(5);
+});
 
 test("Hero dies on your turn, cooldown this turn and next", () => {
   const tg = new TestGame()
