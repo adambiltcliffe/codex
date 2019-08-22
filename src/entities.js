@@ -10,6 +10,7 @@ import cardInfo, { types } from "./cardinfo";
 import get from "lodash/get";
 import forEach from "lodash/forEach";
 import upperFirst from "lodash/upperFirst";
+import { getAP } from "./util";
 
 export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
   const newBuilding = {
@@ -164,6 +165,7 @@ export function killEntity(state, entityId) {
   if (e.fixture === undefined) {
     if (cardInfo[e.card].type == types.hero) {
       state.players[e.owner].commandZone.push(e.card);
+      state.players[e.owner].heroCooldowns[e.card] = e.owner == getAP(state).id ? 2 : 1;
     } else {
       state.updateHidden(fs => {
         fs.players[e.owner].discard.push(e.card);

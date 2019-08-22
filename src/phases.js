@@ -91,4 +91,7 @@ export function doEndOfTurnEffects(state) {
     createBuildingFixture(state, ap.id, f);
     log.add(state, `${upperFirst(fixtures[f].name)} finishes construction.`);
   });
+  forEach(ap.heroCooldowns, (cd, hero) => {
+    ap.heroCooldowns[hero] = cd == 0 ? 0 : cd - 1;
+  });
 }

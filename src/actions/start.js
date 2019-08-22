@@ -30,6 +30,7 @@ function initialisePlayerState(state, playerIndex) {
   state.players[player].paidFixtures = [];
   state.players[player].patrollerIds = emptyPatrolZone;
   state.players[player].commandZone = ["troq_bashar"];
+  state.players[player].heroCooldowns = {};
   createBuildingFixture(state, player, fixtureNames.base, true);
 }
 

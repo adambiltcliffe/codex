@@ -138,3 +138,71 @@ Opponent's hero death: own single hero automatically gains 2 levels
 Opponent's hero death: own single hero gains 1 level if that reaches max
 Opponent's hero death: choice of own heroes to gain level
 */
+
+test("Hero dies on your turn, cooldown this turn and next", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "iron_man")
+    .insertEntity(testp2Id, "troq_bashar");
+  const [im, troq] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: troq, target: im }
+  ]);
+  expect(tg.state.entities[troq]).toBeUndefined();
+  expect(tg.state.players[testp2Id].commandZone).toContain("troq_bashar");
+  expect(tg.state.players[testp2Id].heroCooldowns["troq_bashar"]).toEqual(2);
+  expect(() => tg.checkAction({ type: "summon", hero: "troq_bashar" })).toThrow(
+    "cooldown"
+  );
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(tg.state.players[testp2Id].heroCooldowns["troq_bashar"]).toEqual(1);
+  expect(() => tg.checkAction({ type: "summon", hero: "troq_bashar" })).toThrow(
+    "cooldown"
+  );
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(tg.state.players[testp2Id].heroCooldowns["troq_bashar"]).toEqual(0);
+  expect(() =>
+    tg.checkAction({ type: "summon", hero: "troq_bashar" })
+  ).not.toThrow();
+});
+
+test("Hero dies on opponent's turn, cooldown on your next turn", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "iron_man")
+    .insertEntity(testp2Id, "troq_bashar");
+  const [im, troq] = tg.insertedEntityIds;
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  tg.playActions([
+    { type: "attack", attacker: im, target: troq },
+    { type: "endTurn" }
+  ]);
+  expect(tg.state.entities[troq]).toBeUndefined();
+  expect(tg.state.players[testp2Id].commandZone).toContain("troq_bashar");
+  expect(tg.state.players[testp2Id].heroCooldowns["troq_bashar"]).toEqual(1);
+  expect(() => tg.checkAction({ type: "summon", hero: "troq_bashar" })).toThrow(
+    "cooldown"
+  );
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(tg.state.players[testp2Id].heroCooldowns["troq_bashar"]).toEqual(0);
+  expect(() =>
+    tg.checkAction({ type: "summon", hero: "troq_bashar" })
+  ).not.toThrow();
+});
+
+test("Can play a different hero when one is on cooldown", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "river_montoya")
+    .insertEntity(testp2Id, "eggship");
+  const [river, es] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: es, target: river },
+    { type: "endTurn" }
+  ]);
+  expect(() =>
+    tg.checkAction({ type: "summon", hero: "river_montoya" })
+  ).toThrow("cooldown");
+  expect(() =>
+    tg.checkAction({ type: "summon", hero: "troq_bashar" })
+  ).not.toThrow();
+});

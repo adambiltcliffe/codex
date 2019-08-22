@@ -103,6 +103,17 @@ test("Attacking 1/2s with other 1/2s", () => {
   expect(s3.players[testp2Id].discard.length).toEqual(oldDiscardSize + 1);
 });
 
+test("Heroes can be attacked", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "timely_messenger")
+    .insertEntity(testp2Id, "troq_bashar");
+  const [tm, troq] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: tm, target: troq });
+  expect(tg.state.log).toContain("Timely Messenger attacks Troq Bashar.");
+  expect(tg.state.entities[tm]).toBeUndefined();
+  expect(tg.state.entities[troq].damage).toEqual(1);
+});
+
 beforeAll(() => {
   triggerDefinitions.cardInfo["_test_kill_attack_target"] = {
     color: colors.neutral,

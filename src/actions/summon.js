@@ -12,6 +12,9 @@ export function checkSummonAction(state, action) {
   if (ap.gold < cardInfo[action.hero].cost) {
     throw new Error("Not enough gold");
   }
+  if ((ap.heroCooldowns[action.hero] || 0) > 0) {
+    throw new Error("Hero is on cooldown");
+  }
 }
 
 export function doSummonAction(state, action) {

@@ -18,7 +18,7 @@ import { fixtureNames } from "../fixtures";
 import invert from "lodash/invert";
 
 function isAttackableType(t) {
-  return t == types.unit || t == types.building;
+  return t == types.unit || t == types.hero || t == types.building;
 }
 
 export function checkAttackAction(state, action) {
