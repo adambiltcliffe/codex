@@ -1,35 +1,12 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import {
-  getCurrentValues,
-  createUnit,
-  getName,
-  updateCurrentValues,
-  applyStateBasedEffects
-} from "../entities";
+import { getCurrentValues, createUnit } from "../entities";
 import { types, colors } from "../cardinfo/constants";
 import { addSpellToQueue } from "../triggers";
 
 import findIndex from "lodash/findIndex";
 import forEach from "lodash/forEach";
-import filter from "lodash/filter";
-
-function getHeroColors(state) {
-  /*return filter(
-    getCurrentValues(state, Object.keys(state.entities)),
-    v => v.controller == getAP(state).id && v.type == types.hero
-  ).map(v => v.color);*/
-  return getAP(state).current.heroColors;
-}
-
-function getHeroSpecs(state) {
-  /*return filter(
-    getCurrentValues(state, Object.keys(state.entities)),
-    v => v.controller == getAP(state).id && v.type == types.hero
-  ).map(v => v.spec);*/
-  return getAP(state).current.heroSpecs;
-}
 
 function getPlayCost(state, cardInfo) {
   let currentCost = cardInfo.cost;
@@ -53,7 +30,7 @@ function getPlayCost(state, cardInfo) {
     cardInfo.minor &&
     cardInfo.color != colors.neutral
   ) {
-    if (!getHeroColors(state).includes(cardInfo.color)) {
+    if (!getAP(state).current.heroColors.includes(cardInfo.color)) {
       currentCost += 1;
     }
   }
@@ -71,7 +48,7 @@ export function checkPlayAction(state, action) {
   }
   const ci = cardInfo[action.card];
   if (ci.type == types.spell) {
-    const heroSpecs = getHeroSpecs(state);
+    const heroSpecs = ap.current.heroSpecs;
     if ((!ci.minor && !heroSpecs.includes(ci.spec)) || heroSpecs.length == 0) {
       throw new Error("Don't have the right hero to cast that spell");
     }
