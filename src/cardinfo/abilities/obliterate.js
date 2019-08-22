@@ -47,14 +47,15 @@ export const obliterate = n => ({
     const victims = definitely.concat(
       (choices.targetIds || []).map(id => state.entities[id])
     );
-    log.add(
-      state,
-      `${andJoinVerb(
-        victims.map(v => v.current.name),
-        "is",
-        "are"
-      )} obliterated.`
-    );
+    const message =
+      victims.length > 0
+        ? `${andJoinVerb(
+            victims.map(v => v.current.name),
+            "is",
+            "are"
+          )} obliterated.`
+        : "No units exist to be obliterated.";
+    log.add(state, message);
     victims.forEach(v => killEntity(state, v.id));
   }
 });

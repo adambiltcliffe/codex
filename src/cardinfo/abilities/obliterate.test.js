@@ -1,5 +1,6 @@
 import { TestGame, testp1Id, testp2Id } from "../../testutil";
 import { partitionObliterateTargets } from "./obliterate";
+import { fixtureNames } from "../../fixtures";
 
 test("Correct behaviour of (internal) function partitionObliterateTargets", () => {
   const fakeTf = { current: { name: "Tenderfoot", tech: 0 } };
@@ -121,4 +122,17 @@ test("Only have to choose to unforced ones if some units must die", () => {
   );
   expect(tg.state.log).toContain("Tenderfoot dies.");
   expect(tg.state.log).toContain("Revolver Ocelot dies.");
+});
+
+test("Obliterate cannot destroy buildings or heroes", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "pirate_gunship")
+    .insertEntity(testp2Id, "river_montoya")
+    .insertFixture(testp2Id, fixtureNames.surplus);
+  const p2base = tg.findBaseId(testp2Id);
+  const [pg, river, surp] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: pg, target: p2base });
+  expect(tg.state.entities[river]).not.toBeUndefined();
+  expect(tg.state.entities[surp]).not.toBeUndefined();
+  expect(tg.state.log).toContain("No units exist to be obliterated.");
 });

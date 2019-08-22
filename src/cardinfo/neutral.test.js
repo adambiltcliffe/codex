@@ -125,39 +125,23 @@ test("Brick Thief can steal a brick from enemy base at start of game", () => {
   expect(s3.log).toContain("Brick Thief repairs 1 damage from base.");
 });
 
-//Reinstate this test when more than 2 buildings can be in play
-/*test("Brick Thief can steal a brick from an opposing building", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "brick_thief");
-  const p1base = findEntityIds(
-    s0,
-    e => e.fixture == fixtureNames.base && e.owner == testp1Id
-  )[0];
-  const p2base = findEntityIds(
-    s0,
-    e => e.fixture == fixtureNames.base && e.owner == testp2Id
-  )[0];
-  s0.entities[p1base].damage = 2;
-  const s1 = playActions(s0, [
-    {
-      type: "play",
-      card: "brick_thief"
-    },
-    { type: "choice", target: p2base }
-  ]);
-  expect(s1.log).toContain("Brick Thief deals 1 damage to base.");
-  const s2 = playActions(s1, [{ type: "choice", target: p1base }]);
-  expect(s2.log).toContain("Brick Thief repairs 1 damage from base.");
-  const bt = findEntityIds(s2, e => e.card == "brick_thief")[0];
-  const s2a = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
-  const s2b = playActions(s2a, [
-    { type: "attack", attacker: bt, target: p2base }
-  ]);
-  const s3 = playActions(s2b, [{ type: "choice", target: p2base }]);
-  expect(s3.log).toContain("Brick Thief deals 1 damage to base.");
-  const s4 = playActions(s3, [{ type: "choice", target: p1base }]);
-  expect(s4.log).toContain("Brick Thief repairs 1 damage from base.");
-});*/
+test.only("Brick Thief can steal a brick from opposing building", () => {
+  const tg = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tower)
+    .putCardsInHand(testp1Id, ["brick_thief"]);
+  const p1base = tg.findBaseId(testp1Id);
+  const p2base = tg.findBaseId(testp2Id);
+  const [tower] = tg.insertedEntityIds;
+  tg.modifyEntity(p1base, { damage: 2 });
+  tg.playAction({ type: "play", card: "brick_thief" });
+  expect(tg.state.currentTrigger).not.toBeNull();
+  expect(tg.getLegalChoices().sort()).toEqual([p1base, p2base, tower].sort());
+  tg.playAction({ type: "choice", target: p2base });
+  expect(tg.state.log).toContain("Brick Thief deals 1 damage to base.");
+  expect(tg.getLegalChoices().sort()).toEqual([p1base, tower].sort());
+  tg.playAction({ type: "choice", target: p1base });
+  expect(tg.state.log).toContain("Brick Thief repairs 1 damage from base.");
+});
 
 test("Brick Thief doesn't report repairing damage if it didn't", () => {
   const s0 = getNewGame();

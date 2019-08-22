@@ -5,7 +5,8 @@
   "main": "src/codex.js",
   "scripts": {
     "playground": "board-state-playground --entry ./playground.jsx",
-    "test": "jest"
+    "test": "jest",
+    "test-watch": "jest --watch"
   },
   "keywords": [
     "boardgames"

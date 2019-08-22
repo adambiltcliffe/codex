@@ -22,7 +22,6 @@ Effects that last for the current turn
 
 # Tests to write
 
-Obliterate doesn't destroy heroes or buildings
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
 Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice
@@ -35,7 +34,6 @@ Final Smash: if only one choice for tech 0 and tech 2, still choose tech 1
 Ultimate spell casting: can cast with maxed hero from previous turn
 Ultimate spell casting: can't cast without maxed hero
 Ultimate spell casting: can't cast with hero who maxed this turn
-Put back deleted Brick Thief tests when more than 2 buildings can exist
 Stealth unit can't attack backline if tower has unused detector
 Stealth unit can't attack backline if tower detected it previously
 Stealth unit can attack backline if tower has used detector

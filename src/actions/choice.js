@@ -59,7 +59,7 @@ export function doChoiceAction(state, action) {
     : def.prompt; */
   switch (stepDef.targetMode) {
     case targetMode.single:
-      choices.targetId = action.target;
+      choices.targetId = action.target || null;
       const target = state.entities[action.target];
       if (
         stepDef.hasTargetSymbol &&
@@ -70,6 +70,6 @@ export function doChoiceAction(state, action) {
       }
       log.add(state, log.fmt`${getAP(state)} chooses ${target.current.name}.`);
     case targetMode.obliterate:
-      choices.targetIds = action.targets;
+      choices.targetIds = action.targets || null;
   }
 }
