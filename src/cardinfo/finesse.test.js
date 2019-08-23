@@ -19,9 +19,9 @@ import CodexGame from "../codex";
 import { hasKeyword, haste } from "./abilities/keywords";
 
 test("Nimble Fencer gives herself and other Virtuosos haste", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "tenderfoot");
-  putCardInHand(s0, testp1Id, "nimble_fencer");
+  const s0 = new TestGame()
+    .putCardsInHand(testp1Id, ["tenderfoot", "nimble_fencer"])
+    .insertFixture(testp1Id, fixtureNames.tech1).state;
   const s1 = playActions(s0, [{ type: "play", card: "tenderfoot" }]);
   const tf = findEntityIds(s1, e => e.card == "tenderfoot")[0];
   const p2base = findEntityIds(
@@ -59,12 +59,15 @@ test("Star-Crossed Starlet buffs her attack with damage and kills herself after 
 });
 
 test("Grounded Guide buffs Virtuosos and non-Virtuosos by appropriate amounts", () => {
-  const s0 = getNewGame();
-  s0.players[testp1Id].gold = 20;
-  putCardInHand(s0, testp1Id, "tenderfoot");
-  putCardInHand(s0, testp1Id, "older_brother");
-  putCardInHand(s0, testp1Id, "grounded_guide");
-  putCardInHand(s0, testp1Id, "grounded_guide");
+  const s0 = new TestGame()
+    .setGold(testp1Id, 20)
+    .insertFixture(testp1Id, fixtureNames.tech2)
+    .putCardsInHand(testp1Id, [
+      "tenderfoot",
+      "older_brother",
+      "grounded_guide",
+      "grounded_guide"
+    ]).state;
   const s1 = playActions(s0, [
     { type: "play", card: "tenderfoot" },
     { type: "play", card: "older_brother" }

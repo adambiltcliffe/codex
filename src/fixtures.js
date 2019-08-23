@@ -1,7 +1,4 @@
 import { types } from "./cardinfo/constants";
-import log from "./log";
-import { getAP } from "./util";
-import { drawCards } from "./draw";
 
 export const fixtureNames = {
   base: "base",
@@ -11,6 +8,13 @@ export const fixtureNames = {
   tech2: "tech2",
   tech3: "tech3"
 };
+
+export const techBuildingFixtures = [
+  null,
+  fixtureNames.tech1,
+  fixtureNames.tech2,
+  fixtureNames.tech3
+];
 
 const fixtures = {
   [fixtureNames.base]: {

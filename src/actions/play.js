@@ -7,6 +7,7 @@ import { addSpellToQueue } from "../triggers";
 
 import findIndex from "lodash/findIndex";
 import forEach from "lodash/forEach";
+import { techBuildingFixtures } from "../fixtures";
 
 function getPlayCost(state, cardInfo) {
   let currentCost = cardInfo.cost;
@@ -54,6 +55,14 @@ export function checkPlayAction(state, action) {
     }
     if (ci.ultimate && !ap.current.ultimateSpecs.includes(ci.spec)) {
       throw new Error("Your hero was not max level at the start of the turn");
+    }
+  } else {
+    if (ci.tech > 0) {
+      if (ap.current.fixtures[techBuildingFixtures[ci.tech]] === undefined) {
+        throw new Error(
+          "You don't have the correct tech building to play that"
+        );
+      }
     }
   }
 }

@@ -1,20 +1,20 @@
 import CodexGame from "../codex";
 import {
   findTriggerIndices,
-  getNewGame,
   playActions,
-  putCardInHand,
   testp1Id,
-  findEntityIds
+  findEntityIds,
+  TestGame
 } from "../testutil";
 
 import startsWith from "lodash/startsWith";
+import { fixtureNames } from "../fixtures";
 
 test("Can choose the order of triggers in the queue when they trigger together", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "helpful_turtle");
-  putCardInHand(s0, testp1Id, "starcrossed_starlet");
-  s0.players[testp1Id].gold = 10;
+  const s0 = new TestGame()
+    .putCardsInHand(testp1Id, ["helpful_turtle", "starcrossed_starlet"])
+    .insertFixture(testp1Id, fixtureNames.tech1)
+    .setGold(testp1Id, 10).state;
   const s1 = playActions(s0, [
     { type: "play", card: "helpful_turtle" },
     { type: "play", card: "starcrossed_starlet" },

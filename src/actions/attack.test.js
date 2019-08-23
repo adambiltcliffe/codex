@@ -15,9 +15,10 @@ import { colors, types } from "../cardinfo";
 import { haste } from "../cardinfo/abilities/keywords";
 
 test("Arrival fatigue and attacking base", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "iron_man");
-  const s1 = playActions(s0, [{ type: "play", card: "iron_man" }]);
+  const tg = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tech1)
+    .putCardsInHand(testp1Id, ["iron_man"]);
+  const s1 = playActions(tg.state, [{ type: "play", card: "iron_man" }]);
   const im = findEntityIds(
     s1,
     e => e.owner == testp1Id && e.card == "iron_man"

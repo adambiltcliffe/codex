@@ -12,8 +12,9 @@ import { fixtureNames } from "../fixtures";
 import { hasKeyword, stealth } from "./abilities/keywords";
 
 test("Hired Stomper must kill itself with own trigger if no other units", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "hired_stomper");
+  const s0 = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tech2)
+    .putCardsInHand(testp1Id, ["hired_stomper"]).state;
   expect(s0.currentTrigger).toBeNull();
   const s1 = playActions(s0, [{ type: "play", card: "hired_stomper" }]);
   expect(s1.log).toContain("Hired Stomper deals 3 damage to itself.");
@@ -21,6 +22,7 @@ test("Hired Stomper must kill itself with own trigger if no other units", () => 
 
 test("Hired Stomper can kill itself with own trigger even if other options available", () => {
   const s0 = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tech2)
     .insertEntity(testp1Id, "older_brother")
     .putCardsInHand(testp1Id, ["hired_stomper"]).state;
   expect(s0.currentTrigger).toBeNull();
@@ -33,12 +35,16 @@ test("Hired Stomper can kill itself with own trigger even if other options avail
 });
 
 test("Hired Stomper can target your own units or the opponent's", () => {
-  const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "regularsized_rhinoceros");
-  putCardInHand(s0, testp2Id, "regularsized_rhinoceros");
-  putCardInHand(s0, testp2Id, "hired_stomper");
-  putCardInHand(s0, testp2Id, "hired_stomper");
-  s0.players[testp2Id].gold = 20;
+  const s0 = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tech2)
+    .insertFixture(testp2Id, fixtureNames.tech2)
+    .putCardsInHand(testp1Id, ["regularsized_rhinoceros"])
+    .putCardsInHand(testp2Id, [
+      "regularsized_rhinoceros",
+      "hired_stomper",
+      "hired_stomper"
+    ])
+    .setGold(testp2Id, 20).state;
   const s1 = playActions(s0, [
     { type: "play", card: "regularsized_rhinoceros" },
     { type: "endTurn" },
@@ -122,7 +128,8 @@ test("Intimidate decreases attack by 4 for a turn", () => {
 test("Sneaky Pig has stealth on first turn but not later", () => {
   const tg = new TestGame()
     .insertEntity(testp1Id, "iron_man")
-    .putCardsInHand(testp2Id, ["sneaky_pig"]);
+    .putCardsInHand(testp2Id, ["sneaky_pig"])
+    .insertFixture(testp2Id, fixtureNames.tech2);
   const [im] = tg.insertedEntityIds;
   tg.playActions([
     { type: "endTurn", patrollers: [im, null, null, null, null] },

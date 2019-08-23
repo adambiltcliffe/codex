@@ -29,15 +29,15 @@ test("Workers generate gold during upkeep", () => {
 
 test("Units become exhausted when attacking and ready next turn", () => {
   const s0 = getNewGame();
-  putCardInHand(s0, testp1Id, "iron_man");
+  putCardInHand(s0, testp1Id, "older_brother");
   putCardInHand(s0, testp2Id, "tenderfoot");
   const s1 = playActions(s0, [
-    { type: "play", card: "iron_man" },
+    { type: "play", card: "older_brother" },
     { type: "endTurn" },
     { type: "play", card: "tenderfoot" },
     { type: "endTurn" }
   ]);
-  const attackerId = findEntityIds(s1, u => u.card == "iron_man")[0];
+  const attackerId = findEntityIds(s1, u => u.card == "older_brother")[0];
   const targetId = findEntityIds(s1, u => u.card == "tenderfoot")[0];
   const s2 = playActions(s1, [
     { type: "attack", attacker: attackerId, target: targetId }
@@ -45,5 +45,5 @@ test("Units become exhausted when attacking and ready next turn", () => {
   expect(s2.entities[attackerId].ready).toBeFalsy();
   const s3 = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
   expect(s3.entities[attackerId].ready).toBeTruthy();
-  expect(s3.log).toContain(`\${${testp1Id}} readies Iron Man.`);
+  expect(s3.log).toContain(`\${${testp1Id}} readies Older Brother.`);
 });

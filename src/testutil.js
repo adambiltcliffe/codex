@@ -69,20 +69,11 @@ export function withGoldSetTo(state, playerId, amount) {
 }
 
 export function getGameWithUnits(p1units, p2units) {
-  const s0 = getNewGame();
-  p1units.forEach(u => {
-    putCardInHand(s0, testp1Id, u);
-    s0.players[testp1Id].gold += cardInfo[u].cost;
-  });
-  p2units.forEach(u => {
-    putCardInHand(s0, testp2Id, u);
-    s0.players[testp2Id].gold += cardInfo[u].cost;
-  });
-  const s1 = playActions(s0, p1units.map(u => ({ type: "play", card: u })));
-  const s2 = playActions(s1, [{ type: "endTurn" }]);
-  const s3 = playActions(s2, p2units.map(u => ({ type: "play", card: u })));
-  const s4 = playActions(s3, [{ type: "endTurn" }]);
-  return s4;
+  const tg = new TestGame();
+  p1units.forEach(u => tg.insertEntity(testp1Id, u));
+  p2units.forEach(u => tg.insertEntity(testp2Id, u));
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  return tg.state;
 }
 
 export function playActions(initialState, actionList) {
