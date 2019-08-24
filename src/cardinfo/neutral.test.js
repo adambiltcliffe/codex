@@ -9,7 +9,6 @@ import {
   getGameWithUnits,
   withCardsInHand,
   withInsertedEntity,
-  withInsertedEntities,
   getTestGame,
   TestGame
 } from "../testutil";
@@ -64,17 +63,15 @@ test("Helpful Turtle heals your units but not the enemy's", () => {
 });
 
 test("Fruit Ninja's frenzy functions correctly", () => {
-  const s0 = getNewGame();
-  s0.players[testp1Id].gold = 20;
-  s0.players[testp2Id].gold = 20;
-  putCardInHand(s0, testp2Id, "iron_man");
-  putCardInHand(s0, testp2Id, "iron_man");
-  const [s1, [fn1, fn2]] = withInsertedEntities(s0, testp1Id, [
-    "fruit_ninja",
-    "fruit_ninja"
-  ]);
-  expect(getCurrentValues(s1, fn1).attack).toEqual(3);
-  const s2 = playActions(s1, [
+  const tg = new TestGame()
+    .insertFixture(testp2Id, fixtureNames.tech1)
+    .setGold(testp1Id, 20)
+    .setGold(testp2Id, 20)
+    .putCardsInHand(testp2Id, ["iron_man", "iron_man"])
+    .insertEntities(testp1Id, ["fruit_ninja", "fruit_ninja"]);
+  const [tb, fn1, fn2] = tg.insertedEntityIds;
+  expect(getCurrentValues(tg.state, fn1).attack).toEqual(3);
+  const s2 = playActions(tg.state, [
     { type: "endTurn" },
     { type: "play", card: "iron_man" },
     { type: "play", card: "iron_man" }
@@ -124,7 +121,7 @@ test("Brick Thief can steal a brick from enemy base at start of game", () => {
   expect(s3.log).toContain("Brick Thief repairs 1 damage from base.");
 });
 
-test.only("Brick Thief can steal a brick from opposing building", () => {
+test("Brick Thief can steal a brick from opposing building", () => {
   const tg = new TestGame()
     .insertFixture(testp1Id, fixtureNames.tower)
     .putCardsInHand(testp1Id, ["brick_thief"]);

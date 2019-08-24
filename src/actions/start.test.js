@@ -1,4 +1,4 @@
-import CodexGame from "../codex";
+import CodexGame from "../game";
 
 test("Can start a game", () => {
   const pregameState = { playerList: ["player1", "player2"] };

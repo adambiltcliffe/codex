@@ -1,8 +1,8 @@
+import { types, targetMode } from "./cardinfo/constants";
 import log from "./log";
-import { givePlayerGold, getAP } from "./util";
+import { givePlayerGold } from "./util";
 import { drawCards } from "./draw";
 import resolveAttackTriggers from "./resolveattack";
-import { types, targetMode } from "./cardinfo";
 
 const triggerInfo = {
   ...resolveAttackTriggers,
