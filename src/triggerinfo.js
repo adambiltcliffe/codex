@@ -1,6 +1,6 @@
 import { types, targetMode } from "./cardinfo/constants";
 import log from "./log";
-import { givePlayerGold } from "./util";
+import { givePlayerGold, getAP } from "./util";
 import { drawCards } from "./draw";
 import resolveAttackTriggers from "./resolveattack";
 
@@ -48,6 +48,21 @@ const triggerInfo = {
       log.add(
         state,
         `${hero.current.name} gains ${gain} level${gain == 1 ? "" : "s"}.`
+      );
+    }
+  },
+  tech: {
+    prompt: "Choose cards to tech",
+    //targetMode: targetMode.codex,
+    targetCount: 2,
+    maySkipSearch: ({ state }) => {
+      return !getAP(state).mustTech;
+    },
+    action: ({ state, choices }) => {
+      const ap = getAP(state);
+      log.add(
+        state,
+        log.fmt`${ap} ${ap.mustTech ? "must" : "may"} tech 2 cards.`
       );
     }
   }

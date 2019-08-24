@@ -1,5 +1,6 @@
 # Tests to write
 
+Correctly report gaining 0 gold from workers in upkeep
 Requirement for tech buildings to play units
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike

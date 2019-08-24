@@ -13,6 +13,7 @@ import upperFirst from "lodash/upperFirst";
 import { drawCards } from "./draw";
 
 export const phases = {
+  tech: "P_TECH",
   ready: "P_READY",
   upkeep: "P_UPKEEP",
   main: "P_MAIN",
@@ -20,20 +21,36 @@ export const phases = {
 };
 
 export function advanceTurn(state) {
+  const oldAP = getAP(state);
+  oldAP.mustTech = oldAP.workers < 10;
   state.turn++;
   state.activePlayerIndex += 1;
   state.activePlayerIndex %= state.playerList.length;
   // have to do this because of "X during your turn" effects
   applyStateBasedEffects(state);
-  enterReadyPhase(state);
+  enterTechPhase(state);
 }
 
 export function advancePhase(state) {
-  if (state.phase == phases.ready) {
+  if (state.phase == phases.tech) {
+    enterReadyPhase(state);
+  } else if (state.phase == phases.ready) {
     enterUpkeepPhase(state);
   } else if (state.phase == phases.upkeep) {
     enterMainPhase(state);
   }
+}
+
+export function enterTechPhase(state) {
+  state.phase = phases.tech;
+  if (state.turn < state.playerList.length) {
+    // it's a player's first turn so they cannot tech
+    return;
+  }
+  state.newTriggers.push({
+    path: "triggerInfo.tech",
+    triggerSilently: true
+  });
 }
 
 export function enterReadyPhase(state) {

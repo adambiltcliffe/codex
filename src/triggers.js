@@ -22,7 +22,7 @@ export function addSpellToQueue(state, trigger) {
 
 export function addTriggerToQueue(state, trigger) {
   state.queue.push(trigger);
-  if (!trigger.isActivatedAbility) {
+  if (!trigger.isActivatedAbility && !trigger.triggerSilently) {
     const desc =
       "Triggered action" +
       (trigger.sourceId
