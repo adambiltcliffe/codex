@@ -94,13 +94,19 @@ const finesseCardInfo = {
             action: ({ state, choices }) => {
               const ap = getAP(state);
               if (choices.index == 0) {
-                log.add(state, log.fmt`${ap} chooses top of draw pile.`);
+                log.add(
+                  state,
+                  log.fmt`${ap} puts Appel Stomp on top of their draw pile.`
+                );
                 state.updateHidden(fs => {
                   fs.players[ap.id].deck.unshift(fs.playedCard);
                 });
                 delete state.playedCard;
               } else {
-                log.add(state, log.fmt`${ap} chooses discard.`);
+                log.add(
+                  state,
+                  log.fmt`${ap} puts Appel Stomp in their discard.`
+                );
               }
             }
           }
