@@ -41,5 +41,6 @@ export const specs = {
 
 export const targetMode = {
   single: "TM_1",
+  modal: "TM_MODAL",
   obliterate: "TM_OBLITERATE"
 };

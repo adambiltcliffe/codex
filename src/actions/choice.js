@@ -5,6 +5,7 @@ import log from "../log";
 import { targetMode } from "../cardinfo";
 import { getObliterateTargets } from "../cardinfo/abilities/obliterate";
 
+import range from "lodash/range";
 import some from "lodash/some";
 
 export function checkChoiceAction(state, action) {
@@ -43,6 +44,14 @@ export function checkChoiceAction(state, action) {
         }
       });
       return true;
+    case targetMode.modal:
+      if (!Number.isInteger(action.index)) {
+        throw new Error("action.index must be a number");
+      }
+      if (action.index < 0 || action.index >= stepDef.options.length) {
+        throw new Error("Index is out of range");
+      }
+      return true;
   }
 }
 
@@ -54,12 +63,9 @@ export function doChoiceAction(state, action) {
     choices = choices[state.currentTrigger.stepIndex];
     stepDef = def.steps[state.currentTrigger.stepIndex];
   }
-  /* const prompt = def.steps
-    ? def.steps[state.currentTrigger.stepIndex].prompt
-    : def.prompt; */
   switch (stepDef.targetMode) {
     case targetMode.single:
-      choices.targetId = action.target || null;
+      choices.targetId = action.target;
       const target = state.entities[action.target];
       if (
         stepDef.hasTargetSymbol &&
@@ -69,7 +75,12 @@ export function doChoiceAction(state, action) {
         getAP(state).gold -= resistCost;
       }
       log.add(state, log.fmt`${getAP(state)} chooses ${target.current.name}.`);
+      break;
     case targetMode.obliterate:
-      choices.targetIds = action.targets || null;
+      choices.targetIds = action.targets;
+      break;
+    case targetMode.modal:
+      choices.index = action.index;
+      break;
   }
 }

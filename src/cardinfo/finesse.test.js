@@ -238,3 +238,44 @@ test("Discord kills small units", () => {
   expect(tg.state.entities[bt]).toBeUndefined();
   expect(tg.state.entities[tm]).toBeUndefined();
 });
+
+test("Sidelining a patroller with Appel Stomp and putting it back", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["older_brother", "tenderfoot", "fruit_ninja"])
+    .insertEntity(testp2Id, "river_montoya");
+  const [ob, tf, fn, river] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { level: 5, controlledSince: -1, maxedSince: -1 })
+    .playAction({ type: "endTurn", patrollers: [ob, tf, null, null, null] })
+    .putCardsInHand(testp2Id, ["appel_stomp"]);
+  expect(tg.state.players[testp2Id].hand.length).toEqual(6);
+  expect(tg.state.players[testp2Id].deck.length).toEqual(5);
+  expect(tg.state.players[testp2Id].discard.length).toEqual(0);
+  const topCard = tg.state.players[testp2Id].deck[0];
+  tg.playAction({ type: "play", card: "appel_stomp" });
+  expect(tg.getLegalChoices().sort()).toEqual([ob, tf].sort());
+  tg.playAction({ type: "choice", target: ob });
+  expect(tg.state.players[testp2Id].hand.length).toEqual(6);
+  expect(tg.state.players[testp2Id].deck.length).toEqual(4);
+  expect(tg.state.players[testp2Id].hand).toContain(topCard);
+  tg.playAction({ type: "choice", index: 0 });
+  expect(tg.state.players[testp1Id].patrollerIds[0]).toBeNull();
+  expect(tg.state.players[testp2Id].hand.length).toEqual(6);
+  expect(tg.state.players[testp2Id].deck.length).toEqual(5);
+  expect(tg.state.players[testp2Id].deck[0]).toEqual("appel_stomp");
+  expect(tg.state.players[testp2Id].discard.length).toEqual(0);
+});
+
+test("Sidelining a patroller with Appel Stomp and discarding it", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "older_brother")
+    .insertEntity(testp2Id, "river_montoya");
+  const [ob, river] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { level: 5, controlledSince: -1, maxedSince: -1 })
+    .playAction({ type: "endTurn", patrollers: [ob, null, null, null, null] })
+    .putCardsInHand(testp2Id, ["appel_stomp"]);
+  tg.playAction({ type: "play", card: "appel_stomp" });
+  tg.playAction({ type: "choice", index: 1 });
+  expect(tg.state.players[testp2Id].hand.length).toEqual(6);
+  expect(tg.state.players[testp2Id].deck.length).toEqual(4);
+  expect(tg.state.players[testp2Id].discard).toEqual(["appel_stomp"]);
+});

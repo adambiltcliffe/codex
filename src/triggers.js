@@ -103,6 +103,8 @@ export function canResolveCurrentTrigger(state) {
         stepDef.targetCount
       );
       return maybe.length == 0;
+    case targetMode.modal:
+      return choices.index !== undefined;
   }
 }
 
@@ -129,7 +131,7 @@ export function resolveCurrentTrigger(state) {
   ) {
     state.currentTrigger.stepIndex++;
   } else {
-    if (state.currentTrigger.isSpell) {
+    if (state.currentTrigger.isSpell && state.playedCard !== undefined) {
       state.updateHidden(fs => {
         getAP(fs).discard.push(fs.playedCard);
         delete fs.playedCard;

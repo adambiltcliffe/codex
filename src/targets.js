@@ -78,5 +78,7 @@ export function getLegalChoicesForStep(state, stepDef) {
         stepDef.targetCount
       );
       return maybe.map(e => e.id);
+    case targetMode.modal:
+      return range(stepDef.options.length);
   }
 }

@@ -12,6 +12,8 @@ import { getAP, andJoinVerb } from "../util";
 
 import forEach from "lodash/forEach";
 import { attachEffectThisTurn } from "../effects";
+import { isPatrolling, sideline } from "../patrolzone";
+import { drawCards } from "../draw";
 
 const finesseCardInfo = {
   discord: {
@@ -67,7 +69,42 @@ const finesseCardInfo = {
     abilities: [
       {
         isSpellEffect: true,
-        steps: []
+        steps: [
+          {
+            prompt: "Choose a patroller to sideline",
+            hasTargetSymbol: true,
+            targetMode: targetMode.single,
+            targetTypes: [types.unit, types.hero],
+            canTarget: ({ state, target }) => isPatrolling(state, target),
+            action: ({ state, choices }) => {
+              const target = state.entities[choices.targetId];
+              sideline(state, target);
+              log.add(state, `${target.current.name} is sidelined.`);
+            }
+          },
+          {
+            action: ({ state }) => {
+              drawCards(state, getAP(state).id, 1, " from Appel Stomp");
+            }
+          },
+          {
+            prompt: "Choose where to put Appel Stomp",
+            targetMode: targetMode.modal,
+            options: ["On top of your draw pile", "In your discard pile"],
+            action: ({ state, choices }) => {
+              const ap = getAP(state);
+              if (choices.index == 0) {
+                log.add(state, log.fmt`${ap} chooses top of draw pile.`);
+                state.updateHidden(fs => {
+                  fs.players[ap.id].deck.unshift(fs.playedCard);
+                });
+                delete state.playedCard;
+              } else {
+                log.add(state, log.fmt`${ap} chooses discard.`);
+              }
+            }
+          }
+        ]
       }
     ]
   },

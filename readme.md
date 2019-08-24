@@ -52,8 +52,6 @@ Flyer with stealth abilities doesn't fly over AA units
 
 # Game features not implemented:
 
-Modal choice on spell resolution (> Appel Stomp)
-Replacement card destination after spell resolution (> Appel Stomp)
 Ongoing spell & channelling (> Harmony)
 Tokens (> Harmony)
 When-you-play trigger (> Harmony)
@@ -87,6 +85,8 @@ Make Flagbearer not an ability (to support Vortoss Emblem)
 
 Make hero level up on death happen faster than other death triggers
 
+Choosing an opponent (update Discord)
+
 # Other stuff to do
 
 Tidy up the way making choices and queuing triggers is reported
@@ -96,6 +96,7 @@ Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities
 Move suggest into a module and write tests for it
+Add suggestions for targetMode.modal
 Add suggestions for building fixtures
 Move abilities/ out of cardinfo/ to untangle some imports
 Store 'patrolSlot' in entity.current to simplify attack logic
