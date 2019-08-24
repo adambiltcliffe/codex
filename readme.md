@@ -1,25 +1,3 @@
-# Game features implemented:
-
-Decks and drawing cards
-Workers generating gold, making new workers
-Units
-Base
-Combat
-Heroes
-Tech buildings and add-ons with base damage when they die
-Ability to level up heroes
-Upkeep/arrival/attack triggers
-Activated abilities
-Choice of order when adding triggers to queue
-Automatic resolution of triggers when only one choice exists and skipping if none
-Passive effects on units: modify own/others' stats, add abilities, modify costs to play cards
-Frenzy, haste, flying, anti-air, invisible, healing, resist, overpower, sparkshot, readiness, stealth
-Patrol zone with bonuses for squad leader, elite, scavenger, technician and lookout
-Spell casting including checking if you have the right hero and ultimate spells
-Flagbearer ability
-+1/+1 and -1/-1 runes
-Effects that last for the current turn
-
 # Tests to write
 
 Requirement for tech buildings to play units
