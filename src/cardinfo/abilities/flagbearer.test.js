@@ -10,7 +10,7 @@ import {
   withGoldSetTo,
   TestGame
 } from "../../testutil";
-import CodexGame from "../../codex";
+import CodexGame from "../../game";
 import { fixtureNames } from "../../fixtures";
 
 test("Spells must target flagbearer", () => {

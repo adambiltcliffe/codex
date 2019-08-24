@@ -6,7 +6,7 @@ import {
   playActions,
   findEntityIds
 } from "./testutil";
-import CodexGame from "./codex";
+import CodexGame from "./game";
 
 test("Workers generate gold during upkeep", () => {
   const s0 = getNewGame();

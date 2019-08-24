@@ -1,4 +1,4 @@
-import CodexGame from "../codex";
+import CodexGame from "../game";
 import {
   findEntityIds,
   getNewGame,

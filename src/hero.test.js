@@ -10,7 +10,7 @@ import {
   TestGame
 } from "./testutil";
 import { getCurrentValues } from "./entities";
-import CodexGame from "./codex";
+import CodexGame from "./game";
 
 test("Summoning hero and levelling up", () => {
   const s0 = getNewGame();

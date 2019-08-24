@@ -1,4 +1,4 @@
-import produce, { createDraft, finishDraft, isDraft } from "immer";
+import { createDraft, finishDraft } from "immer";
 
 import fixtures, { fixtureNames } from "./fixtures";
 import log from "./log";

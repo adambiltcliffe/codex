@@ -1,5 +1,5 @@
 import { types } from "./cardinfo/constants";
-import CodexGame from "./codex";
+import CodexGame from "./game";
 import {
   createUnit,
   createHero,

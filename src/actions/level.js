@@ -1,7 +1,7 @@
 import { types } from "../cardinfo";
 import { getAP } from "../util";
 import log from "../log";
-import { getCurrentValues, getName, applyStateBasedEffects } from "../entities";
+import { getCurrentValues, applyStateBasedEffects } from "../entities";
 
 export function checkLevelAction(state, action) {
   const ap = getAP(state);

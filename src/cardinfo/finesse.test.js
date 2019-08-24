@@ -15,7 +15,7 @@ import {
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
-import CodexGame from "../codex";
+import CodexGame from "../game";
 import { hasKeyword, haste } from "./abilities/keywords";
 
 test("Nimble Fencer gives herself and other Virtuosos haste", () => {

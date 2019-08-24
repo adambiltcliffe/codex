@@ -14,8 +14,7 @@ import {
   TestGame
 } from "../testutil";
 import { getCurrentValues } from "../entities";
-import CodexGame from "../codex";
-import produce from "immer";
+import CodexGame from "../game";
 
 test("Timely Messenger can attack with haste", () => {
   const tg = new TestGame()

@@ -11,7 +11,7 @@ import {
   withGoldSetTo,
   TestGame
 } from "./testutil";
-import CodexGame from "./codex";
+import CodexGame from "./game";
 import { fixtureNames } from "./fixtures";
 import { getCurrentValues } from "./entities";
 import forEach from "lodash/forEach";
