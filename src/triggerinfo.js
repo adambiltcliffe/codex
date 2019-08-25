@@ -55,8 +55,8 @@ const triggerInfo = {
     prompt: "Choose cards to tech",
     //targetMode: targetMode.codex,
     targetCount: 2,
-    maySkipSearch: ({ state }) => {
-      return !getAP(state).mustTech;
+    mustFindFullAmount: ({ state }) => {
+      return getAP(state).mustTech;
     },
     action: ({ state, choices }) => {
       const ap = getAP(state);
