@@ -1,5 +1,7 @@
 # Tests to write
 
+Checking players' specs when starting game
+Starting with right cards in codex, command zone and deck
 Correctly report gaining 0 gold from workers in upkeep
 Requirement for tech buildings to play units
 Blademaster: other units have swift strike
@@ -40,7 +42,7 @@ State trigger (> Two-step)
 Temporary detection by tower on own turn
 
 Avoid leaking minor information when workering
-Codex and tech phase
+Teching cards
 Victory condition
 
 # Game features not implemented, not needed for BvF:

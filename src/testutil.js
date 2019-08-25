@@ -18,7 +18,10 @@ export const testp2Id = "test_player2";
 
 export function getNewGame() {
   const playerList = [testp1Id, testp2Id];
-  const { state } = CodexGame.playAction({ playerList }, { type: "start" });
+  const { state } = CodexGame.playAction(
+    { playerList },
+    { type: "start", specs: { [testp1Id]: [], [testp2Id]: [] } }
+  );
   return state;
 }
 
@@ -128,6 +131,12 @@ export class TestGame {
   setWorkers(playerId, amount) {
     this.state = produce(this.state, draft => {
       draft.players[playerId].workers = amount;
+    });
+    return this;
+  }
+  putHeroInCommandZone(playerId, hero) {
+    this.state = produce(this.state, draft => {
+      draft.players[playerId].commandZone.push(hero);
     });
     return this;
   }

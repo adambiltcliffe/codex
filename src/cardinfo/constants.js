@@ -39,6 +39,29 @@ export const specs = {
   finesse: "FINESSE"
 };
 
+export const specColors = {
+  [specs.anarchy]: colors.red,
+  [specs.blood]: colors.red,
+  [specs.fire]: colors.red,
+  [specs.balance]: colors.green,
+  [specs.feral]: colors.green,
+  [specs.growth]: colors.green,
+  [specs.law]: colors.blue,
+  [specs.peace]: colors.blue,
+  [specs.truth]: colors.blue,
+  [specs.demonology]: colors.black,
+  [specs.disease]: colors.black,
+  [specs.necromancy]: colors.black,
+  [specs.discipline]: colors.white,
+  [specs.ninjutsu]: colors.white,
+  [specs.strength]: colors.white,
+  [specs.past]: colors.purple,
+  [specs.present]: colors.purple,
+  [specs.future]: colors.purple,
+  [specs.bashing]: colors.neutral,
+  [specs.finesse]: colors.neutral
+};
+
 export const targetMode = {
   single: "TM_1",
   modal: "TM_MODAL",

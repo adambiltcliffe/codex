@@ -13,8 +13,9 @@ import { getCurrentValues } from "./entities";
 import CodexGame from "./game";
 
 test("Summoning hero and levelling up", () => {
-  const s0 = getNewGame();
-  s0.players[testp1Id].gold = 9;
+  const s0 = new TestGame()
+    .setGold(testp1Id, 9)
+    .putHeroInCommandZone(testp1Id, "troq_bashar").state;
   const s1 = playActions(s0, [{ type: "summon", hero: "troq_bashar" }]);
   const troq = findEntityIds(s1, e => e.card == "troq_bashar")[0];
   expect(s1.players[testp1Id].gold).toEqual(7);
@@ -36,8 +37,9 @@ test("Summoning hero and levelling up", () => {
 });
 
 test("Can't level hero past max", () => {
-  const s0 = getNewGame();
-  s0.players[testp1Id].gold = 20;
+  const s0 = new TestGame()
+    .setGold(testp1Id, 20)
+    .putHeroInCommandZone(testp1Id, "troq_bashar").state;
   const s1 = playActions(s0, [{ type: "summon", hero: "troq_bashar" }]);
   const troq = findEntityIds(s1, e => e.card == "troq_bashar")[0];
   expect(() =>
@@ -49,7 +51,7 @@ test("Can't level hero past max", () => {
 });
 
 test("Can't level hero without paying for it", () => {
-  const s0 = getNewGame();
+  const s0 = new TestGame().putHeroInCommandZone(testp1Id, "troq_bashar").state;
   const s1 = playActions(s0, [{ type: "summon", hero: "troq_bashar" }]);
   const troq = findEntityIds(s1, e => e.card == "troq_bashar")[0];
   expect(() =>
@@ -61,7 +63,9 @@ test("Can't level hero without paying for it", () => {
 });
 
 test("Levelling up a hero to mid/maxband heals all damage", () => {
-  const s0 = getGameWithUnits([], ["older_brother", "iron_man"]);
+  const s0 = new TestGame()
+    .insertEntities(testp2Id, ["older_brother", "iron_man"])
+    .putHeroInCommandZone(testp1Id, "troq_bashar").state;
   const s1 = playActions(s0, [{ type: "summon", hero: "troq_bashar" }]);
   const troq = findEntityIds(s1, e => e.card == "troq_bashar")[0];
   const ob = findEntityIds(s1, e => e.card == "older_brother")[0];
@@ -289,7 +293,7 @@ test("Hero dies on opponent's turn, cooldown on your next turn", () => {
 test("Can play a different hero when one is on cooldown", () => {
   const tg = new TestGame()
     .insertEntity(testp1Id, "river_montoya")
-    .insertEntity(testp2Id, "eggship");
+    .insertEntity(testp2Id, "eggship").putHeroInCommandZone(testp1Id,'troq_bashar')
   const [river, es] = tg.insertedEntityIds;
   tg.playActions([
     { type: "endTurn" },

@@ -1,5 +1,22 @@
-import { buildSingleCodex, playableSpecs } from "./codex";
-import { specs } from "./cardinfo";
+import { buildSingleCodex, buildStarterDeck, playableSpecs } from "./codex";
+import { specs, specColors, colors } from "./cardinfo";
+
+import uniq from "lodash/uniq";
+
+test("Building neutral starter deck", () => {
+  expect(buildStarterDeck(colors.neutral)).toEqual([
+    "timely_messenger",
+    "tenderfoot",
+    "older_brother",
+    "brick_thief",
+    "helpful_turtle",
+    "granfalloon_flagbearer",
+    "fruit_ninja",
+    "spark",
+    "bloom",
+    "wither"
+  ]);
+});
 
 test("Building a single-spec codex for Bashing", () => {
   expect(buildSingleCodex(specs.bashing)).toEqual([
@@ -16,6 +33,13 @@ test("Building a single-spec codex for Bashing", () => {
     { card: "harvest_reaper", n: 2 },
     { card: "trojan_duck", n: 2 }
   ]);
+});
+
+test("Each playable spec has a starter deck of 10 cards", () => {
+  const playableColors = uniq(playableSpecs.map(s => specColors[s]));
+  playableColors.forEach(c => {
+    expect(buildStarterDeck(c)).toHaveLength(10);
+  });
 });
 
 test("Each playable spec has 12 codex cards", () => {

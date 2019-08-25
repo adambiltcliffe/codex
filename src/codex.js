@@ -1,8 +1,23 @@
 import cardInfo, { types, specs } from "./cardinfo";
 
+import findKey from "lodash/findKey";
 import reduce from "lodash/reduce";
 
 export const playableSpecs = [specs.bashing];
+
+export function getHero(spec) {
+  return findKey(cardInfo, v => v.type == types.hero && v.spec == spec);
+}
+
+export function buildStarterDeck(color) {
+  return reduce(
+    cardInfo,
+    (a, v, k) => {
+      return v.color == color && v.spec === undefined ? a.concat(k) : a;
+    },
+    []
+  );
+}
 
 export function buildSingleCodex(spec) {
   return reduce(
