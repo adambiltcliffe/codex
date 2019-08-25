@@ -9,9 +9,6 @@ Blademaster: if it dies when defending without killing attacker, other units don
 Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
-Stealth unit can't attack backline if tower has unused detector
-Stealth unit can't attack backline if tower detected it previously
-Stealth unit can attack backline if tower has used detector
 
 # Tests to write later
 

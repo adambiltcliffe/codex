@@ -25,7 +25,8 @@ export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
     damage: 0,
     armor: 0,
     ready: true,
-    effects: []
+    effects: [],
+    thisTurn: {}
   };
   state.entities[newBuilding.id] = newBuilding;
   state.nextId++;
@@ -371,11 +372,12 @@ function checkForEndOfGame(state) {
     state.players,
     p => state.entities[p.current.fixtures[fixtureNames.base]].damage
   );
-  if (max(baseDmg) >=20 ) {
+  if (max(baseDmg) >= 20) {
     const winner = findKey(
       state.players,
       p =>
-        state.entities[p.current.fixtures[fixtureNames.base]].damage == min(baseDmg)
+        state.entities[p.current.fixtures[fixtureNames.base]].damage ==
+        min(baseDmg)
     );
     state.result = { winner };
     log.add(state, log.fmt`${state.players[winner]} wins the game.`);
