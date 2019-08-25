@@ -8,7 +8,11 @@ import { getEffectDefinition, expireEffects } from "./effects";
 import cardInfo, { types } from "./cardinfo";
 
 import get from "lodash/get";
+import findKey from "lodash/findKey";
 import forEach from "lodash/forEach";
+import map from "lodash/map";
+import min from "lodash/min";
+import max from "lodash/max";
 import upperFirst from "lodash/upperFirst";
 import { getAP } from "./util";
 
@@ -355,8 +359,25 @@ export function applyStateBasedEffects(state) {
     forEach(state.entities, u => {
       if (u.damage >= u.current.hp) {
         const wasKilled = killEntity(state, u.id);
-        stable = !wasKilled;
+        stable &= !wasKilled;
       }
     });
+  }
+  checkForEndOfGame(state);
+}
+
+function checkForEndOfGame(state) {
+  const baseDmg = map(
+    state.players,
+    p => state.entities[p.current.fixtures[fixtureNames.base]].damage
+  );
+  if (max(baseDmg) >=20 ) {
+    const winner = findKey(
+      state.players,
+      p =>
+        state.entities[p.current.fixtures[fixtureNames.base]].damage == min(baseDmg)
+    );
+    state.result = { winner };
+    log.add(state, log.fmt`${state.players[winner]} wins the game.`);
   }
 }

@@ -40,6 +40,7 @@ class CodexGame extends Game {
             if (p != k) {
               delete s.players[p].hand;
               delete s.players[p].discard;
+              delete s.players[p].codex;
             }
           }
         }
@@ -89,7 +90,7 @@ class CodexGame extends Game {
     }
     // We stop the simulation when we can't continue without a player acting
     let needAction = false;
-    while (needAction == false) {
+    while (needAction == false && !state.result) {
       if (state.newTriggers.length == 1) {
         addTriggerToQueue(state, state.newTriggers.shift());
       }
@@ -131,6 +132,9 @@ class CodexGame extends Game {
     delete state.updateHidden;
   }
   static checkAction(state, action) {
+    if (state.result) {
+      throw new Error("The game has ended");
+    }
     if (typeof action != "object") {
       throw new Error("Action was not an object");
     }

@@ -22,7 +22,12 @@ function initialisePlayerState(state, playerIndex, playerSpecs) {
     const deck = buildStarterDeck(starterColor);
     knuthShuffle(deck);
     const hand = deck.splice(0, 5);
-    fs.players[player] = { hand, deck, discard: [] };
+    fs.players[player] = {
+      hand,
+      deck,
+      discard: [],
+      codex: flatMap(uniqueSpecs, buildSingleCodex)
+    };
   });
   state.players[player].id = player;
   state.players[player].workers = playerIndex == 0 ? 4 : 5;
@@ -30,7 +35,6 @@ function initialisePlayerState(state, playerIndex, playerSpecs) {
   state.players[player].paidFixtures = [];
   state.players[player].patrollerIds = emptyPatrolZone;
   state.players[player].commandZone = uniqueSpecs.map(s => getHero(s));
-  state.players[player].codex = flatMap(uniqueSpecs, buildSingleCodex);
   state.players[player].heroCooldowns = {};
   state.players[player].mustTech = false;
   createBuildingFixture(state, player, fixtureNames.base, true);

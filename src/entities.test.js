@@ -29,3 +29,17 @@ test("Destroying a building deals 2 damage to base", () => {
   expect(tg.state.entities[p1base].damage).toEqual(2);
   expect(tg.state.log).toContain("Base takes 2 damage.");
 });
+
+test("Game ends when a player's base is reduced to 0hp", () => {
+  const tg = new TestGame().insertEntity(testp1Id, "timely_messenger");
+  const [tm] = tg.insertedEntityIds;
+  const p2base = tg.findBaseId(testp2Id);
+  expect(tg.state.result).toBeUndefined();
+  tg.modifyEntity(p2base, { damage: 19 }).playAction({
+    type: "attack",
+    attacker: tm,
+    target: p2base
+  });
+  expect(tg.state.result).toEqual({ winner: testp1Id });
+  expect(tg.state.log).toContain(`\${${testp1Id}} wins the game.`);
+});
