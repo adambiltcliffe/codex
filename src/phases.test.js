@@ -4,7 +4,8 @@ import {
   testp1Id,
   testp2Id,
   playActions,
-  findEntityIds
+  findEntityIds,
+  TestGame
 } from "./testutil";
 import CodexGame from "./game";
 
@@ -25,6 +26,13 @@ test("Workers generate gold during upkeep", () => {
   expect(s2.activePlayerIndex).toEqual(0);
   expect(s2.players[testp1Id].gold).toEqual(8);
   expect(s2.players[testp2Id].gold).toEqual(5);
+});
+
+test("Correctly report the case where a player gains 0 gold from workers", () => {
+  const tg = new TestGame()
+    .setGold(testp2Id, 20)
+    .playAction({ type: "endTurn" });
+  expect(tg.state.log).toContain(`\${${testp2Id}} gains 0 gold from workers.`);
 });
 
 test("Units become exhausted when attacking and ready next turn", () => {

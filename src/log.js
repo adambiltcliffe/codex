@@ -1,6 +1,8 @@
 function rep(thing) {
   if (typeof thing == "object") {
     return `\$\{${thing.id}\}`;
+  } else if (typeof thing == "number") {
+    return thing.toString();
   } else {
     return thing;
   }
