@@ -1,7 +1,5 @@
 # Tests to write
 
-Checking players' specs when starting game
-Starting with right cards in codex, command zone and deck
 Requirement for tech buildings to play units
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
@@ -15,6 +13,7 @@ Trojan Duck: if kill attack target with trigger, choose new one
 \*Unstoppable
 Long-range
 Scorch and Fire Dart
+Starting with right cards in codex, command zone and deck for 3-hero game
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
 Flying plus overpower and legal targets to redirect to (Void Star)
 Sparkshot/overpower unit can't kill only additional patroller with SS and overpower to base (Blooming Elm)
