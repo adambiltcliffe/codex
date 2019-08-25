@@ -2,7 +2,6 @@
 
 Checking players' specs when starting game
 Starting with right cards in codex, command zone and deck
-Correctly report gaining 0 gold from workers in upkeep
 Requirement for tech buildings to play units
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
@@ -10,9 +9,6 @@ Blademaster: if it dies when defending without killing attacker, other units don
 Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
-Final Smash: if no tech 0 unit exists, can still do the tech 1 and 2 bits
-Final Smash: if 2 targets for each tech level, have to choose for each
-Final Smash: if only one choice for tech 0 and tech 2, still choose tech 1
 Stealth unit can't attack backline if tower has unused detector
 Stealth unit can't attack backline if tower detected it previously
 Stealth unit can attack backline if tower has used detector

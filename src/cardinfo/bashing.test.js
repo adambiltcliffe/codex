@@ -176,3 +176,89 @@ test("Final Smash can do all three of its effects", () => {
   expect(tg.state.entities[ll].current.controller).toEqual(testp1Id);
   expect(tg.state.players[testp2Id].hand).toContain("nimble_fencer");
 });
+
+test("Final Smash can do the second and third steps without a target for the first", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, [
+      "iron_man",
+      "revolver_ocelot",
+      "sneaky_pig",
+      "eggship",
+      "trojan_duck"
+    ]);
+  const [troq, im, ro, sp, es, td] = tg.insertedEntityIds;
+  tg.modifyEntity(troq, { level: 8, controlledSince: -1, maxedSince: -1 })
+    .putCardsInHand(testp1Id, ["final_smash"])
+    .setGold(testp1Id, 6)
+    .playAction({ type: "play", card: "final_smash" });
+  expect(tg.state.log).toContain(
+    "Choose a tech 0 unit to destroy: No legal choices."
+  );
+  expect(tg.getLegalChoices().sort()).toEqual([im, ro].sort());
+  tg.playAction({ type: "choice", target: im });
+  expect(tg.state.log).toContain(
+    `Iron Man is returned to \${${testp2Id}}'s hand.`
+  );
+  expect(tg.getLegalChoices().sort()).toEqual([sp, es].sort());
+  tg.playAction({ type: "choice", target: es });
+  expect(tg.state.log).toContain(`\${${testp1Id}} gains control of Eggship.`);
+  expect(tg.state.currentTrigger).toBeNull();
+});
+
+test("Final Smash requires a target for each step if needed", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, [
+      "tenderfoot",
+      "older_brother",
+      "iron_man",
+      "revolver_ocelot",
+      "sneaky_pig",
+      "eggship",
+      "trojan_duck"
+    ]);
+  const [troq, tf, ob, im, ro, sp, es, td] = tg.insertedEntityIds;
+  tg.modifyEntity(troq, { level: 8, controlledSince: -1, maxedSince: -1 })
+    .putCardsInHand(testp1Id, ["final_smash"])
+    .setGold(testp1Id, 6)
+    .playAction({ type: "play", card: "final_smash" });
+  expect(tg.getLegalChoices().sort()).toEqual([tf, ob].sort());
+  tg.playAction({ type: "choice", target: ob });
+  expect(tg.state.log).toContain("Older Brother dies.");
+  expect(tg.getLegalChoices().sort()).toEqual([im, ro].sort());
+  tg.playAction({ type: "choice", target: im });
+  expect(tg.state.log).toContain(
+    `Iron Man is returned to \${${testp2Id}}'s hand.`
+  );
+  expect(tg.getLegalChoices().sort()).toEqual([sp, es].sort());
+  tg.playAction({ type: "choice", target: es });
+  expect(tg.state.log).toContain(`\${${testp1Id}} gains control of Eggship.`);
+  expect(tg.state.currentTrigger).toBeNull();
+});
+
+test("Final Smash can auto-target some steps and prompt for others", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, [
+      "older_brother",
+      "iron_man",
+      "revolver_ocelot",
+      "sneaky_pig"
+    ]);
+  const [troq, ob, im, ro, sp] = tg.insertedEntityIds;
+  tg.modifyEntity(troq, { level: 8, controlledSince: -1, maxedSince: -1 })
+    .putCardsInHand(testp1Id, ["final_smash"])
+    .setGold(testp1Id, 6)
+    .playAction({ type: "play", card: "final_smash" });
+  expect(tg.state.log).toContain("Older Brother dies.");
+  expect(tg.getLegalChoices().sort()).toEqual([im, ro].sort());
+  tg.playAction({ type: "choice", target: im });
+  expect(tg.state.log).toContain(
+    `Iron Man is returned to \${${testp2Id}}'s hand.`
+  );
+  expect(tg.state.log).toContain(
+    `\${${testp1Id}} gains control of Sneaky Pig.`
+  );
+  expect(tg.state.currentTrigger).toBeNull();
+});
