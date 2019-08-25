@@ -105,6 +105,8 @@ export function canResolveCurrentTrigger(state) {
       return maybe.length == 0;
     case targetMode.modal:
       return choices.index !== undefined;
+    case targetMode.codex:
+      return choices.indices !== undefined;
   }
 }
 

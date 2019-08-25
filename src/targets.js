@@ -10,6 +10,8 @@ import { getAP } from "./util";
 import { patrolSlots } from "./patrolzone";
 import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
+import range from "lodash/range";
+
 export function getResistCost(state, entity) {
   const bonusResist =
     state.players[entity.current.controller].patrollerIds[
@@ -80,5 +82,8 @@ export function getLegalChoicesForStep(state, stepDef) {
       return maybe.map(e => e.id);
     case targetMode.modal:
       return range(stepDef.options.length);
+    case targetMode.codex:
+      const ap = getAP(state);
+      return range(ap.codex.length).filter(k => ap.codex[k].n > 0);
   }
 }

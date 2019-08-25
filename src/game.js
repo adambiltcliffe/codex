@@ -11,7 +11,7 @@ import {
   getLegalChoicesForCurrentTrigger
 } from "./triggers";
 import { getCurrentValues, cacheCurrentValues } from "./entities";
-import { types } from "./cardinfo/constants";
+import { types, specs } from "./cardinfo/constants";
 import { emptyPatrolZone } from "./patrolzone";
 import { enqueueResolveAttack } from "./resolveattack";
 
@@ -182,7 +182,13 @@ class CodexGame extends Game {
   }
   static suggestActions(state) {
     if (!state.started) {
-      return [{ type: "start" }];
+      // make this use correct player IDs
+      return [
+        {
+          type: "start",
+          specs: { player1: [specs.bashing], player2: [specs.bashing] }
+        }
+      ];
     }
     if (state.newTriggers.length > 0) {
       return range(state.newTriggers.length).map(n => ({

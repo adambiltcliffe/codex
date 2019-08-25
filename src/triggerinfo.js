@@ -4,6 +4,8 @@ import { givePlayerGold, getAP } from "./util";
 import { drawCards } from "./draw";
 import resolveAttackTriggers from "./resolveattack";
 
+import sumBy from "lodash/sumBy";
+
 const triggerInfo = {
   ...resolveAttackTriggers,
   scavenger: {
@@ -53,17 +55,37 @@ const triggerInfo = {
   },
   tech: {
     prompt: "Choose cards to tech",
-    //targetMode: targetMode.codex,
-    targetCount: 2,
-    mustFindFullAmount: ({ state }) => {
+    targetMode: targetMode.codex,
+    cardCount: 2,
+    mustFindFullAmount: state => {
       return getAP(state).mustTech;
     },
+    shouldSkipChoice: state => {
+      state.updateHidden(fs => {
+        const ap = getAP(fs);
+        ap.codexCount = sumBy(ap.codex, "n");
+      });
+      return getAP(state).codexCount == 0;
+    },
     action: ({ state, choices }) => {
-      const ap = getAP(state);
-      log.add(
-        state,
-        log.fmt`${ap} ${ap.mustTech ? "must" : "may"} tech 2 cards.`
-      );
+      if (choices.indices) {
+        state.updateHidden(fs => {
+          const ap = getAP(fs);
+          let techedCards = 0;
+          choices.indices.forEach(index => {
+            ap.codex[index].n--;
+            ap.discard.push(ap.codex[index].card);
+            techedCards++;
+          });
+          fs.techResult = techedCards;
+        });
+        log.add(
+          state,
+          log.fmt`${getAP(state)} techs ${state.techResult} card${
+            state.techResult == 1 ? "" : "s"
+          }.`
+        );
+      }
     }
   }
 };

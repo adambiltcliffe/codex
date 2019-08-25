@@ -5,8 +5,10 @@ import log from "../log";
 import { targetMode } from "../cardinfo";
 import { getObliterateTargets } from "../cardinfo/abilities/obliterate";
 
-import range from "lodash/range";
+import countBy from "lodash/countBy";
+import forEach from "lodash/forEach";
 import some from "lodash/some";
+import sumBy from "lodash/sumBy";
 
 export function checkChoiceAction(state, action) {
   if (state.currentTrigger === null) {
@@ -52,6 +54,35 @@ export function checkChoiceAction(state, action) {
         throw new Error("Index is out of range");
       }
       return true;
+    case targetMode.codex:
+      if (!Array.isArray(action.indices)) {
+        throw new Error("action.indices must be an array");
+      }
+      const ap = getAP(state);
+      const counts = countBy(action.indices);
+      const cardsInCodex = sumBy(ap.codex, "n");
+      let total = 0;
+      forEach(counts, (count, index) => {
+        total += count;
+        if (ap.codex[index] === undefined) {
+          throw new Error("Illegal index");
+        }
+        if (ap.codex[index].n < count) {
+          throw new Error("Not enough cards in codex");
+        }
+      });
+      if (total > stepDef.cardCount) {
+        throw new Error("Too many cards");
+      }
+      if (
+        stepDef.mustFindFullAmount &&
+        stepDef.mustFindFullAmount(state) &&
+        total < stepDef.cardCount &&
+        total < cardsInCodex
+      ) {
+        throw new Error("Not enough cards");
+      }
+      return true;
   }
 }
 
@@ -81,6 +112,9 @@ export function doChoiceAction(state, action) {
       break;
     case targetMode.modal:
       choices.index = action.index;
+      break;
+    case targetMode.codex:
+      choices.indices = action.indices;
       break;
   }
 }
