@@ -1,7 +1,6 @@
 # Tests to write
 
 Workering: correct card is removed
-Requirement for tech buildings to play units
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
 Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice

@@ -6,6 +6,7 @@ import {
   testp1Id,
   TestGame
 } from "../testutil";
+import { fixtureNames } from "../fixtures";
 
 test("Can put units into play", () => {
   const s0 = getNewGame();
@@ -20,6 +21,24 @@ test("Can put units into play", () => {
   expect(
     findEntityIds(s1, u => u.owner == testp1Id && u.card == "iron_man").length
   ).toEqual(1);
+});
+
+test("Have to build tech building to play corresponding cards", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["iron_man"])
+    .setWorkers(testp1Id, 6);
+  expect(() => tg.checkAction({ type: "play", card: "iron_man" })).toThrow(
+    "tech"
+  );
+  tg.playAction({ type: "build", fixture: fixtureNames.tech1 });
+  expect(() => tg.checkAction({ type: "play", card: "iron_man" })).toThrow(
+    "tech"
+  );
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  tg.putCardsInHand(testp1Id, ["iron_man"]);
+  expect(() =>
+    tg.checkAction({ type: "play", card: "iron_man" })
+  ).not.toThrow();
 });
 
 test("Can't cast spells without a hero", () => {
