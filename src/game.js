@@ -41,6 +41,7 @@ class CodexGame extends Game {
               delete s.players[p].hand;
               delete s.players[p].discard;
               delete s.players[p].codex;
+              delete s.players[p].secret;
             }
           }
         }

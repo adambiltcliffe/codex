@@ -13,6 +13,7 @@ import {
 import flatMap from "lodash/flatMap";
 import uniq from "lodash/uniq";
 import { colors, specColors } from "../cardinfo";
+import { resetSecret } from "../targets";
 
 function initialisePlayerState(state, playerIndex, playerSpecs) {
   const player = state.playerList[playerIndex];
@@ -28,6 +29,7 @@ function initialisePlayerState(state, playerIndex, playerSpecs) {
       discard: [],
       codex: flatMap(uniqueSpecs, buildSingleCodex)
     };
+    resetSecret(fs, player);
   });
   state.players[player].id = player;
   state.players[player].workers = playerIndex == 0 ? 4 : 5;

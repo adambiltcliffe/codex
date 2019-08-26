@@ -12,6 +12,19 @@ import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
 import range from "lodash/range";
 
+export function wrapSecret(state, playerId, secret, n) {
+  return (((secret + state.players[playerId].secret) % n) + n) % n;
+}
+
+export function unwrapSecret(state, playerId, secret, n) {
+  return (((secret - state.players[playerId].secret) % n) + n) % n;
+}
+
+export function resetSecret(state, playerId) {
+  // call only from within updateHidden
+  state.players[playerId].secret = Math.floor(Math.random() * 1000000);
+}
+
 export function getResistCost(state, entity) {
   const bonusResist =
     state.players[entity.current.controller].patrollerIds[
