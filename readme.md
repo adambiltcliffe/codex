@@ -11,8 +11,6 @@ Tech phase: can't tech cards not in codex or tech 2 if only one left
 Tech phase: can't tech more or less than 2
 Tech phase: can tech fewer cards if codex is empty (or has only 1 card)
 Tech phase: can tech last card in codex
-Winning the game
-Can't continue to play after winning
 
 # Tests to write later
 
