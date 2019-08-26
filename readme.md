@@ -1,5 +1,6 @@
 # Tests to write
 
+Workering: correct card is removed
 Requirement for tech buildings to play units
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
@@ -12,6 +13,8 @@ Tech phase: can't tech cards not in codex or tech 2 if only one left
 Tech phase: can't tech more or less than 2
 Tech phase: can tech fewer cards if codex is empty (or has only 1 card)
 Tech phase: can tech last card in codex
+Winning the game
+Can't continue to play after winning
 
 # Tests to write later
 
@@ -38,9 +41,7 @@ State trigger (> Two-step)
 
 Temporary detection by tower on own turn
 
-Avoid leaking minor information when workering
-Teching cards
-Victory condition
+Avoid leaking (major) information when teching
 
 # Game features not implemented, not needed for BvF:
 
