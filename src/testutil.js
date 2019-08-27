@@ -152,6 +152,12 @@ export class TestGame {
     });
     return this;
   }
+  setCodex(playerId, codex) {
+    this.state = produce(this.state, draft => {
+      draft.players[playerId].codex = codex;
+    });
+    return this;
+  }
   insertFixture(playerId, fixture) {
     let newId = null;
     const newState = produce(this.state, draft => {

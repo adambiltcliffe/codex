@@ -1,6 +1,10 @@
 import { currentTriggerDefinition } from "../triggers";
 import { getAP, andJoin } from "../util";
-import { getResistCost, getLegalChoicesForStep } from "../targets";
+import {
+  getResistCost,
+  getLegalChoicesForStep,
+  unwrapSecrets
+} from "../targets";
 import log from "../log";
 import { targetMode } from "../cardinfo";
 import { getObliterateTargets } from "../cardinfo/abilities/obliterate";
@@ -59,7 +63,13 @@ export function checkChoiceAction(state, action) {
         throw new Error("action.indices must be an array");
       }
       const ap = getAP(state);
-      const counts = countBy(action.indices);
+      const realIndices = unwrapSecrets(
+        state,
+        ap.id,
+        action.indices,
+        ap.codex.length
+      );
+      const counts = countBy(realIndices);
       const cardsInCodex = sumBy(ap.codex, "n");
       let total = 0;
       forEach(counts, (count, index) => {

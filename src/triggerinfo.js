@@ -5,6 +5,7 @@ import { drawCards } from "./draw";
 import resolveAttackTriggers from "./resolveattack";
 
 import sumBy from "lodash/sumBy";
+import { resetSecret, unwrapSecrets } from "./targets";
 
 const triggerInfo = {
   ...resolveAttackTriggers,
@@ -72,12 +73,19 @@ const triggerInfo = {
         state.updateHidden(fs => {
           const ap = getAP(fs);
           let techedCards = 0;
-          choices.indices.forEach(index => {
+          const realIndices = unwrapSecrets(
+            fs,
+            ap.id,
+            choices.indices,
+            ap.codex.length
+          );
+          realIndices.forEach(index => {
             ap.codex[index].n--;
             ap.discard.push(ap.codex[index].card);
             techedCards++;
           });
           fs.techResult = techedCards;
+          resetSecret(fs, ap.id);
         });
         log.add(
           state,

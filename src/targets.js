@@ -12,12 +12,32 @@ import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
 import range from "lodash/range";
 
-export function wrapSecret(state, playerId, secret, n) {
-  return (((secret + state.players[playerId].secret) % n) + n) % n;
+export function wrapSecret(state, playerId, real, n) {
+  return (((real + state.players[playerId].secret) % n) + n) % n;
 }
 
-export function unwrapSecret(state, playerId, secret, n) {
-  return (((secret - state.players[playerId].secret) % n) + n) % n;
+export function unwrapSecret(state, playerId, code, n) {
+  return (((code - state.players[playerId].secret) % n) + n) % n;
+}
+
+export function wrapSecrets(state, playerId, realArray, n) {
+  let currentSecret = state.players[playerId].secret;
+  const result = [];
+  realArray.forEach(real => {
+    result.push((((real + currentSecret) % n) + n) % n);
+    currentSecret = Math.floor(currentSecret / n);
+  });
+  return result;
+}
+
+export function unwrapSecrets(state, playerId, codeArray, n) {
+  let currentSecret = state.players[playerId].secret;
+  const result = [];
+  codeArray.forEach(code => {
+    result.push((((code - currentSecret) % n) + n) % n);
+    currentSecret = Math.floor(currentSecret / n);
+  });
+  return result;
 }
 
 export function resetSecret(state, playerId) {

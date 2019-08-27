@@ -6,11 +6,6 @@ Blademaster: if it dies when defending without killing attacker, other units don
 Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
-Tech phase: can tech 2 cards and cards end up in discard (and not in codex)
-Tech phase: can't tech cards not in codex or tech 2 if only one left
-Tech phase: can't tech more or less than 2
-Tech phase: can tech fewer cards if codex is empty (or has only 1 card)
-Tech phase: can tech last card in codex
 
 # Tests to write later
 
@@ -36,8 +31,6 @@ Two targets (> Two-step)
 State trigger (> Two-step)
 
 Temporary detection by tower on own turn
-
-Avoid leaking (major) information when teching
 
 # Game features not implemented, not needed for BvF:
 
