@@ -1,7 +1,7 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import { getCurrentValues, createUnit } from "../entities";
+import { getCurrentValues, createUnit, createOngoingSpell } from "../entities";
 import { types, colors } from "../cardinfo/constants";
 import { addSpellToQueue } from "../triggers";
 
@@ -83,13 +83,20 @@ export function doPlayAction(state, action) {
 }
 
 function playSpell(state) {
+  const ap = getAP(state);
   const ci = cardInfo[state.playedCard];
-  log.add(state, log.fmt`${getAP(state)} plays ${ci.name}.`);
-  const spellEffectIndex = findIndex(ci.abilities, a => a.isSpellEffect);
-  addSpellToQueue(state, {
-    path: `cardInfo.${state.playedCard}.abilities[${spellEffectIndex}]`,
-    isSpell: true
-  });
+  log.add(state, log.fmt`${ap} plays ${ci.name}.`);
+  if (ci.ongoing) {
+    const newOngoingSpell = createOngoingSpell(state, ap.id, state.playedCard);
+    delete state.playedCard;
+    log.add(state, log.fmt`${ap} plays ${newOngoingSpell.current.name}.`);
+  } else {
+    const spellEffectIndex = findIndex(ci.abilities, a => a.isSpellEffect);
+    addSpellToQueue(state, {
+      path: `cardInfo.${state.playedCard}.abilities[${spellEffectIndex}]`,
+      isSpell: true
+    });
+  }
 }
 
 function playUnit(state) {

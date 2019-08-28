@@ -17,6 +17,7 @@ import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
 import CodexGame from "../game";
 import { hasKeyword, haste } from "./abilities/keywords";
+import { types } from "./constants";
 
 test("Nimble Fencer gives herself and other Virtuosos haste", () => {
   const s0 = new TestGame()
@@ -279,3 +280,31 @@ test("Sidelining a patroller with Appel Stomp and discarding it", () => {
   expect(tg.state.players[testp2Id].deck.length).toEqual(4);
   expect(tg.state.players[testp2Id].discard).toEqual(["appel_stomp"]);
 });
+
+test("Harmony can enter play and is sacrificed when Finesse hero dies", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "river_montoya")
+    .insertEntity(testp2Id, "iron_man")
+    .putCardsInHand(testp1Id, ["harmony"]);
+  const [river, im] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { controlledSince: -1 }).playAction({
+    type: "play",
+    card: "harmony"
+  });
+  const h = findEntityIds(tg.state, e => e.card == "harmony");
+  expect(h).toHaveLength(1);
+  expect(tg.state.entities[h[0]].current.type).toEqual(types.spell);
+  tg.playAction({ type: "attack", attacker: river, target: im });
+  expect(tg.state.log).toContain("River Montoya dies.");
+  expect(tg.state.log).toContain("Harmony is sacrificed.");
+  expect(tg.state.entities[h[0]]).toBeUndefined();
+  expect(tg.state.players[testp1Id].discard).toContain("harmony");
+});
+
+/*
+Harmony: No token exists while spell is being resolved
+Harmony: Have a token after spell is done resolving
+Harmony: When token dies, it doesn't go to discard
+Harmony: If have 3 tokens when Harmony trigger resolves, no new one
+Harmony: Can activate ability and turn tokens into Angry Dancers
+*/

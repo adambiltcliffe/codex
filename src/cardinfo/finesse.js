@@ -2,6 +2,7 @@ import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
 import { conferComplexAbility, conferKeyword, damageEntity } from "../entities";
 import {
+  channeling,
   haste,
   flying,
   invisible,
@@ -16,6 +17,16 @@ import { isPatrolling, sideline } from "../patrolzone";
 import { drawCards } from "../draw";
 
 const finesseCardInfo = {
+  harmony: {
+    color: colors.neutral,
+    spec: specs.finesse,
+    name: "Harmony",
+    type: types.spell,
+    ongoing: true,
+    subtypes: ["Buff"],
+    cost: 2,
+    abilities: [channeling]
+  },
   discord: {
     color: colors.neutral,
     spec: specs.finesse,
@@ -136,7 +147,6 @@ const finesseCardInfo = {
       }
     ]
   },
-
   starcrossed_starlet: {
     color: colors.neutral,
     tech: 1,
@@ -296,6 +306,27 @@ const finesseCardInfo = {
           }
         }
       }
+    ]
+  },
+  dancer_token: {
+    token:true,
+    color: colors.neutral,
+    tech: 0,
+    name: "Dancer",
+    type: types.unit,
+    attack: 0,
+    hp: 1,
+    abilities: [{ whenYouStopTheMusic: "flipThis" }]
+  },
+  angry_dancer_token: {token:true,
+    color: colors.neutral,
+    tech: 0,
+    name: "Angry Dancer",
+    type: types.unit,
+    attack: 2,
+    hp: 1,
+    abilities: [
+      /*unstoppable*/
     ]
   }
 };

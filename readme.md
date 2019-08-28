@@ -7,6 +7,15 @@ Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
 
+Harmony: No token exists while spell is being resolved
+Harmony: Have a token after spell is done resolving
+Harmony: When token dies, it doesn't go to discard
+Harmony: If have 3 tokens when Harmony trigger resolves, no new one
+Harmony: Can activate ability and turn tokens into Angry Dancers
+
+Unstoppable: Can attack anything
+Unstoppable: Doesn't trigger tower detection
+
 # Tests to write later
 
 \*Unstoppable
@@ -20,7 +29,7 @@ Swift strike flying attacker can kill the SL it flew over and not get hit (needs
 Flying plus stealth/invisible/unstoppable etc. and not taking AA damage if not using flying to evade
 Declare an attack that destroys all possible attack targets with triggers (obliterate vs Lawbringer Gryphon)
 Check stealth abilities vs tower still work correctly when retarget after initial target dies
-Flyer with stealth abilities doesn't fly over AA units
+Flyer with stealth/unstoppable abilities doesn't fly over AA units
 
 # Game features not implemented:
 

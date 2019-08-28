@@ -80,6 +80,22 @@ export function createHero(state, owner, card) {
   return newHero;
 }
 
+export function createOngoingSpell(state, owner, card) {
+  const newOngoingSpell = {
+    id: `e${state.nextId}`,
+    card,
+    owner,
+    defaultController: owner,
+    lastControlledBy: owner,
+    controlledSince: state.turn,
+    ready: true
+  };
+  state.entities[newOngoingSpell.id] = newOngoingSpell;
+  state.nextId++;
+  applyStateBasedEffects(state);
+  return newOngoingSpell;
+}
+
 export function damageEntity(state, entity, damage) {
   if (damage.amount < 1) {
     return;
@@ -125,13 +141,15 @@ export function bounceEntity(state, entityId) {
   }
 }
 
-export function killEntity(state, entityId) {
+export function killEntity(state, entityId, opts) {
   const e = state.entities[entityId];
+  const { verb } = opts || {};
   if (e.fixture == fixtureNames.base) {
     return false;
   }
   if (e.current.type == types.building) {
-    log.add(state, `${upperFirst(e.current.name)} is destroyed.`);
+    const realVerb = verb || "is destroyed";
+    log.add(state, `${upperFirst(e.current.name)} ${realVerb}.`);
     const base =
       state.entities[
         state.players[e.current.controller].current.fixtures[fixtureNames.base]
@@ -139,7 +157,8 @@ export function killEntity(state, entityId) {
     log.add(state, `${upperFirst(base.current.name)} takes 2 damage.`);
     base.damage += 2;
   } else {
-    log.add(state, log.fmt`${e.current.name} dies.`);
+    const realVerb = verb || "dies";
+    log.add(state, log.fmt`${e.current.name} ${realVerb}.`);
   }
   delete state.entities[e.id];
   const pz = state.players[e.current.controller].patrollerIds;
@@ -189,9 +208,6 @@ export function getCurrentValues(state, unitIds) {
     shouldReturnSingleton = true;
   }
   const result = {};
-  // currently we do each unit separately but we handle requesting several at once
-  // because of the future case where we need to check all copy effects to see if
-  // they have added or removed a global effect from a unit
   forEach(state.entities, (u, id) => {
     if (unitIds.includes(id)) {
       result[id] = u.current;
@@ -358,10 +374,16 @@ export function applyStateBasedEffects(state) {
     stable = true;
     updateCurrentValues(state);
     forEach(state.entities, u => {
-      if (u.damage >= u.current.hp) {
+      if (u.damage !== undefined && u.damage >= u.current.hp) {
         const wasKilled = killEntity(state, u.id);
         stable &= !wasKilled;
       }
+      forEach(u.current.abilities, a => {
+        if (a.mustSacrifice && a.mustSacrifice({ state, source: u })) {
+          const wasKilled = killEntity(state, u.id, { verb: "is sacrificed" });
+          stable &= !wasKilled;
+        }
+      });
     });
   }
   checkForEndOfGame(state);

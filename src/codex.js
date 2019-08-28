@@ -13,7 +13,9 @@ export function buildStarterDeck(color) {
   return reduce(
     cardInfo,
     (a, v, k) => {
-      return v.color == color && v.spec === undefined ? a.concat(k) : a;
+      return v.color == color && v.spec === undefined && !v.token
+        ? a.concat(k)
+        : a;
     },
     []
   );

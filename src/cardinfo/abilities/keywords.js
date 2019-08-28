@@ -76,3 +76,10 @@ export const healing = n => ({
     }
   }
 });
+
+export const channeling = {
+  mustSacrifice: ({ state, source }) => {
+    const p = source.current.controller;
+    return !state.players[p].current.heroSpecs.includes(source.current.spec);
+  }
+};
