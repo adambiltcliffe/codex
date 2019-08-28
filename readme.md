@@ -6,6 +6,7 @@ Blademaster: if it dies when defending without killing attacker, other units don
 Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
+Side-effects of targetting (tower detection, resist payments) happen when auto-targetting
 
 # Tests to write later
 
@@ -29,8 +30,6 @@ Tokens (> Harmony)
 When-you-play trigger (> Harmony)
 Two targets (> Two-step)
 State trigger (> Two-step)
-
-Temporary detection by tower on own turn
 
 # Game features not implemented, not needed for BvF:
 

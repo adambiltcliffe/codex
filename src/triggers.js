@@ -9,6 +9,7 @@ import effectInfo from "./effectinfo";
 
 import get from "lodash/get";
 import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
+import { doTargetSymbolEffects } from "./actions/choice";
 
 export const triggerDefinitions = {
   cardInfo,
@@ -88,6 +89,9 @@ export function canResolveCurrentTrigger(state) {
         case 1:
           log.add(state, `${stepDef.prompt}: Only one legal choice.`);
           choices.targetId = possibleChoices[0];
+          if (stepDef.hasTargetSymbol) {
+            doTargetSymbolEffects(state, state.entities[choices.targetId]);
+          }
           return true;
         default:
           return false;

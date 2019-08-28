@@ -8,11 +8,13 @@ import {
 import log from "../log";
 import { targetMode } from "../cardinfo";
 import { getObliterateTargets } from "../cardinfo/abilities/obliterate";
+import { hasKeyword, invisible } from "../cardinfo/abilities/keywords";
 
 import countBy from "lodash/countBy";
 import forEach from "lodash/forEach";
 import some from "lodash/some";
 import sumBy from "lodash/sumBy";
+import { fixtureNames } from "../fixtures";
 
 export function checkChoiceAction(state, action) {
   if (state.currentTrigger === null) {
@@ -97,6 +99,7 @@ export function checkChoiceAction(state, action) {
 }
 
 export function doChoiceAction(state, action) {
+  const ap = getAP(state);
   const def = currentTriggerDefinition(state);
   let choices = state.currentTrigger.choices;
   let stepDef = def;
@@ -112,8 +115,7 @@ export function doChoiceAction(state, action) {
         stepDef.hasTargetSymbol &&
         target.current.controller != getAP(state).id
       ) {
-        const resistCost = getResistCost(state, target);
-        getAP(state).gold -= resistCost;
+        doTargetSymbolEffects(state, target);
       }
       log.add(state, log.fmt`${getAP(state)} chooses ${target.current.name}.`);
       break;
@@ -126,5 +128,21 @@ export function doChoiceAction(state, action) {
     case targetMode.codex:
       choices.indices = action.indices;
       break;
+  }
+}
+
+export function doTargetSymbolEffects(state, target) {
+  const ap = getAP(state);
+  const resistCost = getResistCost(state, target);
+  ap.gold -= resistCost;
+  if (hasKeyword(target.current, invisible) && !target.thisTurn.detected) {
+    const tower =
+      state.entities[state.players[ap.id].current.fixtures[fixtureNames.tower]];
+    tower.thisTurn.usedDetector = true;
+    target.thisTurn.detected = true;
+    log.add(
+      state,
+      `${target.current.name} is detected by ${tower.current.name}.`
+    );
   }
 }

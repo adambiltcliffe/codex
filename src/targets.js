@@ -11,6 +11,7 @@ import { patrolSlots } from "./patrolzone";
 import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
 import range from "lodash/range";
+import { fixtureNames } from "./fixtures";
 
 export function wrapSecret(state, playerId, real, n) {
   return (((real + state.players[playerId].secret) % n) + n) % n;
@@ -74,8 +75,14 @@ function stepCanTargetEntity(state, stepDef, target) {
   if (stepDef.hasTargetSymbol) {
     // if it's an opponent's unit, check resist and invisible
     if (target.current.controller != getAP(state).id) {
-      if (hasKeyword(target.current, invisible)) {
-        return false;
+      if (hasKeyword(target.current, invisible) && !target.thisTurn.detected) {
+        const tower =
+          state.entities[
+            state.players[getAP(state).id].current.fixtures[fixtureNames.tower]
+          ];
+        if (!tower || tower.thisTurn.usedDetector) {
+          return false;
+        }
       }
       const resistCost = getResistCost(state, target);
       if (resistCost > getAP(state).gold) {

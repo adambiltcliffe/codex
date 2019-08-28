@@ -68,3 +68,18 @@ test("Can't target a resist unit without gold to pay for it", () => {
     CodexGame.checkAction(s2, { type: "choice", target: tr });
   }).toThrow();
 });
+
+test("Still have to pay resist if target is chosen automatically", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "_test_resist")
+    .insertEntity(testp2Id, "troq_bashar");
+  const [tr, troq] = tg.insertedEntityIds;
+  tg.playAction({ type: "endTurn", patrollers: [null, null, null, null, tr] })
+    .putCardsInHand(testp2Id, ["spark"])
+    .playAction({ type: "play", card: "spark" });
+  expect(tg.state.log).toContain(
+    "Choose a patroller to damage: Only one legal choice."
+  );
+  expect(tg.state.entities[tr].damage).toEqual(1);
+  expect(tg.state.players[testp2Id].gold).toEqual(2);
+});

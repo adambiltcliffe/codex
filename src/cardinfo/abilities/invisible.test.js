@@ -5,7 +5,8 @@ import {
   findEntityIds,
   getGameWithUnits,
   withCardsInHand,
-  withInsertedEntity
+  withInsertedEntity,
+  TestGame
 } from "../../testutil";
 import { fixtureNames } from "../../fixtures";
 import { getAttackableEntityIds } from "../../actions/attack";
@@ -86,4 +87,59 @@ test("Can target your own invisible units but not the opponent's", () => {
   expect(() => {
     CodexGame.checkAction(s1, { type: "choice", target: p2bs });
   }).toThrow();
+});
+
+test("With tower, can target an invisible unit (more than once if needed)", () => {
+  const tg = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tower)
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, ["backstabber", "iron_man"])
+    .putCardsInHand(testp1Id, ["wither", "wither"]);
+  const [tower, troq, bs, im] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "wither" });
+  expect(tg.getLegalChoices().sort()).toEqual([troq, bs, im].sort());
+  tg.playAction({ type: "choice", target: bs });
+  expect(tg.state.log).toContain("Backstabber is detected by tower.");
+  expect(tg.state.entities[bs].runes).toEqual(-1);
+  expect(tg.state.entities[bs].thisTurn.detected).toBeTruthy();
+  tg.playAction({ type: "play", card: "wither" });
+  expect(tg.getLegalChoices().sort()).toEqual([troq, bs, im].sort());
+  tg.playAction({ type: "choice", target: bs });
+  expect(tg.state.log).not.toContain("Backstabber is detected by tower.");
+  expect(tg.state.entities[bs].runes).toEqual(-2);
+});
+
+test("With tower, can only target one invisible unit per turn", () => {
+  const tg = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tower)
+    .insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, ["backstabber", "backstabber", "iron_man"])
+    .putCardsInHand(testp1Id, ["wither", "wither"]);
+  const [tower, troq, bs1, bs2, im] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "wither" });
+  expect(tg.getLegalChoices().sort()).toEqual([troq, bs1, bs2, im].sort());
+  tg.playAction({ type: "choice", target: bs1 });
+  expect(tg.state.log).toContain("Backstabber is detected by tower.");
+  expect(tg.state.entities[bs1].runes).toEqual(-1);
+  expect(tg.state.entities[bs1].thisTurn.detected).toBeTruthy();
+  tg.playAction({ type: "play", card: "wither" });
+  expect(tg.getLegalChoices().sort()).toEqual([troq, bs1, im].sort());
+});
+
+test("Still have to detect invisible unit target is chosen automatically", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "backstabber")
+    .insertEntity(testp2Id, "troq_bashar")
+    .insertFixture(testp2Id, fixtureNames.tower);
+  const [bs, troq, tower] = tg.insertedEntityIds;
+  tg.playAction({ type: "endTurn", patrollers: [null, null, null, null, bs] })
+    .putCardsInHand(testp2Id, ["spark"])
+    .playAction({ type: "play", card: "spark" });
+  expect(tg.state.log).toContain(
+    "Choose a patroller to damage: Only one legal choice."
+  );
+  expect(tg.state.log).toContain("Backstabber is detected by tower.");
+  expect(tg.state.entities[bs].damage).toEqual(1);
+  expect(tg.state.entities[bs].thisTurn.detected).toBeTruthy();
+  expect(tg.state.entities[tower].thisTurn.usedDetector).toBeTruthy();
 });
