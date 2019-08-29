@@ -34,3 +34,10 @@ If you fly over a patroller which has anti-air but not swift strike, and after s
 i think yes, anti-air gets locked in after 2 choose defender
 the reasoning was that otherwise its sorta undefined whether youre using flying to bypass things (since you could be attacking illegally)
  */
+
+/*
+ UrbanVelvetToday at 7:50 PM
+Question. Wandering mimic gets sparkshot from a hero, when killing that hero do they still get to do 1 to the adjacent patroller?
+CarpeToday at 7:51 PM
+Yes, combat damage is all dealt at once
+ */

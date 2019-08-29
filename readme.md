@@ -7,10 +7,6 @@ Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
 
-Harmony: No token exists while spell is being resolved
-Harmony: Have a token after spell is done resolving
-Harmony: When token dies, it doesn't go to discard
-Harmony: If have 3 tokens when Harmony trigger resolves, no new one
 Harmony: Can activate ability and turn tokens into Angry Dancers
 
 Unstoppable: Can attack anything
@@ -30,12 +26,10 @@ Flying plus stealth/invisible/unstoppable etc. and not taking AA damage if not u
 Declare an attack that destroys all possible attack targets with triggers (obliterate vs Lawbringer Gryphon)
 Check stealth abilities vs tower still work correctly when retarget after initial target dies
 Flyer with stealth/unstoppable abilities doesn't fly over AA units
+Dancer tokens don't flip if you stop the music while they're polymorphed or copying something
 
 # Game features not implemented:
 
-Ongoing spell & channelling (> Harmony)
-Tokens (> Harmony)
-When-you-play trigger (> Harmony)
 Two targets (> Two-step)
 State trigger (> Two-step)
 

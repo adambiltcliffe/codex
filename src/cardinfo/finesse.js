@@ -7,7 +7,9 @@ import {
   flying,
   invisible,
   swiftStrike,
-  antiAir
+  antiAir,
+  hasKeyword,
+  flippable
 } from "./abilities/keywords";
 import { getAP, andJoinVerb } from "../util";
 
@@ -15,6 +17,7 @@ import forEach from "lodash/forEach";
 import { attachEffectThisTurn } from "../effects";
 import { isPatrolling, sideline } from "../patrolzone";
 import { drawCards } from "../draw";
+import { putUnitIntoPlay } from "../actions/play";
 
 const finesseCardInfo = {
   harmony: {
@@ -25,7 +28,53 @@ const finesseCardInfo = {
     ongoing: true,
     subtypes: ["Buff"],
     cost: 2,
-    abilities: [channeling]
+    abilities: [
+      channeling,
+      {
+        triggerOnPlayOtherCard: true,
+        shouldTrigger: ({ cardInfo }) => cardInfo.type == types.spell,
+        action: ({ state }) => {
+          const ap = getAP(state);
+          const total =
+            (ap.current.tokenCounts["dancer_token"] || 0) +
+            (ap.current.tokenCounts["angry_dancer_token"] || 0);
+          if (total < 3) {
+            putUnitIntoPlay(state, ap.id, "dancer_token");
+            log.add(state, "Harmony creates a Dancer token.");
+          } else {
+            log.add(state, "Harmony cannot create any more Dancer tokens.");
+          }
+        }
+      },
+      {
+        isActivatedAbility: true,
+        costsSacrificeSelf: true,
+        action: ({ state }) => {
+          const ap = getAP(state);
+          let count = 0;
+          forEach(state.entities, e => {
+            if (
+              (e.card =
+                "dancer_token" &&
+                e.current.controller == ap.id &&
+                hasKeyword(e.current, flippable))
+            ) {
+              e.card = "angry_dancer_token";
+              count++;
+            }
+          });
+          if (count > 0) {
+            const s = count == 1 ? "" : "s";
+            log.add(
+              state,
+              `${count} Dancer${s} become${
+                count == 1 ? "s an" : ""
+              } Angry Dancer${s}.`
+            );
+          }
+        }
+      }
+    ]
   },
   discord: {
     color: colors.neutral,
@@ -309,7 +358,7 @@ const finesseCardInfo = {
     ]
   },
   dancer_token: {
-    token:true,
+    token: true,
     color: colors.neutral,
     tech: 0,
     name: "Dancer",
@@ -318,7 +367,8 @@ const finesseCardInfo = {
     hp: 1,
     abilities: [{ whenYouStopTheMusic: "flipThis" }]
   },
-  angry_dancer_token: {token:true,
+  angry_dancer_token: {
+    token: true,
     color: colors.neutral,
     tech: 0,
     name: "Angry Dancer",

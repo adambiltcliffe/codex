@@ -40,6 +40,7 @@ export const swiftStrike = keyword("K_SWIFTSTRIKE");
 export const stealth = keyword("K_STEALTH");
 export const unstoppable = keyword("K_UNSTOPPABLE");
 export const longRange = keyword("K_LONGRANGE");
+export const flippable = keyword("K_FLIPPABLE");
 
 export const resist = numericKeyword("KV_RESIST");
 

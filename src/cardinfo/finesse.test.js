@@ -301,10 +301,92 @@ test("Harmony can enter play and is sacrificed when Finesse hero dies", () => {
   expect(tg.state.players[testp1Id].discard).toContain("harmony");
 });
 
+test("Harmony creates a token when you cast a spell, but only after resolving it", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "river_montoya")
+    .putCardsInHand(testp1Id, ["harmony", "bloom"])
+    .insertEntity(testp2Id, "iron_man");
+  const [river, im] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "harmony" });
+  expect(tg.state.log).not.toContain("Harmony creates a Dancer token.");
+  expect(tg.state.currentTrigger).toBeNull();
+  tg.playAction({ type: "play", card: "bloom" });
+  expect(tg.state.log).not.toContain("Harmony creates a Dancer token.");
+  expect(tg.state.currentTrigger).not.toBeNull();
+  expect(tg.state.queue).toHaveLength(1);
+  expect(findEntityIds(tg.state, e => e.card == "dancer_token")).toHaveLength(
+    0
+  );
+  tg.playAction({ type: "choice", target: river });
+  expect(tg.state.log).toContain("Harmony creates a Dancer token.");
+  expect(findEntityIds(tg.state, e => e.card == "dancer_token")).toHaveLength(
+    1
+  );
+});
+
+test("Harmony creates no token when you play a unit", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "river_montoya")
+    .putCardsInHand(testp1Id, ["harmony", "older_brother"])
+    .insertEntity(testp2Id, "iron_man");
+  tg.playAction({ type: "play", card: "harmony" });
+  tg.playAction({ type: "play", card: "older_brother" });
+  expect(tg.state.queue).toHaveLength(0);
+  expect(tg.state.log).not.toContain("Harmony creates a Dancer token.");
+  expect(findEntityIds(tg.state, e => e.card == "dancer_token")).toHaveLength(
+    0
+  );
+});
+
+test("Harmony doesn't create a token if you already have 3 dancers", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "river_montoya")
+    .putCardsInHand(testp1Id, ["harmony", "discord"])
+    .insertEntities(testp1Id, ["dancer_token", "dancer_token", "dancer_token"])
+    .playActions([
+      { type: "play", card: "harmony" },
+      { type: "play", card: "discord" }
+    ]);
+  expect(tg.state.log).toContain(
+    "Harmony cannot create any more Dancer tokens."
+  );
+  expect(findEntityIds(tg.state, e => e.card == "dancer_token")).toHaveLength(
+    3
+  );
+});
+
+test("Harmony doesn't create a token if you have a mix of 3 dancers", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "river_montoya")
+    .putCardsInHand(testp1Id, ["harmony", "discord"])
+    .insertEntities(testp1Id, [
+      "dancer_token",
+      "dancer_token",
+      "angry_dancer_token"
+    ])
+    .playActions([
+      { type: "play", card: "harmony" },
+      { type: "play", card: "discord" }
+    ]);
+  expect(tg.state.log).toContain(
+    "Harmony cannot create any more Dancer tokens."
+  );
+  expect(findEntityIds(tg.state, e => e.card == "dancer_token")).toHaveLength(
+    2
+  );
+});
+
+test("Killed Dancer tokens don't go to discard", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "timely_messenger")
+    .insertEntity(testp2Id, "dancer_token");
+  const [tm, token] = tg.insertedEntityIds;
+  tg.playAction({ type: "attack", attacker: tm, target: token });
+  expect(tg.state.log).toContain("Dancer dies.");
+  expect(tg.state.players[testp2Id].discard).toEqual([]);
+});
+
 /*
-Harmony: No token exists while spell is being resolved
-Harmony: Have a token after spell is done resolving
 Harmony: When token dies, it doesn't go to discard
-Harmony: If have 3 tokens when Harmony trigger resolves, no new one
 Harmony: Can activate ability and turn tokens into Angry Dancers
 */

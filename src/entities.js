@@ -191,7 +191,7 @@ export function killEntity(state, entityId, opts) {
       state.players[e.owner].commandZone.push(e.card);
       state.players[e.owner].heroCooldowns[e.card] =
         e.owner == getAP(state).id ? 2 : 1;
-    } else {
+    } else if (!cardInfo[e.card].token) {
       state.updateHidden(fs => {
         fs.players[e.owner].discard.push(e.card);
       });
@@ -271,7 +271,8 @@ export function updateCurrentValues(state) {
       heroColors: [],
       heroSpecs: [],
       ultimateSpecs: [],
-      fixtures: {}
+      fixtures: {},
+      tokenCounts: {}
     };
   });
   // 1. Start with a draft based on each entity's printed values
@@ -363,6 +364,8 @@ export function updateCurrentValues(state) {
       if (fixtures[e.fixture].isAddOn) {
         pc.addOn = e.id;
       }
+    } else if (cardInfo[e.card].token) {
+      pc.tokenCounts[e.card] = (pc.tokenCounts[e.card] || 0) + 1;
     }
   });
 }

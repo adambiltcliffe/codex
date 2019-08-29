@@ -74,11 +74,29 @@ export function doPlayAction(state, action) {
     fs.playedCard = ap.hand.splice(handIndex, 1)[0];
   });
   const ap = getAP(state);
-  ap.gold -= getPlayCost(state, cardInfo[action.card]);
-  if (cardInfo[state.playedCard].type == types.spell) {
+  const ci = cardInfo[action.card];
+  ap.gold -= getPlayCost(state, ci);
+  forEach(state.entities, e => {
+    forEach(e.current.abilities, a => {
+      if (
+        a.triggerOnPlayOtherCard &&
+        (!a.shouldTrigger || a.shouldTrigger({ state, cardInfo: ci }))
+      ) {
+        state.newTriggers.push({
+          path: a.path,
+          sourceId: e.id
+        });
+      }
+    });
+  });
+  if (ci.type == types.spell) {
     playSpell(state);
   } else {
-    playUnit(state);
+    const ap = getAP(state);
+    const card = state.playedCard;
+    delete state.playedCard;
+    const newUnit = putUnitIntoPlay(state, ap.id, card);
+    log.add(state, log.fmt`${ap} plays ${newUnit.current.name}.`);
   }
 }
 
@@ -99,11 +117,8 @@ function playSpell(state) {
   }
 }
 
-function playUnit(state) {
-  const ap = getAP(state);
-  const newUnit = createUnit(state, ap.id, state.playedCard);
-  delete state.playedCard;
-  log.add(state, log.fmt`${ap} plays ${newUnit.current.name}.`);
+export function putUnitIntoPlay(state, playerId, card) {
+  const newUnit = createUnit(state, playerId, card);
   forEach(newUnit.current.abilities, a => {
     if (a.triggerOnOwnArrival) {
       state.newTriggers.push({
@@ -112,4 +127,5 @@ function playUnit(state) {
       });
     }
   });
+  return newUnit;
 }
