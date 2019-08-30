@@ -9,7 +9,8 @@ import {
   swiftStrike,
   antiAir,
   hasKeyword,
-  flippable
+  flippable,
+  unstoppable
 } from "./abilities/keywords";
 import { getAP, andJoinVerb } from "../util";
 
@@ -54,10 +55,9 @@ const finesseCardInfo = {
           let count = 0;
           forEach(state.entities, e => {
             if (
-              (e.card =
-                "dancer_token" &&
-                e.current.controller == ap.id &&
-                hasKeyword(e.current, flippable))
+              e.card == "dancer_token" &&
+              e.current.controller == ap.id &&
+              hasKeyword(e.current, flippable)
             ) {
               e.card = "angry_dancer_token";
               count++;
@@ -365,7 +365,7 @@ const finesseCardInfo = {
     type: types.unit,
     attack: 0,
     hp: 1,
-    abilities: [{ whenYouStopTheMusic: "flipThis" }]
+    abilities: [flippable]
   },
   angry_dancer_token: {
     token: true,
@@ -375,9 +375,7 @@ const finesseCardInfo = {
     type: types.unit,
     attack: 2,
     hp: 1,
-    abilities: [
-      /*unstoppable*/
-    ]
+    abilities: [unstoppable]
   }
 };
 

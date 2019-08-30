@@ -16,7 +16,7 @@ import {
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
 import CodexGame from "../game";
-import { hasKeyword, haste } from "./abilities/keywords";
+import { hasKeyword, haste, unstoppable } from "./abilities/keywords";
 import { types } from "./constants";
 
 test("Nimble Fencer gives herself and other Virtuosos haste", () => {
@@ -386,7 +386,23 @@ test("Killed Dancer tokens don't go to discard", () => {
   expect(tg.state.players[testp2Id].discard).toEqual([]);
 });
 
-/*
-Harmony: When token dies, it doesn't go to discard
-Harmony: Can activate ability and turn tokens into Angry Dancers
-*/
+test("Can activate Harmony to flip dancers", () => {
+  const tg = new TestGame().insertEntities(testp1Id, [
+    "river_montoya",
+    "harmony",
+    "dancer_token",
+    "dancer_token"
+  ]);
+  const [river, harmony, token1, token2] = tg.insertedEntityIds;
+  tg.playAction({ type: "activate", source: harmony, index: 2 });
+  expect(tg.state.entities[token1].card).toEqual("angry_dancer_token");
+  expect(tg.state.entities[token2].card).toEqual("angry_dancer_token");
+  expect(tg.state.entities[token1].current).toMatchObject({
+    attack: 2,
+    hp: 1,
+    name: "Angry Dancer"
+  });
+  expect(
+    hasKeyword(tg.state.entities[token1].current, unstoppable)
+  ).toBeTruthy();
+});

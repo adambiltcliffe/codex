@@ -4,7 +4,8 @@ import {
   createUnit,
   createHero,
   updateCurrentValues,
-  createBuildingFixture
+  createBuildingFixture,
+  createOngoingSpell
 } from "./entities";
 import { fixtureNames } from "./fixtures";
 import { getLegalChoicesForCurrentTrigger } from "./triggers";
@@ -170,6 +171,7 @@ export class TestGame {
   insertEntity(playerId, card) {
     let newId = null;
     const newState = produce(this.state, draft => {
+      draft.updateHidden = func => func(draft);
       switch (cardInfo[card].type) {
         case types.unit:
           newId = createUnit(draft, playerId, card).id;
@@ -177,7 +179,10 @@ export class TestGame {
         case types.hero:
           newId = createHero(draft, playerId, card).id;
           break;
+        case types.spell:
+          newId = createOngoingSpell(draft, playerId, card).id;
       }
+      delete draft.updateHidden;
     });
     this.state = newState;
     this.insertedEntityIds.push(newId);

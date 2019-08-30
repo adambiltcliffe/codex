@@ -27,6 +27,7 @@ Declare an attack that destroys all possible attack targets with triggers (oblit
 Check stealth abilities vs tower still work correctly when retarget after initial target dies
 Flyer with stealth/unstoppable abilities doesn't fly over AA units
 Dancer tokens don't flip if you stop the music while they're polymorphed or copying something
+Units which sacrifice as a cost have the ability resolve before triggers (eg. bugblatter)
 
 # Game features not implemented:
 
