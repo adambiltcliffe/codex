@@ -262,3 +262,53 @@ test("Final Smash can auto-target some steps and prompt for others", () => {
   );
   expect(tg.state.currentTrigger).toBeNull();
 });
+
+test("Trojan Duck obliterates 2 units and damages a building when it attacks", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "older_brother",
+      "tenderfoot",
+      "brick_thief",
+      "iron_man"
+    ])
+    .insertEntity(testp2Id, "trojan_duck");
+  const [ob, tf, bt, im, td] = tg.insertedEntityIds;
+  const p1base = tg.findBaseId(testp1Id);
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: td, target: ob }
+  ]);
+  tg.queueByPath("cardInfo.trojan_duck.abilities[1]");
+  tg.playAction({ type: "choice", target: p1base });
+  expect(tg.state.log).toContain("Trojan Duck deals 4 damage to base.");
+  expect(tg.state.entities[p1base].damage).toEqual(4);
+  tg.playAction({ type: "choice", targets: [ob, bt] });
+  expect(tg.state.log).toContain(
+    "Older Brother and Brick Thief are obliterated."
+  );
+  tg.playAction({ type: "choice", target: tf });
+  expect(tg.state.log).toContain("Trojan Duck deals 8 damage to Tenderfoot.");
+  expect(tg.state.entities[td].damage).toEqual(1);
+});
+
+test("If the attack trigger kills the target, can choose a new one", () => {
+  const tg = new TestGame()
+    .insertFixture(testp1Id, fixtureNames.tower)
+    .insertEntities(testp1Id, ["older_brother", "iron_man", "sneaky_pig"])
+    .insertEntity(testp2Id, "trojan_duck");
+  const [tower, ob, im, sp, td] = tg.insertedEntityIds;
+  const p1base = tg.findBaseId(testp1Id);
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: td, target: tower }
+  ]);
+  tg.queueByPath("cardInfo.trojan_duck.abilities[0]");
+  expect(tg.state.log).toContain("Older Brother and Iron Man are obliterated.");
+  tg.playAction({ type: "choice", target: tower });
+  expect(tg.state.log).toContain("Trojan Duck deals 4 damage to tower.");
+  expect(tg.state.log).toContain("Tower is destroyed.");
+  tg.playAction({ type: "choice", target: p1base });
+  expect(tg.state.log).toContain("Trojan Duck deals 8 damage to base.");
+  expect(tg.state.entities[td].damage).toEqual(0);
+  expect(tg.state.entities[p1base].damage).toEqual(10);
+});

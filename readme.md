@@ -3,9 +3,6 @@
 Blademaster: other units have swift strike
 Blademaster: after it dies, other units lose swift strike
 Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice
-Trojan Duck: obliterate 2 units
-Trojan Duck: attack trigger can damage building
-Trojan Duck: if kill attack target with trigger, choose new one
 
 # Tests to write later
 
@@ -41,7 +38,7 @@ Simultaneous hero limit
 Choice of tech specs to unlock and requirement to unlock right spec to play cards
 Tech Lab and Heroes' Hall
 
-Unstoppable, long-range, two lives, deathtouch, other abilities
+Long-range, two lives, deathtouch, other abilities
 Permanent detector
 Damage modification effects
 
