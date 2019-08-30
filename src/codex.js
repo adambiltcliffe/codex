@@ -3,7 +3,7 @@ import cardInfo, { types, specs } from "./cardinfo";
 import findKey from "lodash/findKey";
 import reduce from "lodash/reduce";
 
-export const playableSpecs = [specs.bashing];
+export const playableSpecs = [specs.bashing, specs.finesse];
 
 export function getHero(spec) {
   return findKey(cardInfo, v => v.type == types.hero && v.spec == spec);

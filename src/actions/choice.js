@@ -3,7 +3,8 @@ import { getAP, andJoin } from "../util";
 import {
   getResistCost,
   getLegalChoicesForStep,
-  unwrapSecrets
+  unwrapSecrets,
+  validateTargetCombination
 } from "../targets";
 import log from "../log";
 import { targetMode } from "../cardinfo";
@@ -26,12 +27,37 @@ export function checkChoiceAction(state, action) {
   }
   switch (stepDef.targetMode) {
     case targetMode.single:
-      const legalChoices = getLegalChoicesForStep(state, stepDef);
+      let legalChoices = getLegalChoicesForStep(state, stepDef);
       if (!legalChoices.includes(action.target)) {
         throw new Error(
           `Not a legal choice, legal choices are ${andJoin(legalChoices)}`
         );
       }
+      return true;
+    case targetMode.multiple:
+      if (!Array.isArray(action.targets)) {
+        throw new Error("action.targets must be an array");
+      }
+      if (action.targets.length > stepDef.targetCount) {
+        throw new Error("Too many targets");
+      }
+      if (
+        action.targets.length < stepDef.targetCount &&
+        stepDef.requireAllTargets
+      ) {
+        throw new Error("Too few targets");
+      }
+      legalChoices = getLegalChoicesForStep(state, stepDef);
+      action.targets.forEach(t => {
+        if (!legalChoices.includes(t)) {
+          throw new Error(
+            `${t} is not a legal choice, legal choices are ${andJoin(
+              legalChoices
+            )}`
+          );
+        }
+      });
+      validateTargetCombination(legalChoices, action.targets);
       return true;
     case targetMode.obliterate:
       const dpId = state.currentAttack.defendingPlayer;
@@ -118,6 +144,25 @@ export function doChoiceAction(state, action) {
         doTargetSymbolEffects(state, target);
       }
       log.add(state, log.fmt`${getAP(state)} chooses ${target.current.name}.`);
+      break;
+    case targetMode.multiple:
+      choices.targetIds = action.targets;
+      const names = [];
+      choices.targetIds.forEach(id => {
+        const target = state.entities[id];
+        if (
+          stepDef.hasTargetSymbol &&
+          target.current.controller != getAP(state).id
+        ) {
+          doTargetSymbolEffects(state, target);
+        }
+        names.push(target.current.name);
+      });
+      if (names.length > 0) {
+        log.add(state, log.fmt`${getAP(state)} chooses ${andJoin(names)}.`);
+      } else {
+        log.add(state, log.fmt`${getAP(state)} chooses nothing.`);
+      }
       break;
     case targetMode.obliterate:
       choices.targetIds = action.targets;

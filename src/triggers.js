@@ -76,7 +76,7 @@ export function canResolveCurrentTrigger(state) {
     return true;
   }
   switch (stepDef.targetMode) {
-    case targetMode.single:
+    case targetMode.single: {
       if (choices.targetId !== undefined) {
         return true;
       }
@@ -96,6 +96,22 @@ export function canResolveCurrentTrigger(state) {
         default:
           return false;
       }
+    }
+    case targetMode.multiple: {
+      if (choices.targetIds !== undefined) {
+        return true;
+      }
+      const possibleChoices = getLegalChoicesForStep(state, stepDef);
+      if (
+        possibleChoices.length < stepDef.targetCount &&
+        stepDef.requireAllTargets
+      ) {
+        log.add(state, `${stepDef.prompt}: Not enough legal choices.`);
+        choices.skipped = true;
+        return true;
+      }
+      return false;
+    }
     case targetMode.obliterate:
       if (choices.targetIds !== undefined) {
         return true;

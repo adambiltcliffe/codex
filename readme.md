@@ -1,3 +1,9 @@
+Multiple targets: triggers/canResolveCurrentTrigger
+
+# Two Step tests
+
+Combinations including one or more flagbearers
+
 # Tests to write later
 
 Long-range
@@ -14,6 +20,7 @@ Flyer with stealth/unstoppable abilities doesn't fly over AA units
 Attacker with stealth and unstoppable still triggers tower (check this is right)
 Dancer tokens don't flip if you stop the music while they're polymorphed or copying something
 Units which sacrifice as a cost have the ability resolve before triggers (eg. bugblatter)
+Triggers which must target some specific number of things >1 are skipped if unfulfillable (detector, resist)
 
 # Game features not implemented:
 
@@ -55,6 +62,7 @@ Move suggest into a module and write tests for it
 Add suggestions for starting game (properly)
 Add suggestions for targetMode.modal and targetMode.codex
 Add suggestions for building fixtures
+Auto-resolve targetMode.multiple when there's only one valid combination
 Move abilities/ out of cardinfo/ to untangle some imports
 Store 'patrolSlot' in entity.current to simplify attack logic
 Use a schema validation library to simplify action checking

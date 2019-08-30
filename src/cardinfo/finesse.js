@@ -1,6 +1,11 @@
 import log from "../log";
 import { types, colors, specs, targetMode } from "./constants";
-import { conferComplexAbility, conferKeyword, damageEntity } from "../entities";
+import {
+  conferComplexAbility,
+  conferKeyword,
+  damageEntity,
+  applyStateBasedEffects
+} from "../entities";
 import {
   channeling,
   haste,
@@ -117,6 +122,63 @@ const finesseCardInfo = {
         subject.current.hp -= 1;
       }
     }
+  },
+  two_step: {
+    color: colors.neutral,
+    spec: specs.finesse,
+    name: "Two Step",
+    type: types.spell,
+    ongoing: true,
+    subtypes: ["Buff"],
+    cost: 2,
+    abilities: [
+      channeling,
+      {
+        isSpellEffect: true,
+        targetMode: targetMode.multiple,
+        targetTypes: [types.unit],
+        canTarget: ({ state, target }) => {
+          const ap = getAP(state);
+          return (
+            target.current.controller == ap.id &&
+            target.current.dancePartner === undefined
+          );
+        },
+        requireAllTargets: true,
+        action: ({ state, choices }) => {
+          const spellId = createOngoingSpell(
+            state,
+            getAP(state).id,
+            state.playedCard,
+            true
+          );
+          state.entities[spellId].partnerIds = choices.targetIds;
+          applyStateBasedEffects(state);
+        },
+        modifyGlobalValues: ({ self, other }) => {
+          if (self.partnerIds.includes(other.id)) {
+            other.current.attack += 2;
+            other.current.hp += 2;
+            other.current.dancePartner = find(
+              self.partnerIds,
+              id => id != other.id
+            );
+          }
+        },
+        mustSacrifice: ({ state, source }) => {
+          source.partnerIds.forEach(id => {
+            const partner = state.entities[id];
+            if (
+              partner === undefined ||
+              partner.current.controller != source.current.controller
+            ) {
+              return true;
+            }
+          });
+          return false;
+        }
+      }
+    ]
   },
   appel_stomp: {
     color: colors.neutral,

@@ -104,16 +104,18 @@ function playSpell(state) {
   const ap = getAP(state);
   const ci = cardInfo[state.playedCard];
   log.add(state, log.fmt`${ap} plays ${ci.name}.`);
-  if (ci.ongoing) {
-    const newOngoingSpell = createOngoingSpell(state, ap.id, state.playedCard);
-    delete state.playedCard;
-    log.add(state, log.fmt`${ap} plays ${newOngoingSpell.current.name}.`);
-  } else {
-    const spellEffectIndex = findIndex(ci.abilities, a => a.isSpellEffect);
+  const spellEffectIndex = findIndex(ci.abilities, a => a.isSpellEffect);
+  if (spellEffectIndex != -1) {
+    // if an ongoing spell has a spell effect, the effect has to put it into play itself
     addSpellToQueue(state, {
       path: `cardInfo.${state.playedCard}.abilities[${spellEffectIndex}]`,
       isSpell: true
     });
+  } else {
+    if (ci.ongoing) {
+      createOngoingSpell(state, ap.id, state.playedCard);
+    }
+    delete state.playedCard;
   }
 }
 

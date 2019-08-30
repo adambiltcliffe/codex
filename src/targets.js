@@ -11,6 +11,7 @@ import { patrolSlots } from "./patrolzone";
 import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
 import range from "lodash/range";
+import some from "lodash/some";
 import { fixtureNames } from "./fixtures";
 
 export function wrapSecret(state, playerId, real, n) {
@@ -96,7 +97,7 @@ function stepCanTargetEntity(state, stepDef, target) {
 
 export function getLegalChoicesForStep(state, stepDef) {
   switch (stepDef.targetMode) {
-    case targetMode.single:
+    case targetMode.single: {
       let possibleTargets = Object.values(state.entities);
       if (stepDef.restrictTargets) {
         possibleTargets = stepDef.restrictTargets(state);
@@ -112,6 +113,16 @@ export function getLegalChoicesForStep(state, stepDef) {
       } else {
         return targets.map(e => e.id);
       }
+    }
+    case targetMode.multiple: {
+      let possibleTargets = Object.values(state.entities);
+      if (stepDef.restrictTargets) {
+        possibleTargets = stepDef.restrictTargets(state);
+      }
+      return possibleTargets
+        .filter(e => stepCanTargetEntity(state, stepDef, e))
+        .map(e => e.id);
+    }
     case targetMode.obliterate:
       const dpId = state.currentAttack.defendingPlayer;
       const [definitely, maybe] = getObliterateTargets(
@@ -126,4 +137,18 @@ export function getLegalChoicesForStep(state, stepDef) {
       const ap = getAP(state);
       return range(ap.codex.length).filter(k => ap.codex[k].n > 0);
   }
+}
+
+export function validateTargetCombination(legalTargets, chosenIds) {
+  // should also throw if can't afford resist, or would require multiple detectors
+  const flagbearers = legalTargets.filter(e =>
+    hasKeyword(e.current, flagbearer)
+  );
+  const choseFlagbearer = some(chosenIds, id =>
+    hasKeyword(state.entities[id].current, flagbearer)
+  );
+  if (flagbearers.length > 0 && !choseFlagbearer) {
+    throw new Error("Must target at least one flagbearer");
+  }
+  return true;
 }

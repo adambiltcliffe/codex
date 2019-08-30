@@ -64,6 +64,7 @@ export const specColors = {
 
 export const targetMode = {
   single: "TM_1",
+  multiple: "TM_N",
   modal: "TM_MODAL",
   obliterate: "TM_OBLITERATE",
   codex: "TM_CODEX"

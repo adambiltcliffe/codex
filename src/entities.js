@@ -80,7 +80,7 @@ export function createHero(state, owner, card) {
   return newHero;
 }
 
-export function createOngoingSpell(state, owner, card) {
+export function createOngoingSpell(state, owner, card, suppressUpdate) {
   const newOngoingSpell = {
     id: `e${state.nextId}`,
     card,
@@ -92,7 +92,9 @@ export function createOngoingSpell(state, owner, card) {
   };
   state.entities[newOngoingSpell.id] = newOngoingSpell;
   state.nextId++;
-  applyStateBasedEffects(state);
+  if (!suppressUpdate) {
+    applyStateBasedEffects(state);
+  }
   return newOngoingSpell;
 }
 
