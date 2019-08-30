@@ -16,7 +16,12 @@ import {
 import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
 import CodexGame from "../game";
-import { hasKeyword, haste, unstoppable } from "./abilities/keywords";
+import {
+  hasKeyword,
+  haste,
+  unstoppable,
+  swiftStrike
+} from "./abilities/keywords";
 import { types } from "./constants";
 
 test("Nimble Fencer gives herself and other Virtuosos haste", () => {
@@ -405,4 +410,43 @@ test("Can activate Harmony to flip dancers", () => {
   expect(
     hasKeyword(tg.state.entities[token1].current, unstoppable)
   ).toBeTruthy();
+});
+
+test("Blademaster gives other units swift strike", () => {
+  const tg = new TestGame()
+    .putCardsInHand(testp1Id, ["blademaster"])
+    .setGold(testp1Id, 6)
+    .insertFixture(testp1Id, fixtureNames.tech3)
+    .insertEntity(testp1Id, "iron_man")
+    .insertEntity(testp2Id, "regularsized_rhinoceros");
+  const [t3, im, rr] = tg.insertedEntityIds;
+  expect(hasKeyword(tg.state.entities[im].current, swiftStrike)).toBeFalsy();
+  tg.playAction({ type: "play", card: "blademaster" });
+  const bm = findEntityIds(tg.state, e => e.card == "blademaster")[0];
+  expect(hasKeyword(tg.state.entities[im].current, swiftStrike)).toBeTruthy();
+  tg.modifyEntity(rr, { armor: 5 }).playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: rr, target: bm }
+  ]);
+  expect(tg.state.log).toContain("Blademaster dies.");
+  expect(hasKeyword(tg.state.entities[im].current, swiftStrike)).toBeFalsy();
+});
+
+test("If Blademaster dies on defense, others don't deal damage twice", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["blademaster", "fox_primus"])
+    .insertEntities(testp2Id, ["blademaster", "spectral_roc"]);
+  const [bm1, fp, bm2, sr] = tg.insertedEntityIds;
+  tg.modifyEntity(bm1, { damage: 3 }).playActions([
+    { type: "endTurn", patrollers: [fp, null, null, null, null] },
+    { type: "attack", attacker: sr, target: bm1 }
+  ]);
+  expect(tg.state.log).toContain(
+    "Spectral Roc attacks Blademaster, flying over Fox Primus."
+  );
+  expect(tg.state.entities[sr].damage).toEqual(2);
+  expect(tg.state.log).toContain("Fox Primus deals 2 damage to Spectral Roc.");
+  expect(tg.state.log).toContain("Spectral Roc deals 4 damage to Blademaster.");
+  expect(tg.state.log).toContain("Blademaster dies.");
+  expect(tg.state.log).not.toContain("Spectral Roc dies.");
 });

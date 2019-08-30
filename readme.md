@@ -1,9 +1,3 @@
-# Tests to write
-
-Blademaster: other units have swift strike
-Blademaster: after it dies, other units lose swift strike
-Blademaster: if it dies when defending without killing attacker, other units don't deal damage twice
-
 # Tests to write later
 
 Long-range
