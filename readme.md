@@ -71,17 +71,69 @@ Make sure it works out of the box, i.e. without npm linking playground
 
 # Cards that will need special attention
 
-Hotter Fire (Red/Fire)
-Master Midori (Green/Balance)
-Stalking Tiger (Green/Feral)
-Rampaging Elephant (Green/Feral)
-Polymorph: Squirrel (Green/Growth)
-Manufactured Truth (Blue/starter)
-Jail (Blue/starter)
-Reteller of Truths (Blue/Truth)
-Dreamscape (Blue/Truth)
-Graveyard (Black/starter)
-Soul Stone (Black/Demonology)
-Smoker (White/starter)
-Second Chances (Purple/Past)
-Gilded Glaxx (Purple/Future)
+Trigger on who-killed or how-killed:
+. Captain Zane (Red/Anarchy)
+. Gunpoint Taxman (Red/Anarchy)
+. Firehouse (Red/Fire)
+. Jandra, the Negator (Black/starter)
+. Shadow Blade (Black/Demonology)
+Delayed Trigger:
+. Desperation (Red/Blood)
+. Bloodlust (Red/Blood)
+. Vandy Anadrose (Black/Demonology)
+. Death Rites (Black/Necromancy)
+. Promise of Payment (Purple/Future)
+Modify arriving units:
+. Drakk Ramhorn
+Modifying ability damage:
+. Hotter Fire (Red/Fire)
+Damage prevention:
+. Focus Master (White/Discipline)
+. Morningstar Pass (White/Strength)
+. Sentry (Purple/Present)
+. Blackhand Dozer (Black/Demonology)
+Order of continous effects matters:
+. Master Midori (Green/Balance)
+. Behind the Ferns (Green/Feral)
+. Wandering Mimic (Green/Balance)
+. Fox's Den School (White/Ninjutsu)
+. Jade Fox, Den's Headmistress (White/Ninjutsu)
+Conditional stealth:
+. Stalking Tiger (Green/Feral)
+On-exhaust trigger:
+. Rampaging Elephant (Green/Feral)
+Copy and modify-printed-values effects:
+. Polymorph: Squirrel (Green/Growth)
+. Manufactured Truth (Blue/starter)
+. Chaos Mirror (Red/Anarchy)
+Copiable (T0/1) legends:
+. Galina Glimmer (Green/Growth)
+. Jandra, the Negator (Black/starter)
+Heroes can't level up:
+. Nether Drain (Black/Necromancy)
+. Chronofixer (Purple/Present)
+Choice of how to pay costs:
+. Skeletal Lord (White/Necromancy)
+. True Power of Storms (White/Discipline)
+. Omegacron (Purple/Future)
+Replace units entering play:
+. Jail (Blue/starter)
+Replace units leaving play:
+. Reteller of Truths (Blue/Truth)
+. Graveyard (Black/starter)
+. Soul Stone (Black/Demonology)
+. Second Chances (Purple/Past)
+. Brave Knight (Blue/Peace)
+On-target trigger:
+. Dreamscape (Blue/Truth)
+. All Illusions (Blue/starter and Truth)
+. Smoker (White/starter)
+Damage Division:
+. Ember Sparks (Red/Fire)
+. Burning Volley (Red/Fire)
+Force sacrifice:
+. Sacrifice the Weak (Black/starter)
+Can't be sacrificed:
+. Pestering Haunt (Black/starter)
+Just generally weird interactions with everything:
+. Gilded Glaxx (Purple/Future)
