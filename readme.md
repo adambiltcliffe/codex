@@ -7,14 +7,8 @@ Trojan Duck: obliterate 2 units
 Trojan Duck: attack trigger can damage building
 Trojan Duck: if kill attack target with trigger, choose new one
 
-Harmony: Can activate ability and turn tokens into Angry Dancers
-
-Unstoppable: Can attack anything
-Unstoppable: Doesn't trigger tower detection
-
 # Tests to write later
 
-\*Unstoppable
 Long-range
 Scorch and Fire Dart
 Starting with right cards in codex, command zone and deck for 3-hero game
@@ -26,6 +20,7 @@ Flying plus stealth/invisible/unstoppable etc. and not taking AA damage if not u
 Declare an attack that destroys all possible attack targets with triggers (obliterate vs Lawbringer Gryphon)
 Check stealth abilities vs tower still work correctly when retarget after initial target dies
 Flyer with stealth/unstoppable abilities doesn't fly over AA units
+Attacker with stealth and unstoppable still triggers tower (check this is right)
 Dancer tokens don't flip if you stop the music while they're polymorphed or copying something
 Units which sacrifice as a cost have the ability resolve before triggers (eg. bugblatter)
 
