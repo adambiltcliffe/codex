@@ -57,7 +57,7 @@ export function checkChoiceAction(state, action) {
           );
         }
       });
-      validateTargetCombination(legalChoices, action.targets);
+      validateTargetCombination(state, legalChoices, action.targets);
       return true;
     case targetMode.obliterate:
       const dpId = state.currentAttack.defendingPlayer;

@@ -450,3 +450,48 @@ test("If Blademaster dies on defense, others don't deal damage twice", () => {
   expect(tg.state.log).toContain("Blademaster dies.");
   expect(tg.state.log).not.toContain("Spectral Roc dies.");
 });
+
+test("Can buff two of your units with Two Step, goes away when River dies", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "tenderfoot",
+      "older_brother",
+      "fruit_ninja"
+    ])
+    .putCardsInHand(testp1Id, ["two_step"]).insertEntity(testp2Id, 'iron_man');
+  const [river, tf, ob, fn, im] = tg.insertedEntityIds;
+  tg.modifyEntity(river,{controlledSince:-1})
+  expect(tg.state.entities[tf].current).toMatchObject({ attack: 1, hp: 2 });
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
+  tg.playAction({ type: "play", card: "two_step" });
+  tg.playAction({ type: "choice", targets: [tf, ob] });
+  expect(tg.state.entities[tf].current).toMatchObject({ attack: 3, hp: 4 });
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 4, hp: 4 });
+  tg.playAction({type:'attack',attacker:river,target:im})
+  expect(tg.state.entities[tf].current).toMatchObject({ attack: 1, hp: 2 });
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
+  expect(tg.state.log).toContain('River Montoya dies.')
+  expect(tg.state.log).toContain('Two Step is sacrificed.')
+});
+
+test("Can buff two of your units with Two Step, goes away when one dies", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "timely_messenger",
+      "older_brother",
+      "fruit_ninja"
+    ])
+    .putCardsInHand(testp1Id, ["two_step"]).insertEntity(testp2Id, 'iron_man');
+  const [river, tm, ob, fn, im] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "two_step" });
+  tg.playAction({ type: "choice", targets: [tm, ob] });
+  expect(tg.state.entities[tm].current).toMatchObject({ attack: 3, hp: 3 });
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 4, hp: 4 });
+  tg.playAction({type:'attack',attacker:tm,target:im})
+  expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
+  expect(tg.state.entities[im].damage).toEqual(3)
+  expect(tg.state.log).toContain('Timely Messenger dies.')
+  expect(tg.state.log).toContain('Two Step is sacrificed.')
+});

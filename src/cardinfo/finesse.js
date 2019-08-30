@@ -4,7 +4,8 @@ import {
   conferComplexAbility,
   conferKeyword,
   damageEntity,
-  applyStateBasedEffects
+  applyStateBasedEffects,
+  createOngoingSpell
 } from "../entities";
 import {
   channeling,
@@ -19,11 +20,13 @@ import {
 } from "./abilities/keywords";
 import { getAP, andJoinVerb } from "../util";
 
-import forEach from "lodash/forEach";
 import { attachEffectThisTurn } from "../effects";
 import { isPatrolling, sideline } from "../patrolzone";
 import { drawCards } from "../draw";
 import { putUnitIntoPlay } from "../actions/play";
+
+import find from "lodash/find";
+import forEach from "lodash/forEach";
 
 const finesseCardInfo = {
   harmony: {
@@ -135,6 +138,7 @@ const finesseCardInfo = {
       channeling,
       {
         isSpellEffect: true,
+        hasTargetSymbol: true,
         targetMode: targetMode.multiple,
         targetTypes: [types.unit],
         canTarget: ({ state, target }) => {
@@ -146,13 +150,13 @@ const finesseCardInfo = {
         },
         requireAllTargets: true,
         action: ({ state, choices }) => {
-          const spellId = createOngoingSpell(
+          const spell = createOngoingSpell(
             state,
             getAP(state).id,
             state.playedCard,
             true
           );
-          state.entities[spellId].partnerIds = choices.targetIds;
+          state.entities[spell.id].partnerIds = choices.targetIds;
           applyStateBasedEffects(state);
         },
         modifyGlobalValues: ({ self, other }) => {
@@ -166,16 +170,17 @@ const finesseCardInfo = {
           }
         },
         mustSacrifice: ({ state, source }) => {
+          let sacrifice = false;
           source.partnerIds.forEach(id => {
             const partner = state.entities[id];
             if (
               partner === undefined ||
               partner.current.controller != source.current.controller
             ) {
-              return true;
+              sacrifice = true;
             }
           });
-          return false;
+          return sacrifice;
         }
       }
     ]

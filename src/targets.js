@@ -139,10 +139,10 @@ export function getLegalChoicesForStep(state, stepDef) {
   }
 }
 
-export function validateTargetCombination(legalTargets, chosenIds) {
+export function validateTargetCombination(state, legalIds, chosenIds) {
   // should also throw if can't afford resist, or would require multiple detectors
-  const flagbearers = legalTargets.filter(e =>
-    hasKeyword(e.current, flagbearer)
+  const flagbearers = legalIds.filter(id =>
+    hasKeyword(state.entities[id].current, flagbearer)
   );
   const choseFlagbearer = some(chosenIds, id =>
     hasKeyword(state.entities[id].current, flagbearer)

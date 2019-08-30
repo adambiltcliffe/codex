@@ -1,8 +1,13 @@
-Multiple targets: triggers/canResolveCurrentTrigger
-
 # Two Step tests
 
-Combinations including one or more flagbearers
+Can't choose a single target
+Can't choose three targets
+Can't target an opponent's unit
+Can't re-partner something already partnered
+Can re-partner something previously partnered if its partner died
+If you control a flagbearer, you have to partner it
+If you control two flagbearers, you only have to partner one
+If you have a flagbearer that's already partnered, can partner something else
 
 # Tests to write later
 
@@ -21,6 +26,7 @@ Attacker with stealth and unstoppable still triggers tower (check this is right)
 Dancer tokens don't flip if you stop the music while they're polymorphed or copying something
 Units which sacrifice as a cost have the ability resolve before triggers (eg. bugblatter)
 Triggers which must target some specific number of things >1 are skipped if unfulfillable (detector, resist)
+Stealing half of a Two-Step partnership causes Two-Step to be sacrificed
 
 # Game features not implemented:
 
