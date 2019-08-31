@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import CodexGame from "./src/game";
+import CodexGame from "./src";
 
 import PlaygroundApp from "@adam.biltcliffe/board-state-playground";
 

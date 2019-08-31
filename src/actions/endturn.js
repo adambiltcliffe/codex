@@ -39,6 +39,7 @@ export function checkEndTurnAction(state, action) {
       }
     }
   });
+  return true;
 }
 
 export function doEndTurnAction(state, action) {

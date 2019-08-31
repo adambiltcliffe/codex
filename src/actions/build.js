@@ -37,6 +37,7 @@ export function checkBuildAction(state, action) {
       throw new Error("Already constructing an add-on.");
     }
   }
+  return true;
 }
 
 export function doBuildAction(state, action) {

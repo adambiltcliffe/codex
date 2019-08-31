@@ -15,6 +15,7 @@ export function checkSummonAction(state, action) {
   if ((ap.heroCooldowns[action.hero] || 0) > 0) {
     throw new Error("Hero is on cooldown");
   }
+  return true;
 }
 
 export function doSummonAction(state, action) {

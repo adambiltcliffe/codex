@@ -1,7 +1,6 @@
 import log from "../log";
 import { getAP } from "../util";
 import { resetSecret, unwrapSecret } from "../targets";
-import deepcopy from "deepcopy";
 
 export function checkWorkerAction(state, action) {
   const ap = getAP(state);
@@ -14,6 +13,7 @@ export function checkWorkerAction(state, action) {
   if (state.madeWorkerThisTurn) {
     throw new Error("Already made a worker this turn");
   }
+  return true;
 }
 
 export function doWorkerAction(state, action) {

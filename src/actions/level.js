@@ -31,6 +31,7 @@ export function checkLevelAction(state, action) {
   ) {
     throw new Error("Hero would exceed max level.");
   }
+  return true;
 }
 
 export function doLevelAction(state, action) {

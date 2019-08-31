@@ -65,6 +65,7 @@ export function checkPlayAction(state, action) {
       }
     }
   }
+  return true;
 }
 
 export function doPlayAction(state, action) {

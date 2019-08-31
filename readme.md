@@ -40,23 +40,24 @@ Make hero level up on death happen faster than other death triggers
 
 Choosing an opponent (update Discord)
 
+# Stuff to do before initial "release"
+
+Add suggestions for targetMode.multiple, targetMode.modal and targetMode.codex
+Make sure it works out of the box, i.e. without npm linking playground
+
 # Other stuff to do
 
+Write tests for suggest
 Tidy up the way making choices and queuing triggers is reported
 Make damage reporting call out swift strike/overpower/sparkshot damage
 Rewrite the core loop in CodexGame.updateState as an FSM or other better way
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities
-Move suggest into a module and write tests for it
-Add suggestions for starting game (properly)
-Add suggestions for targetMode.modal and targetMode.codex
-Add suggestions for building fixtures
 Auto-resolve targetMode.multiple when there's only one valid combination
 Move abilities/ out of cardinfo/ to untangle some imports
 Store 'patrolSlot' in entity.current to simplify attack logic
 Use a schema validation library to simplify action checking
-Make sure it works out of the box, i.e. without npm linking playground
 
 # Cards that will need special attention
 

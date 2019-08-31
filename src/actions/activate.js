@@ -33,6 +33,7 @@ export function checkActivateAction(state, action) {
       throw new Error("Source entity is exhausted.");
     }
   }
+  return true;
 }
 
 export function doActivateAction(state, action) {

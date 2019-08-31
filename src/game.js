@@ -1,27 +1,17 @@
 import Game from "board-state";
 import * as actions from "./actions";
-import { getAP } from "./util";
 import log from "./log";
 import { phases, advancePhase } from "./phases";
 import {
   addTriggerToQueue,
   canResolveCurrentTrigger,
   enqueueNextTrigger,
-  resolveCurrentTrigger,
-  getLegalChoicesForCurrentTrigger
+  resolveCurrentTrigger
 } from "./triggers";
-import { getCurrentValues, cacheCurrentValues } from "./entities";
-import { types, specs } from "./cardinfo/constants";
-import { emptyPatrolZone } from "./patrolzone";
+import { cacheCurrentValues } from "./entities";
 import { enqueueResolveAttack } from "./resolveattack";
 
-import flatMap from "lodash/flatMap";
-import flatten from "lodash/flatten";
 import fromPairs from "lodash/fromPairs";
-import partition from "lodash/partition";
-import range from "lodash/range";
-import take from "lodash/take";
-import uniq from "lodash/uniq";
 
 class CodexGame extends Game {
   static getFilters(state) {
@@ -180,87 +170,6 @@ class CodexGame extends Game {
       default:
         throw new Error("Unrecognised action type");
     }
-  }
-  static suggestActions(state) {
-    if (!state.started) {
-      // make this use correct player IDs
-      return [
-        {
-          type: "start",
-          specs: { player1: [specs.bashing], player2: [specs.bashing] }
-        }
-      ];
-    }
-    if (state.newTriggers.length > 0) {
-      return range(state.newTriggers.length).map(n => ({
-        type: "queue",
-        index: n
-      }));
-    }
-    if (state.currentTrigger) {
-      return getLegalChoicesForCurrentTrigger(state).map(c => ({
-        type: "choice",
-        target: c
-      }));
-    }
-    return this.suggestMainPhaseActions(state);
-  }
-  static suggestMainPhaseActions(state) {
-    const ap = getAP(state);
-    const base = [{ type: "endTurn" }];
-    const workerActions = range(ap.hand.length).map(n => ({
-      type: "worker",
-      handIndex: n
-    }));
-    const playActions = uniq(ap.hand).map(c => ({ type: "play", card: c }));
-    const summonActions = uniq(ap.commandZone).map(h => ({
-      type: "summon",
-      hero: h
-    }));
-    const [apUnits, napUnits] = partition(
-      state.entities,
-      u => u.current.controller == ap.id
-    );
-    const attackActions = flatten(
-      apUnits.map(a => napUnits.map(b => [a.id, b.id]))
-    ).map(([a, b]) => ({ type: "attack", attacker: a, target: b }));
-    const examplePatrollers = take(
-      apUnits
-        .filter(
-          e => e.current.type == types.unit || e.current.type == types.hero
-        )
-        .map(u => u.id)
-        .concat(emptyPatrolZone),
-      5
-    );
-    const examplePatrolAction = [
-      { type: "endTurn", patrollers: examplePatrollers }
-    ];
-    const apUnitVals = getCurrentValues(state, apUnits.map(u => u.id));
-    const activateActions = flatMap(apUnits, u =>
-      apUnitVals[u.id].abilities.reduce(
-        (acc, a, index) =>
-          a.isActivatedAbility ? acc.concat([[u.id, index]]) : acc,
-        []
-      )
-    ).map(([e, index]) => ({ type: "activate", source: e, index }));
-    const levelActions = flatMap(
-      Object.entries(apUnitVals).filter(([_k, v]) => v.type == types.hero),
-      ([id, hv]) =>
-        range(1, 1 + hv.maxbandLevel - state.entities[id].level).map(n => ({
-          type: "level",
-          hero: id,
-          amount: n
-        }))
-    );
-    return base
-      .concat(examplePatrolAction)
-      .concat(workerActions)
-      .concat(playActions)
-      .concat(summonActions)
-      .concat(levelActions)
-      .concat(attackActions)
-      .concat(activateActions);
   }
 }
 

@@ -59,6 +59,7 @@ export function checkStartAction(state, action) {
       }
     });
   });
+  return true;
 }
 
 export function doStartAction(state, action) {
