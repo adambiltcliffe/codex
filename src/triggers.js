@@ -48,6 +48,15 @@ export function currentTriggerDefinition(state) {
   return get(triggerDefinitions, state.currentTrigger.path);
 }
 
+export function currentStepDefinition(state) {
+  const def = currentTriggerDefinition(state);
+  let stepDef = def;
+  if (def.steps) {
+    stepDef = def.steps[state.currentTrigger.stepIndex];
+  }
+  return stepDef;
+}
+
 export function getLegalChoicesForCurrentTrigger(state) {
   const def = currentTriggerDefinition(state);
   let stepDef = def;

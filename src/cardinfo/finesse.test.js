@@ -459,20 +459,21 @@ test("Can buff two of your units with Two Step, goes away when River dies", () =
       "older_brother",
       "fruit_ninja"
     ])
-    .putCardsInHand(testp1Id, ["two_step"]).insertEntity(testp2Id, 'iron_man');
+    .putCardsInHand(testp1Id, ["two_step"])
+    .insertEntity(testp2Id, "iron_man");
   const [river, tf, ob, fn, im] = tg.insertedEntityIds;
-  tg.modifyEntity(river,{controlledSince:-1})
+  tg.modifyEntity(river, { controlledSince: -1 });
   expect(tg.state.entities[tf].current).toMatchObject({ attack: 1, hp: 2 });
   expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
   tg.playAction({ type: "play", card: "two_step" });
   tg.playAction({ type: "choice", targets: [tf, ob] });
   expect(tg.state.entities[tf].current).toMatchObject({ attack: 3, hp: 4 });
   expect(tg.state.entities[ob].current).toMatchObject({ attack: 4, hp: 4 });
-  tg.playAction({type:'attack',attacker:river,target:im})
+  tg.playAction({ type: "attack", attacker: river, target: im });
   expect(tg.state.entities[tf].current).toMatchObject({ attack: 1, hp: 2 });
   expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
-  expect(tg.state.log).toContain('River Montoya dies.')
-  expect(tg.state.log).toContain('Two Step is sacrificed.')
+  expect(tg.state.log).toContain("River Montoya dies.");
+  expect(tg.state.log).toContain("Two Step is sacrificed.");
 });
 
 test("Can buff two of your units with Two Step, goes away when one dies", () => {
@@ -483,15 +484,93 @@ test("Can buff two of your units with Two Step, goes away when one dies", () => 
       "older_brother",
       "fruit_ninja"
     ])
-    .putCardsInHand(testp1Id, ["two_step"]).insertEntity(testp2Id, 'iron_man');
+    .putCardsInHand(testp1Id, ["two_step"])
+    .insertEntity(testp2Id, "iron_man");
   const [river, tm, ob, fn, im] = tg.insertedEntityIds;
   tg.playAction({ type: "play", card: "two_step" });
   tg.playAction({ type: "choice", targets: [tm, ob] });
   expect(tg.state.entities[tm].current).toMatchObject({ attack: 3, hp: 3 });
   expect(tg.state.entities[ob].current).toMatchObject({ attack: 4, hp: 4 });
-  tg.playAction({type:'attack',attacker:tm,target:im})
+  tg.playAction({ type: "attack", attacker: tm, target: im });
   expect(tg.state.entities[ob].current).toMatchObject({ attack: 2, hp: 2 });
-  expect(tg.state.entities[im].damage).toEqual(3)
-  expect(tg.state.log).toContain('Timely Messenger dies.')
-  expect(tg.state.log).toContain('Two Step is sacrificed.')
+  expect(tg.state.entities[im].damage).toEqual(3);
+  expect(tg.state.log).toContain("Timely Messenger dies.");
+  expect(tg.state.log).toContain("Two Step is sacrificed.");
 });
+
+test("Two Step requires exactly two targets and you must control them", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "tenderfoot",
+      "older_brother",
+      "fruit_ninja"
+    ])
+    .insertEntity(testp2Id, "brick_thief")
+    .putCardsInHand(testp1Id, ["two_step"]);
+  const [river, tf, ob, fn, bt] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "two_step" });
+  expect(tg.getLegalChoices().sort()).toEqual([tf, ob, fn].sort());
+  expect(() => tg.checkAction({ type: "choice", targets: [tf] })).toThrow(
+    "Too few"
+  );
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [tf, ob, fn] })
+  ).toThrow("Too many");
+  expect(() => tg.checkAction({ type: "choice", targets: [tf, bt] })).toThrow(
+    "legal choice"
+  );
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [tf, river] })
+  ).toThrow("legal choice");
+});
+
+test("Can't re-partner something already partnered with Two Step", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "timely_messenger",
+      "older_brother",
+      "fruit_ninja",
+      "brick_thief",
+      "helpful_turtle"
+    ])
+    .putCardsInHand(testp1Id, ["two_step", "two_step", "two_step"])
+    .setGold(testp1Id, 6)
+    .insertEntity(testp2Id, "iron_man");
+  const [river, tm, ob, fn, bt, ht, im] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "two_step" });
+  tg.playAction({ type: "choice", targets: [tm, ob] });
+  tg.playAction({ type: "play", card: "two_step" });
+  expect(tg.getLegalChoices().sort()).toEqual([bt, fn, ht].sort());
+  expect(() => tg.checkAction({ type: "choice", targets: [ob, fn] })).toThrow(
+    "legal choice"
+  );
+  tg.playAction({ type: "choice", targets: [bt, ht] });
+  tg.playAction({ type: "attack", attacker: tm, target: im });
+  expect(tg.state.log).toContain("Two Step is sacrificed.");
+  tg.playAction({ type: "play", card: "two_step" });
+  expect(tg.getLegalChoices()).toEqual([ob, fn].sort());
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [ob, fn] })
+  ).not.toThrow();
+});
+
+test("Skip resolving Two Step if you only control one unit", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["river_montoya", "older_brother"])
+    .putCardsInHand(testp1Id, ["two_step"])
+    .playAction({ type: "play", card: "two_step" });
+  expect(tg.state.log).toContain(
+    "Choose two dance partners: Not enough legal choices."
+  );
+  expect(tg.state.currentTrigger).toBeNull();
+  expect(tg.state.playedCard).toBeUndefined();
+  expect(tg.state.players[testp1Id].discard).toContain("two_step");
+});
+
+/*
+If you control a flagbearer, you have to partner it
+If you control two flagbearers, you only have to partner one
+If you have a flagbearer that's already partnered, can partner something else
+*/

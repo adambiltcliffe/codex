@@ -8,7 +8,10 @@ import {
   createOngoingSpell
 } from "./entities";
 import { fixtureNames } from "./fixtures";
-import { getLegalChoicesForCurrentTrigger } from "./triggers";
+import {
+  getLegalChoicesForCurrentTrigger,
+  currentStepDefinition
+} from "./triggers";
 import cardInfo from "./cardinfo";
 
 import pickBy from "lodash/pickby";
@@ -89,6 +92,15 @@ export function playActions(initialState, actionList) {
       throw new Error(
         "Last action produced an empty log: " + JSON.stringify(a)
       );
+    }
+    if (state.currentTrigger !== null) {
+      const stepDef = currentStepDefinition(state);
+      if (stepDef.prompt === undefined) {
+        throw new Error(
+          "Currently-resolving trigger has no prompt: " +
+            JSON.stringify(state.currentTrigger)
+        );
+      }
     }
   });
   return state;

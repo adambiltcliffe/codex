@@ -138,8 +138,11 @@ const finesseCardInfo = {
       channeling,
       {
         isSpellEffect: true,
+        prompt: "Choose two dance partners",
         hasTargetSymbol: true,
         targetMode: targetMode.multiple,
+        targetCount: 2,
+        requireAllTargets: true,
         targetTypes: [types.unit],
         canTarget: ({ state, target }) => {
           const ap = getAP(state);
@@ -148,7 +151,6 @@ const finesseCardInfo = {
             target.current.dancePartner === undefined
           );
         },
-        requireAllTargets: true,
         action: ({ state, choices }) => {
           const spell = createOngoingSpell(
             state,
