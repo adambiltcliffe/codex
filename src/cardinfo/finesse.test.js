@@ -569,8 +569,65 @@ test("Skip resolving Two Step if you only control one unit", () => {
   expect(tg.state.players[testp1Id].discard).toContain("two_step");
 });
 
-/*
-If you control a flagbearer, you have to partner it
-If you control two flagbearers, you only have to partner one
-If you have a flagbearer that's already partnered, can partner something else
-*/
+test("If you control a flagbearer, you have to partner it", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "tenderfoot",
+      "older_brother",
+      "granfalloon_flagbearer"
+    ])
+    .putCardsInHand(testp1Id, ["two_step"]);
+  const [river, tf, ob, gf] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "two_step" });
+  expect(() => tg.checkAction({ type: "choice", targets: [tf, ob] })).toThrow(
+    "flagbearer"
+  );
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [tf, gf] })
+  ).not.toThrow();
+});
+
+test("If you control two flagbearers, you only have to partner one", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "tenderfoot",
+      "older_brother",
+      "granfalloon_flagbearer",
+      "granfalloon_flagbearer"
+    ])
+    .putCardsInHand(testp1Id, ["two_step"]);
+  const [river, tf, ob, gf1, gf2] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "two_step" });
+  expect(() => tg.checkAction({ type: "choice", targets: [tf, ob] })).toThrow(
+    "flagbearer"
+  );
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [tf, gf1] })
+  ).not.toThrow();
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [gf1, gf2] })
+  ).not.toThrow();
+});
+
+test("If your flagbearer is already partnered, you can partner two other units", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "tenderfoot",
+      "older_brother",
+      "fruit_ninja",
+      "granfalloon_flagbearer"
+    ])
+    .putCardsInHand(testp1Id, ["two_step", "two_step"]);
+  const [river, tf, ob, fn, gf] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "play", card: "two_step" },
+    { type: "choice", targets: [tf, gf] },
+    { type: "play", card: "two_step" }
+  ]);
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [ob, fn] })
+  ).not.toThrow();
+});
