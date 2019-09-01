@@ -1,5 +1,5 @@
 {
-  "name": "codex",
+  "name": "@adam.biltcliffe/codex",
   "version": "0.0.1",
   "description": "Game rules engine for Codex by Sirlin Games",
   "main": "src/index.js",
@@ -15,6 +15,7 @@
     "boardgames"
   ],
   "author": "Adam Biltcliffe",
+  "repository": "https://github.com/adambiltcliffe/codex.git",
   "license": "ISC",
   "dependencies": {
     "board-state": "^0.1.1",
