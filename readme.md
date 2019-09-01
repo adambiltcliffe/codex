@@ -42,7 +42,6 @@ Choosing an opponent (update Discord)
 
 # Stuff to do before initial "release"
 
-Add suggestions for targetMode.multiple and targetMode.obliterate
 Make sure it works out of the box, i.e. without npm linking playground
 
 # Other stuff to do
