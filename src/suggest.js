@@ -1,9 +1,9 @@
 /**
  * Suggestions are exhaustive except for the following action types:
  * endTurn - only one set of possible patrollers is generated
- * choice with targetMode.multiple - currently not handled
- * choice with targetMode.codex - a few options are generated, at least one valid
- * choice with targetMode.obliterate - currently not handled
+ * choice with targetMode.multiple - one choice, should always be legal
+ * choice with targetMode.codex - a few suggestions are generated, at least one should be legal
+ * choice with targetMode.obliterate - one suggestion, should always be legal
  */
 
 import { getAP } from "./util";
@@ -26,6 +26,7 @@ import take from "lodash/take";
 import uniq from "lodash/uniq";
 import { fixtureNames } from "./fixtures";
 import { wrapSecrets } from "./targets";
+import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 
 export default function suggestActions(state) {
   if (!state.started) {
@@ -68,7 +69,8 @@ function getQueueCandidates(state) {
 
 function getChoiceCandidates(state) {
   const ap = getAP(state);
-  switch (currentStepDefinition(state).targetMode) {
+  const stepDef = currentStepDefinition(state);
+  switch (stepDef.targetMode) {
     case targetMode.single:
     case targetMode.modal: {
       return getLegalChoicesForCurrentTrigger(state).map(c => ({
@@ -77,10 +79,30 @@ function getChoiceCandidates(state) {
       }));
     }
     case targetMode.multiple: {
-      return [];
+      let choices = getLegalChoicesForCurrentTrigger(state);
+      if (stepDef.hasTargetSymbol) {
+        choices = sortBy(choices, id =>
+          state.entities[id].current.subtypes.includes("Flagbearer")
+        )
+          ? 0
+          : 1;
+      }
+      return take(choices, stepDef.targetCount).map(ts => ({
+        type: "choice",
+        targets: ts
+      }));
     }
     case targetMode.obliterate: {
-      return [];
+      const dpId = state.currentAttack.defendingPlayer;
+      const [definitely, maybe] = getObliterateTargets(
+        state,
+        dpId,
+        stepDef.targetCount
+      );
+      return take(maybe, stepDef.targetCount).map(es => ({
+        type: "choice",
+        targets: es.map(e => e.id)
+      }));
     }
     case targetMode.codex: {
       const realIndexList = flatMap(ap.codex, ({ card, n }, ix) =>
