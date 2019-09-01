@@ -1,3 +1,11 @@
+/**
+ * Suggestions are exhaustive except for the following action types:
+ * endTurn - only one set of possible patrollers is generated
+ * choice with targetMode.multiple - currently not handled
+ * choice with targetMode.codex - a few options are generated, at least one valid
+ * choice with targetMode.obliterate - currently not handled
+ */
+
 import { getAP } from "./util";
 import {
   getLegalChoicesForCurrentTrigger,
@@ -13,9 +21,11 @@ import flatten from "lodash/flatten";
 import map from "lodash/map";
 import partition from "lodash/partition";
 import range from "lodash/range";
+import slice from "lodash/slice";
 import take from "lodash/take";
 import uniq from "lodash/uniq";
 import { fixtureNames } from "./fixtures";
+import { wrapSecrets } from "./targets";
 
 export default function suggestActions(state) {
   if (!state.started) {
@@ -57,6 +67,7 @@ function getQueueCandidates(state) {
 }
 
 function getChoiceCandidates(state) {
+  const ap = getAP(state);
   switch (currentStepDefinition(state).targetMode) {
     case targetMode.single:
     case targetMode.modal: {
@@ -72,7 +83,21 @@ function getChoiceCandidates(state) {
       return [];
     }
     case targetMode.codex: {
-      return [];
+      const realIndexList = flatMap(ap.codex, ({ card, n }, ix) =>
+        Array(n).fill(ix)
+      );
+      console.log(realIndexList);
+      const realInds = [
+        [],
+        take(realIndexList, 1),
+        take(realIndexList, 2),
+        slice(realIndexList, 1, 3),
+        slice(realIndexList, 2, 4)
+      ];
+      return realInds.map(is => ({
+        type: "choice",
+        indices: wrapSecrets(state, ap.id, is, ap.codex.length)
+      }));
     }
   }
 }

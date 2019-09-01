@@ -42,12 +42,12 @@ Choosing an opponent (update Discord)
 
 # Stuff to do before initial "release"
 
-Add suggestions for targetMode.multiple, targetMode.modal and targetMode.codex
+Add suggestions for targetMode.multiple and targetMode.obliterate
 Make sure it works out of the box, i.e. without npm linking playground
 
 # Other stuff to do
 
-Write tests for suggest
+Write tests for suggest (particularly the non-exhaustive ones)
 Tidy up the way making choices and queuing triggers is reported
 Make damage reporting call out swift strike/overpower/sparkshot damage
 Rewrite the core loop in CodexGame.updateState as an FSM or other better way
