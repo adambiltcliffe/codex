@@ -1,3 +1,14 @@
+# Possible bugs to investigate
+
+Healing heals buildings as well as heroes/units
+Unclear reporting of destroying own add-on
+Order of items in log when sacrificing Harmony
+Double reporting of victory sometimes (seen when base destroyed by building damage?)
+Suggested actions for targetMode.modal don't work (seen with Appel Stomp)
+sortBy is not defined in suggest.js:105 (targetMode.multiple? seen with Two Step/flagbearer)
+Brick Thief reports nothing when no damage healed
+Check that destroying your own add-on when your base has only 2hp makes you lose
+
 # Tests to write later
 
 Long-range

@@ -108,7 +108,6 @@ function getChoiceCandidates(state) {
       const realIndexList = flatMap(ap.codex, ({ card, n }, ix) =>
         Array(n).fill(ix)
       );
-      console.log(realIndexList);
       const realInds = [
         [],
         take(realIndexList, 1),
