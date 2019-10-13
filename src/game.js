@@ -15,8 +15,9 @@ import fromPairs from "lodash/fromPairs";
 
 class CodexGame extends Game {
   static getFilters(state) {
+    const playerKeys = ["observer", ...state.playerList];
     return fromPairs(
-      state.playerList.map(k => [
+      playerKeys.map(k => [
         k,
         s => {
           if (!s.started) {
