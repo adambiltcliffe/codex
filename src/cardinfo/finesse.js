@@ -364,7 +364,8 @@ const finesseCardInfo = {
           isAbilityDamage: true
         });
       }
-    }
+    },
+    hideProperties: ["conferredAbility"]
   },
   backstabber: {
     color: colors.neutral,

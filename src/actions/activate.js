@@ -1,4 +1,4 @@
-import { killEntity } from "../entities";
+import { killEntity, getAbilityDefinition } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/abilities/keywords";
 import { getAP } from "../util";
 import log from "../log";
@@ -15,7 +15,9 @@ export function checkActivateAction(state, action) {
   if (source.current.controller != ap.id) {
     throw new Error("You don't control the source entity.");
   }
-  const abilityDef = source.current.abilities[action.index];
+  const abilityDef = getAbilityDefinition(
+    source.current.abilities[action.index]
+  );
   if (typeof abilityDef != "object") {
     throw new Error("Invalid ability index");
   }
@@ -44,10 +46,11 @@ export function doActivateAction(state, action) {
     sourceId: source.id,
     isActivatedAbility: true
   });
-  if (ability.costsExhaustSelf) {
+  const ad = getAbilityDefinition(ability);
+  if (ad.costsExhaustSelf) {
     state.entities[source.id].ready = false;
   }
-  if (ability.costsSacrificeSelf) {
+  if (ad.costsSacrificeSelf) {
     killEntity(state, source.id, { verb: "is sacrificed" });
   }
   log.add(

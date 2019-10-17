@@ -16,6 +16,10 @@ import max from "lodash/max";
 import upperFirst from "lodash/upperFirst";
 import { getAP } from "./util";
 
+export function getAbilityDefinition(a) {
+  return a.keyword ? a : get(triggerDefinitions, a.path);
+}
+
 export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
   const newBuilding = {
     id: `e${state.nextId}`,
@@ -232,12 +236,16 @@ function getLevelValuesForHero(u, printedValues) {
   };
   for (let b = 0; b <= band; b++) {
     (printedValues.bands[b].abilities || []).forEach((a, index) => {
-      result.abilities.push({
-        ...a,
-        path: `cardInfo.${u.card}.bands[${b}].abilities[${index}]`
-      });
+      result.abilities.push(
+        a.keyword
+          ? a
+          : {
+              path: `cardInfo.${u.card}.bands[${b}].abilities[${index}]`
+            }
+      );
     });
   }
+  delete result.bands;
   return result;
 }
 
@@ -246,8 +254,7 @@ export function conferKeyword(entity, kwAbility) {
 }
 
 export function conferComplexAbility(entity, path) {
-  const ability = get(triggerDefinitions, path);
-  entity.current.abilities.push({ ...ability, path });
+  entity.current.abilities.push({ path });
 }
 
 export function clearCurrentValues(state) {
@@ -290,8 +297,17 @@ export function updateCurrentValues(state) {
     e.current.subtypes = e.current.subtypes || [];
     e.current.abilities = e.current.abilities || [];
     if (e.current.type != types.hero) {
-      e.current.abilities.forEach((a, index) => {
-        a.path = `cardInfo.${e.card}.abilities[${index}]`;
+      e.current.abilities = e.current.abilities.map((a, index) =>
+        a.keyword === undefined
+          ? {
+              path: `cardInfo.${e.card}.abilities[${index}]`
+            }
+          : a
+      );
+    }
+    if (printedValues.hideProperties) {
+      printedValues.hideProperties.forEach(p => {
+        delete e.current[p];
       });
     }
   });
@@ -306,8 +322,9 @@ export function updateCurrentValues(state) {
       e.current.hp += e.runes;
     }
     forEach(e.current.abilities, a => {
-      if (a.modifyOwnValues) {
-        a.modifyOwnValues({
+      const ad = getAbilityDefinition(a);
+      if (ad.modifyOwnValues) {
+        ad.modifyOwnValues({
           state,
           self: e
         });
@@ -384,7 +401,8 @@ export function applyStateBasedEffects(state) {
         stable &= !wasKilled;
       }
       forEach(u.current.abilities, a => {
-        if (a.mustSacrifice && a.mustSacrifice({ state, source: u })) {
+        const ad = getAbilityDefinition(a);
+        if (ad.mustSacrifice && ad.mustSacrifice({ state, source: u })) {
           const wasKilled = killEntity(state, u.id, { verb: "is sacrificed" });
           stable &= !wasKilled;
         }

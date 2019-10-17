@@ -3,7 +3,8 @@ import log from "./log";
 import {
   getCurrentValues,
   applyStateBasedEffects,
-  createBuildingFixture
+  createBuildingFixture,
+  getAbilityDefinition
 } from "./entities";
 import { emptyPatrolZone, applyPatrolzoneEffects } from "./patrolzone";
 import fixtures, { fixtureNames } from "./fixtures";
@@ -87,7 +88,8 @@ export function enterUpkeepPhase(state) {
     const vals = getCurrentValues(state, u.id);
     if (vals.controller == ap.id) {
       forEach(vals.abilities, (a, index) => {
-        if (a.triggerOnUpkeep) {
+        const ad = getAbilityDefinition(a);
+        if (ad.triggerOnUpkeep) {
           state.newTriggers.push({
             path: a.path,
             sourceId: u.id

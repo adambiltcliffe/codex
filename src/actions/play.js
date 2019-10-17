@@ -1,7 +1,12 @@
 import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
-import { getCurrentValues, createUnit, createOngoingSpell } from "../entities";
+import {
+  getCurrentValues,
+  createUnit,
+  createOngoingSpell,
+  getAbilityDefinition
+} from "../entities";
 import { types, colors } from "../cardinfo/constants";
 import { addSpellToQueue } from "../triggers";
 
@@ -14,8 +19,9 @@ function getPlayCost(state, cardInfo) {
   const vals = getCurrentValues(state, Object.keys(state.entities));
   Object.entries(vals).forEach(([id, e]) => {
     e.abilities.forEach(a => {
-      if (a.modifyPlayCost) {
-        currentCost = a.modifyPlayCost({
+      const ad = getAbilityDefinition(a);
+      if (ad.modifyPlayCost) {
+        currentCost = ad.modifyPlayCost({
           state,
           sourceId: id,
           sourceVals: e,
@@ -79,9 +85,10 @@ export function doPlayAction(state, action) {
   ap.gold -= getPlayCost(state, ci);
   forEach(state.entities, e => {
     forEach(e.current.abilities, a => {
+      const ad = getAbilityDefinition(a);
       if (
-        a.triggerOnPlayOtherCard &&
-        (!a.shouldTrigger || a.shouldTrigger({ state, cardInfo: ci }))
+        ad.triggerOnPlayOtherCard &&
+        (!ad.shouldTrigger || ad.shouldTrigger({ state, cardInfo: ci }))
       ) {
         state.newTriggers.push({
           path: a.path,
@@ -123,7 +130,8 @@ function playSpell(state) {
 export function putUnitIntoPlay(state, playerId, card) {
   const newUnit = createUnit(state, playerId, card);
   forEach(newUnit.current.abilities, a => {
-    if (a.triggerOnOwnArrival) {
+    const ad = getAbilityDefinition(a);
+    if (ad.triggerOnOwnArrival) {
       state.newTriggers.push({
         path: a.path,
         sourceId: newUnit.id

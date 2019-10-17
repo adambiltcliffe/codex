@@ -14,11 +14,44 @@ import {
 } from "./triggers";
 import cardInfo from "./cardinfo";
 
+import every from "lodash/every";
+import isArray from "lodash/isArray";
+import isBoolean from "lodash/isBoolean";
+import isNull from "lodash/isNull";
+import isNumber from "lodash/isNumber";
+import isUndefined from "lodash/isUndefined";
+import isPlainObject from "lodash/isPlainObject";
+import isString from "lodash/isString";
+import overSome from "lodash/overSome";
 import pickBy from "lodash/pickby";
 import produce from "immer";
 
 export const testp1Id = "test_player1";
 export const testp2Id = "test_player2";
+
+function isSerializable(obj) {
+  const innerIsSerializable = o =>
+    (isPlainObject(o) || isArray(o)) && every(o, isSerializable);
+  return overSome([
+    isUndefined,
+    isNull,
+    isBoolean,
+    isNumber,
+    isString,
+    innerIsSerializable
+  ])(obj);
+}
+
+function throwIfUnserializable(obj, initialPath) {
+  const path = initialPath || "";
+  if (isPlainObject(obj) || isArray(obj)) {
+    return every(obj, (v, k) => throwIfUnserializable(v, `${path}.${k}`));
+  }
+  if (overSome([isUndefined, isNull, isBoolean, isNumber, isString])(obj)) {
+    return true;
+  }
+  throw new Error(`Unserializable value at state${path}`);
+}
 
 export function getNewGame() {
   const playerList = [testp1Id, testp2Id];
@@ -102,6 +135,7 @@ export function playActions(initialState, actionList) {
         );
       }
     }
+    throwIfUnserializable(state);
   });
   return state;
 }

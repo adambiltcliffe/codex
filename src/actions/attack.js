@@ -1,7 +1,7 @@
 import { andJoin, getAP } from "../util";
 import { types } from "../cardinfo";
 import log from "../log";
-import { updateCurrentValues } from "../entities";
+import { updateCurrentValues, getAbilityDefinition } from "../entities";
 import {
   hasKeyword,
   flying,
@@ -219,7 +219,8 @@ export function doAttackAction(state, action) {
   updateCurrentValues(state);
   const u = state.entities[action.attacker];
   u.current.abilities.forEach((a, index) => {
-    if (a.triggerOnAttack) {
+    const ad = getAbilityDefinition(a);
+    if (ad.triggerOnAttack) {
       state.newTriggers.push({
         path: a.path,
         sourceId: u.id
