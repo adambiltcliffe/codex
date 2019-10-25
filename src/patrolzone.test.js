@@ -15,6 +15,7 @@ import CodexGame from "./game";
 import { fixtureNames } from "./fixtures";
 import { getCurrentValues } from "./entities";
 import forEach from "lodash/forEach";
+import { patrolSlots } from "./patrolzone";
 
 test("Attacking various combinations of patrollers", () => {
   const s0 = getGameWithUnits(
@@ -34,6 +35,8 @@ test("Attacking various combinations of patrollers", () => {
       patrollers: [tf, ht, null, null, null]
     }
   ]);
+  expect(s1a.entities[tf].current.patrolSlot).toEqual(patrolSlots.squadLeader);
+  expect(s1a.entities[ht].current.patrolSlot).toEqual(patrolSlots.elite);
   expect(() =>
     CodexGame.checkAction(s1a, { type: "attack", attacker: ob, target: tf })
   ).not.toThrow();
@@ -119,6 +122,7 @@ test("Lookout gets +1 resist (but only as long as patrolling)", () => {
     ),
     [{ type: "play", card: "wither" }]
   );
+  expect(s2b.entities[ob].current.patrolSlot).toBeNull();
   const gb = s2b.players[testp2Id].gold;
   const s3b = playActions(s2b, [{ type: "choice", target: ob }]);
   expect(s3b.players[testp2Id].gold).toEqual(gb);

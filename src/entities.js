@@ -310,6 +310,15 @@ export function updateCurrentValues(state) {
         delete e.current[p];
       });
     }
+    e.current.patrolSlot = null;
+  });
+  // Store the current patrol slot on each entity so we don't have to keep looking it up
+  forEach(state.players, p => {
+    forEach(p.patrollerIds, (id, slot) => {
+      if (id !== null) {
+        state.entities[id].current.patrolSlot = slot;
+      }
+    });
   });
   forEach(state.entities, e => {
     // 2. chaos mirror, polymorph: squirrel and copy effects
@@ -351,10 +360,7 @@ export function updateCurrentValues(state) {
         });
       }
     });
-    if (
-      state.players[e.current.controller].patrollerIds[patrolSlots.elite] ==
-      e.id
-    ) {
+    if (e.current.patrolSlot === patrolSlots.elite) {
       e.current.attack += 1;
     }
     // 6. reset negative ATK and HP to 0

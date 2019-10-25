@@ -15,7 +15,8 @@
     "build": "npm run clean && npm run build-node && npm run build-browser && npm run build-module",
     "clean": "shx rm -rf dist",
     "playground": "board-state-playground --entry ./playground.jsx",
-    "test": "jest",
+    "test": "jest --verbose false",
+    "test-bail": "jest --bail --verbose false",
     "test-watch": "jest --watch"
   },
   "keywords": [
