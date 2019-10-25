@@ -10,6 +10,7 @@ const fireCardInfo = {
     cost: 2,
     abilities: [
       {
+        text: "Deal 3 damage to a unit or 2 damage to a building.",
         prompt: "Choose a unit or building to damage",
         isSpellEffect: true,
         hasTargetSymbol: true,

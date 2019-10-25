@@ -20,6 +20,7 @@ const fireHeroCardInfo = {
         hp: 3,
         abilities: [
           {
+            text: "⤵ → Deal 1 damage to a patrolling unit or building. ◎",
             prompt: "Choose a patrolling unit or building to damage",
             isActivatedAbility: true,
             costsExhaustSelf: true,
@@ -46,6 +47,7 @@ const fireHeroCardInfo = {
         hp: 3,
         abilities: [
           {
+            text: "⤵ → Deal 3 damage to a unit or building. ◎",
             prompt: "Choose a unit or building to damage",
             isActivatedAbility: true,
             costsExhaustSelf: true,

@@ -50,6 +50,7 @@ const bashingCardInfo = {
     cost: 3,
     abilities: [
       {
+        text: "Destroy a tech 0 or tech I unit.",
         prompt: "Choose a unit to destroy",
         isSpellEffect: true,
         hasTargetSymbol: true,
@@ -73,6 +74,7 @@ const bashingCardInfo = {
     cost: 1,
     abilities: [
       {
+        text: "Give a unit or hero -4 ATK this turn.",
         prompt: "Choose a unit or hero to intimidate",
         isSpellEffect: true,
         hasTargetSymbol: true,
@@ -105,6 +107,8 @@ const bashingCardInfo = {
     cost: 6,
     abilities: [
       {
+        text:
+          "Destroy a tech 0 unit, return a tech I unit to its owner's hand, and gain control of a tech II unit.",
         isSpellEffect: true,
         steps: [
           {
@@ -188,6 +192,7 @@ const bashingCardInfo = {
     hp: 3,
     abilities: [
       {
+        text: "Arrives: Deal 3 damage to a unit.",
         prompt: "Choose a unit to stomp",
         triggerOnOwnArrival: true,
         hasTargetSymbol: true,
@@ -227,6 +232,7 @@ const bashingCardInfo = {
     abilities: [
       haste,
       {
+        text: "Arrives: Gets stealth this turn.",
         triggerOnOwnArrival: true,
         action: ({ state, source }) => {
           attachEffectThisTurn(state, source, {
@@ -279,6 +285,7 @@ const bashingCardInfo = {
     abilities: [
       obliterate(2),
       {
+        text: "Arrives or attacks: Deal 4 damage to a building.",
         triggerOnOwnArrival: true,
         triggerOnAttack: true,
         prompt: "Choose a building to damage",

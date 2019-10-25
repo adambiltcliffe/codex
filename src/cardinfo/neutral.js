@@ -52,6 +52,8 @@ const neutralCardInfo = {
     hp: 1,
     abilities: [
       {
+        text:
+          "Arrives or attacks: Deal 1 damage to a building and repair 1 damage from another building.",
         triggerOnOwnArrival: true,
         triggerOnAttack: true,
         steps: [
@@ -81,9 +83,7 @@ const neutralCardInfo = {
                 state.entities[choices.targetId].damage -= 1;
                 log.add(
                   state,
-                  `${source.current.name} repairs 1 damage from ${
-                    state.entities[choices.targetId].current.name
-                  }.`
+                  `${source.current.name} repairs 1 damage from ${state.entities[choices.targetId].current.name}.`
                 );
               }
             }
@@ -135,6 +135,7 @@ const neutralCardInfo = {
     cost: 1,
     abilities: [
       {
+        text: "Deal 1 damage to a patroller.",
         prompt: "Choose a patroller to damage",
         isSpellEffect: true,
         hasTargetSymbol: true,
@@ -162,6 +163,8 @@ const neutralCardInfo = {
     cost: 2,
     abilities: [
       {
+        text:
+          "Put a +1/+1 rune on a friendly unit or hero that doesn't have a +1/+1 rune.",
         prompt: "Choose a friendly unit or hero to put a +1/+1 rune on",
         isSpellEffect: true,
         hasTargetSymbol: true,
@@ -172,9 +175,7 @@ const neutralCardInfo = {
           state.entities[choices.targetId].runes += 1;
           log.add(
             state,
-            `Bloom adds a +1/+1 rune to ${
-              state.entities[choices.targetId].current.name
-            }.`
+            `Bloom adds a +1/+1 rune to ${state.entities[choices.targetId].current.name}.`
           );
         }
       }
@@ -189,6 +190,7 @@ const neutralCardInfo = {
     cost: 2,
     abilities: [
       {
+        text: "Put a -1/-1 rune on a unit or hero.",
         prompt: "Choose a unit or hero to put a -1/-1 rune on",
         isSpellEffect: true,
         hasTargetSymbol: true,
@@ -198,9 +200,7 @@ const neutralCardInfo = {
           state.entities[choices.targetId].runes -= 1;
           log.add(
             state,
-            `Wither adds a -1/-1 rune to ${
-              state.entities[choices.targetId].current.name
-            }.`
+            `Wither adds a -1/-1 rune to ${state.entities[choices.targetId].current.name}.`
           );
         }
       }

@@ -10,6 +10,7 @@ const redCardInfo = {
     cost: 3,
     abilities: [
       {
+        text: "Deal 2 damage to a patroller or building.",
         prompt: "Choose a patroller or building to damage",
         isSpellEffect: true,
         hasTargetSymbol: true,

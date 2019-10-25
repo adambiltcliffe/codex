@@ -14,6 +14,7 @@ const greenCardInfo = {
     hp: 1,
     abilities: [
       {
+        text: "⤵ → Gain ①.",
         isActivatedAbility: true,
         costsExhaustSelf: true,
         action: ({ state, source }) => {

@@ -40,6 +40,8 @@ const finesseCardInfo = {
     abilities: [
       channeling,
       {
+        text:
+          "Whenever you play a spell, summon a 0/1 neutral Dancer token (limit: 3).",
         triggerOnPlayOtherCard: true,
         shouldTrigger: ({ cardInfo }) => cardInfo.type == types.spell,
         action: ({ state }) => {
@@ -56,6 +58,7 @@ const finesseCardInfo = {
         }
       },
       {
+        text: 'Sacrifice Harmony → "Stop the music."',
         isActivatedAbility: true,
         costsSacrificeSelf: true,
         action: ({ state }) => {
@@ -93,6 +96,8 @@ const finesseCardInfo = {
     cost: 2,
     abilities: [
       {
+        text:
+          "Give all of an opponent's tech 0 and I units -2/-2 until end of turn.",
         isSpellEffect: true,
         action: ({ state, choices }) => {
           const names = [];
@@ -137,6 +142,8 @@ const finesseCardInfo = {
     abilities: [
       channeling,
       {
+        text:
+          "Two of your units become dance partners if they aren't partnered already. While you control both, they each get +2/+2. When you lose one, sacrifice Two Step.",
         isSpellEffect: true,
         prompt: "Choose two dance partners",
         hasTargetSymbol: true,
@@ -197,6 +204,8 @@ const finesseCardInfo = {
     cost: 1,
     abilities: [
       {
+        text:
+          "Sideline a patroller, draw a card, then you may put Appel Stomp on top of your draw pile.",
         isSpellEffect: true,
         steps: [
           {
@@ -255,6 +264,7 @@ const finesseCardInfo = {
     hp: 3,
     abilities: [
       {
+        text: "Your Virtuosos have haste.",
         modifyGlobalValues: ({ self, other }) => {
           if (self.current.controller == other.current.controller) {
             if (other.current.subtypes.includes("Virtuoso")) {
@@ -277,6 +287,7 @@ const finesseCardInfo = {
     hp: 2,
     abilities: [
       {
+        text: "Upkeep: This takes 1 damage.",
         triggerOnUpkeep: true,
         action: ({ state, source }) => {
           damageEntity(state, source, {
@@ -287,6 +298,7 @@ const finesseCardInfo = {
         }
       },
       {
+        text: "This gets +1 ATK for each damage on her.",
         modifyOwnValues: ({ self }) => {
           self.current.attack += self.damage;
         }
@@ -305,6 +317,7 @@ const finesseCardInfo = {
     hp: 4,
     abilities: [
       {
+        text: "Your other units get +1 ATK. Your Virtuosos get +2/+1, instead.",
         modifyGlobalValues: ({ self, other }) => {
           if (
             self.current.controller == other.current.controller &&
@@ -333,6 +346,8 @@ const finesseCardInfo = {
     hp: 5,
     abilities: [
       {
+        text:
+          'Your virtuosos cost ⓪ to play and gain "⤵ → Deal 2 damage to a building. ◎"',
         modifyGlobalValues: ({ state, self, other }) => {
           if (self.current.controller == other.current.controller) {
             if (other.current.subtypes.includes("Virtuoso")) {
@@ -351,6 +366,7 @@ const finesseCardInfo = {
       }
     ],
     conferredAbility: {
+      text: "⤵ → Deal 2 damage to a building. ◎",
       prompt: "Choose a building to damage",
       isActivatedAbility: true,
       costsExhaustSelf: true,
@@ -415,6 +431,7 @@ const finesseCardInfo = {
     hp: 5,
     abilities: [
       {
+        text: "Your units and heroes have swift strike.",
         modifyGlobalValues: ({ state, self, other }) => {
           if (
             self.current.controller == other.current.controller &&

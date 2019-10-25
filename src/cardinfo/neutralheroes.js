@@ -25,6 +25,7 @@ const neutralHeroCardInfo = {
         hp: 4,
         abilities: [
           {
+            text: "Attacks: Deal 1 damage to that opponent's base.",
             triggerOnAttack: true,
             action: ({ state, source }) => {
               const defendingPlayer =
@@ -62,6 +63,8 @@ const neutralHeroCardInfo = {
         hp: 4,
         abilities: [
           {
+            text:
+              "⤵ → Sideline a tech 0 or tech I patroller. (Move it out of the patrol zone.) ◎",
             prompt: "Choose a tech 0 or tech 1 patroller to sideline",
             isActivatedAbility: true,
             costsExhaustSelf: true,
@@ -83,6 +86,7 @@ const neutralHeroCardInfo = {
         hp: 4,
         abilities: [
           {
+            text: "Your tech 0 units cost ① less to play.",
             modifyPlayCost({ state, sourceVals, cardInfo, currentCost }) {
               if (getAP(state).id == sourceVals.controller) {
                 if (cardInfo.type == types.unit && cardInfo.tech == 0) {
