@@ -43,6 +43,8 @@ export function advancePhase(state) {
 }
 
 export function enterTechPhase(state) {
+  state.madeWorkerThisTurn = false;
+  state.constructing = [];
   state.phase = phases.tech;
   if (state.turn < state.playerList.length) {
     // it's a player's first turn so they cannot tech
@@ -56,8 +58,6 @@ export function enterTechPhase(state) {
 
 export function enterReadyPhase(state) {
   state.phase = phases.ready;
-  state.madeWorkerThisTurn = false;
-  state.constructing = [];
   const ap = getAP(state);
   ap.patrollerIds = emptyPatrolZone;
   // this covers "X while patrolling" effects

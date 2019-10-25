@@ -1,5 +1,4 @@
 import { testp2Id, testp1Id, TestGame } from "../testutil";
-import { isPatrolling } from "../patrolzone";
 import { getAttackableEntityIds } from "../actions/attack";
 
 test("Troq at level 1 has no abilities", () => {
@@ -88,7 +87,7 @@ test("River at level 3 can sideline a patroller", () => {
   expect(tg.state.log).toContain(
     "Choose a tech 0 or tech 1 patroller to sideline: Only one legal choice."
   );
-  expect(isPatrolling(tg.state, tg.state.entities[ob])).toBeFalsy();
+  expect(tg.state.entities[ob].current.patrolSlot).toBeNull();
   expect(
     getAttackableEntityIds(tg.state, tg.state.entities[river]).sort()
   ).toEqual([ob, p1base].sort());

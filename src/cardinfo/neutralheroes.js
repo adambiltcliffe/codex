@@ -68,8 +68,8 @@ const neutralHeroCardInfo = {
             hasTargetSymbol: true,
             targetMode: targetMode.single,
             targetTypes: [types.unit, types.hero],
-            canTarget: ({ state, target }) =>
-              target.current.tech < 2 && isPatrolling(state, target),
+            canTarget: ({ target }) =>
+              target.current.tech < 2 && target.current.patrolSlot !== null,
             action: ({ state, source, choices }) => {
               const target = state.entities[choices.targetId];
               sideline(state, target);

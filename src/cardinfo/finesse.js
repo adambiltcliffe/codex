@@ -21,7 +21,7 @@ import {
 import { getAP, andJoinVerb } from "../util";
 
 import { attachEffectThisTurn } from "../effects";
-import { isPatrolling, sideline } from "../patrolzone";
+import { sideline } from "../patrolzone";
 import { drawCards } from "../draw";
 import { putUnitIntoPlay } from "../actions/play";
 
@@ -204,7 +204,7 @@ const finesseCardInfo = {
             hasTargetSymbol: true,
             targetMode: targetMode.single,
             targetTypes: [types.unit, types.hero],
-            canTarget: ({ state, target }) => isPatrolling(state, target),
+            canTarget: ({ target }) => target.current.patrolSlot !== null,
             action: ({ state, choices }) => {
               const target = state.entities[choices.targetId];
               sideline(state, target);

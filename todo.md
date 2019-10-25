@@ -67,7 +67,7 @@ Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities
 Auto-resolve targetMode.multiple when there's only one valid combination
 Move abilities/ out of cardinfo/ to untangle some imports
-Store 'patrolSlot' in entity.current to simplify attack logic
+Simplify attack logic now we have entity.current.patrolSlot
 Use a schema validation library to simplify action checking
 
 # Cards that will need special attention
