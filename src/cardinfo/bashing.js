@@ -26,6 +26,7 @@ const bashingCardInfo = {
     cost: 0,
     abilities: [
       {
+        text: "Deal 2 damage to a building.",
         prompt: "Choose a building to damage",
         isSpellEffect: true,
         hasTargetSymbol: true,
@@ -83,9 +84,7 @@ const bashingCardInfo = {
           });
           log.add(
             state,
-            `${
-              state.entities[choices.targetId].current.name
-            } gets -4 ATK this turn.`
+            `${state.entities[choices.targetId].current.name} gets -4 ATK this turn.`
           );
         }
       }

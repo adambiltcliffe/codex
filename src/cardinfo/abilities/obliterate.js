@@ -58,5 +58,8 @@ export const obliterate = n => ({
         : "No units exist to be obliterated.";
     log.add(state, message);
     victims.forEach(v => killEntity(state, v.id));
-  }
+  },
+  renderKeyword: "obliterate",
+  renderKeywordSum: true,
+  value: n
 });

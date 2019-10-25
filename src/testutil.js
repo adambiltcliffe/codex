@@ -227,6 +227,7 @@ export class TestGame {
           break;
         case types.spell:
           newId = createOngoingSpell(draft, playerId, card).id;
+          break;
       }
       delete draft.updateHidden;
     });

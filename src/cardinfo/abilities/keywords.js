@@ -7,12 +7,20 @@ import sum from "lodash/sum";
 
 export { obliterate } from "./obliterate";
 
-function keyword(k) {
-  return { keyword: k };
+function keyword(k, display, fullText) {
+  if (fullText) {
+    return { keyword: k, text: display };
+  }
+  return { keyword: k, renderKeyword: display };
 }
 
-function numericKeyword(k) {
-  return v => ({ keyword: k, value: v });
+function numericKeyword(k, display) {
+  return v => ({
+    keyword: k,
+    value: v,
+    renderKeyword: display,
+    renderKeywordSum: true
+  });
 }
 
 export function hasKeyword(entityVals, kwAbility) {
@@ -28,28 +36,40 @@ export function sumKeyword(entityVals, kwAbilityCreator) {
   );
 }
 
-export const haste = keyword("K_HASTE");
-export const flying = keyword("K_FLYING");
-export const antiAir = keyword("K_ANTIAIR");
-export const invisible = keyword("K_INVISIBLE");
-export const flagbearer = keyword("K_FLAGBEARER");
-export const readiness = keyword("K_READINESS");
-export const sparkshot = keyword("K_SPARKSHOT");
-export const overpower = keyword("K_OVERPOWER");
-export const swiftStrike = keyword("K_SWIFTSTRIKE");
-export const stealth = keyword("K_STEALTH");
-export const unstoppable = keyword("K_UNSTOPPABLE");
-export const longRange = keyword("K_LONGRANGE");
-export const flippable = keyword("K_FLIPPABLE");
+export const haste = keyword("K_HASTE", "haste");
+export const flying = keyword("K_FLYING", "flying");
+export const antiAir = keyword("K_ANTIAIR", "anti-air");
+export const invisible = keyword("K_INVISIBLE", "invisible");
+export const readiness = keyword("K_READINESS", "readiness");
+export const sparkshot = keyword("K_SPARKSHOT", "sparkshot");
+export const overpower = keyword("K_OVERPOWER", "overpower");
+export const swiftStrike = keyword("K_SWIFTSTRIKE", "swift strike");
+export const stealth = keyword("K_STEALTH", "stealth");
+export const unstoppable = keyword("K_UNSTOPPABLE", "unstoppable");
+export const longRange = keyword("K_LONGRANGE", "long-range");
 
-export const resist = numericKeyword("KV_RESIST");
+export const flippable = keyword(
+  "K_FLIPPABLE",
+  'When you "stop the music", flip this.',
+  true
+);
+export const flagbearer = keyword(
+  "K_FLAGBEARER",
+  "Whenever an opponent plays a spell or ability that can ◎ a flagbearer, it must ◎ a flagbearer at least once.",
+  true
+);
+
+export const resist = numericKeyword("KV_RESIST", "resist");
 
 export const frenzy = n => ({
   modifyOwnValues: ({ state, self }) => {
     if (self.current.controller == getAP(state).id) {
       self.current.attack += n;
     }
-  }
+  },
+  renderKeyword: "frenzy",
+  renderKeywordSum: true,
+  value: n
 });
 
 export const healing = n => ({
@@ -75,12 +95,16 @@ export const healing = n => ({
         `${source.current.name} heals ${1} damage from ${andJoin(healed)}.`
       );
     }
-  }
+  },
+  renderKeyword: "healing",
+  renderKeywordSum: true,
+  value: n
 });
 
 export const channeling = {
   mustSacrifice: ({ state, source }) => {
     const p = source.current.controller;
     return !state.players[p].current.heroSpecs.includes(source.current.spec);
-  }
+  },
+  renderKeyword: "channeling"
 };
