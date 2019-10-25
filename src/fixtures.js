@@ -41,7 +41,7 @@ const fixtures = {
   },
   [fixtureNames.tech1]: {
     type: types.building,
-    name: "tech 1 building",
+    name: "tech I building",
     freeRebuild: true,
     requiresWorkers: 6,
     cost: 1,
@@ -50,7 +50,7 @@ const fixtures = {
   },
   [fixtureNames.tech2]: {
     type: types.building,
-    name: "tech 2 building",
+    name: "tech II building",
     freeRebuild: true,
     requiresWorkers: 8,
     requiresFixture: fixtureNames.tech1,
@@ -60,7 +60,7 @@ const fixtures = {
   },
   [fixtureNames.tech3]: {
     type: types.building,
-    name: "tech 3 building",
+    name: "tech III building",
     freeRebuild: true,
     requiresWorkers: 10,
     requiresFixture: fixtureNames.tech2,
