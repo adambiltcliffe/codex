@@ -75,7 +75,7 @@ function getChoiceCandidates(state) {
     case targetMode.modal: {
       return getLegalChoicesForCurrentTrigger(state).map(c => ({
         type: "choice",
-        target: c
+        index: c
       }));
     }
     case targetMode.multiple: {
