@@ -1,6 +1,9 @@
 import { phases } from "../phases";
 import { patrolSlotNames } from "../patrolzone";
 import fixtures from "../fixtures";
+import { getAbilityDefinition } from "../entities";
+import cardInfo from "../cardinfo";
+import { currentStepDefinition } from "../triggers";
 
 const phaseNames = {
   [phases.tech]: "tech phase",
@@ -17,3 +20,21 @@ export const describePatrolSlot = index =>
 
 export const describeFixture = fixture =>
   fixtures[fixture].name || "unknown fixture";
+
+export const describeEntityAbility = (entity, index) =>
+  getAbilityDefinition(entity.current.abilities[index]).text;
+
+export const describeQueueItem = trigger => {
+  if (trigger.isSpell) {
+    return cardInfo[trigger.card].name;
+  }
+  const text = getAbilityDefinition(trigger).text;
+  const prefix = trigger.isActivatedAbility ? "Ability" : "Triggered action";
+  const sourceDesc = trigger.sourceName ? ` of ${trigger.sourceName}` : "";
+  return `${prefix}${sourceDesc} (${text})`;
+};
+
+export const getCurrentPrompt = state => {
+  const stepDef = currentStepDefinition(state);
+  return stepDef.prompt;
+};

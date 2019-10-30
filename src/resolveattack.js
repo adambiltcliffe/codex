@@ -199,6 +199,7 @@ const chooseSparkshotTarget = {
 
 const resolveAttackTriggers = {
   beginResolveAttack: {
+    text: "Attack",
     steps: [
       retargetAttack,
       findDefenders,
@@ -244,6 +245,7 @@ const resolveAttackTriggers = {
     ]
   },
   finishResolveAttack: {
+    text: "Attack",
     steps: [
       doNothing,
       doNothing,

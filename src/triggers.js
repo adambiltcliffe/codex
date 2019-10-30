@@ -1,6 +1,6 @@
 import { getAP } from "./util";
 import log from "./log";
-import { applyStateBasedEffects } from "./entities";
+import { applyStateBasedEffects, getAbilityDefinition } from "./entities";
 import { getLegalChoicesForStep } from "./targets";
 
 import cardInfo, { targetMode } from "./cardinfo";
@@ -22,14 +22,20 @@ export function addSpellToQueue(state, trigger) {
 }
 
 export function addTriggerToQueue(state, trigger) {
+  if (trigger.sourceId) {
+    const source = state.entities[trigger.sourceId];
+    if (source) {
+      // save the name because the source could be gone when we resolve it
+      trigger.sourceName = source.current.name;
+    }
+  }
   state.queue.push(trigger);
   if (!trigger.isActivatedAbility && !trigger.triggerSilently) {
     const desc =
       "Triggered action" +
-      (trigger.sourceId
-        ? ` from ${state.entities[trigger.sourceId].current.name}`
-        : "");
-    log.add(state, `${desc} was added to the queue.`);
+      (trigger.sourceName ? ` of ${trigger.sourceName}` : "");
+    const text = getAbilityDefinition(trigger).text;
+    log.add(state, `${desc} (${text}) was added to the queue.`);
   }
 }
 

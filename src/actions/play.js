@@ -117,7 +117,8 @@ function playSpell(state) {
     // if an ongoing spell has a spell effect, the effect has to put it into play itself
     addSpellToQueue(state, {
       path: `cardInfo.${state.playedCard}.abilities[${spellEffectIndex}]`,
-      isSpell: true
+      isSpell: true,
+      card: state.playedCard
     });
   } else {
     if (ci.ongoing) {

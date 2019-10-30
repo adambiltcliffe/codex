@@ -10,6 +10,7 @@ import { resetSecret, unwrapSecrets } from "./targets";
 const triggerInfo = {
   ...resolveAttackTriggers,
   scavenger: {
+    text: "Scavenger dies: Gain ①.",
     action: ({ state }) => {
       const player = state.players[state.currentTrigger.playerId];
       const gained = givePlayerGold(state, player.id, 1);
@@ -20,6 +21,7 @@ const triggerInfo = {
     }
   },
   technician: {
+    text: "Technician dies: Draw a card.",
     action: ({ state }) => {
       drawCards(
         state,
@@ -30,6 +32,7 @@ const triggerInfo = {
     }
   },
   heroDeath: {
+    text: "Hero dies: An opposing hero gains 2 levels.",
     prompt: "Choose a hero to gain 2 levels",
     hasTargetSymbol: false,
     targetMode: targetMode.single,
@@ -55,6 +58,7 @@ const triggerInfo = {
     }
   },
   tech: {
+    text: "Add teched cards to discard.",
     prompt: "Choose cards to tech",
     targetMode: targetMode.codex,
     cardCount: 2,
