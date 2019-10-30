@@ -88,7 +88,8 @@ export function doPlayAction(state, action) {
       const ad = getAbilityDefinition(a);
       if (
         ad.triggerOnPlayOtherCard &&
-        (!ad.shouldTrigger || ad.shouldTrigger({ state, cardInfo: ci }))
+        (!ad.shouldTrigger ||
+          ad.shouldTrigger({ state, cardInfo: ci, source: e }))
       ) {
         state.newTriggers.push({
           path: a.path,

@@ -43,7 +43,9 @@ const finesseCardInfo = {
         text:
           "Whenever you play a spell, summon a 0/1 neutral Dancer token (limit: 3).",
         triggerOnPlayOtherCard: true,
-        shouldTrigger: ({ cardInfo }) => cardInfo.type == types.spell,
+        shouldTrigger: ({ state, source, cardInfo }) =>
+          cardInfo.type == types.spell &&
+          getAP(state).id == source.current.controller,
         action: ({ state }) => {
           const ap = getAP(state);
           const total =

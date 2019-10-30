@@ -21,7 +21,7 @@ test("Troq at level 5 deals extra damage when attacking base", () => {
     { type: "attack", attacker: troq, target: p1base }
   ]);
   expect(tg.state.log).toContain(
-    "Triggered action from Troq Bashar was added to the queue."
+    "Triggered action of Troq Bashar (Attacks: Deal 1 damage to that opponent's base.) was added to the queue."
   );
   expect(tg.state.log).toContain("Troq Bashar deals 1 damage to base.");
   expect(tg.state.entities[p1base].damage).toEqual(4);
@@ -38,7 +38,7 @@ test("Troq at level 5 deals damage to base when attacking other things", () => {
     { type: "attack", attacker: troq, target: im }
   ]);
   expect(tg.state.log).toContain(
-    "Triggered action from Troq Bashar was added to the queue."
+    "Triggered action of Troq Bashar (Attacks: Deal 1 damage to that opponent's base.) was added to the queue."
   );
   expect(tg.state.log).toContain("Troq Bashar deals 1 damage to base.");
   expect(tg.state.entities[p1base].damage).toEqual(1);
@@ -58,7 +58,7 @@ test("Troq at level 8 deals damage to base and has readiness", () => {
     { type: "attack", attacker: troq, target: im }
   ]);
   expect(tg.state.log).toContain(
-    "Triggered action from Troq Bashar was added to the queue."
+    "Triggered action of Troq Bashar (Attacks: Deal 1 damage to that opponent's base.) was added to the queue."
   );
   expect(tg.state.log).toContain("Troq Bashar deals 1 damage to base.");
   expect(tg.state.entities[p1base].damage).toEqual(1);

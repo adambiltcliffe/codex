@@ -381,6 +381,25 @@ test("Harmony doesn't create a token if you have a mix of 3 dancers", () => {
   );
 });
 
+test("Harmony doesn't create tokens for your opponent", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "troq_bashar")
+    .putCardsInHand(testp1Id, ["the_boot"])
+    .putCardsInHand(testp2Id, ["discord"])
+    .insertEntities(testp2Id, ["river_montoya", "harmony"]);
+  const [troq, river, harmony] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "the_boot" });
+  expect(tg.state.log).not.toContain("Harmony creates a Dancer token.");
+  expect(findEntityIds(tg.state, e => e.card == "dancer_token")).toHaveLength(
+    0
+  );
+  tg.playActions([{ type: "endTurn" }, { type: "play", card: "discord" }]);
+  expect(tg.state.log).toContain("Harmony creates a Dancer token.");
+  expect(findEntityIds(tg.state, e => e.card == "dancer_token")).toHaveLength(
+    1
+  );
+});
+
 test("Killed Dancer tokens don't go to discard", () => {
   const tg = new TestGame()
     .insertEntity(testp1Id, "timely_messenger")
