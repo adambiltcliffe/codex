@@ -115,3 +115,13 @@ export const legalBuildActions = state =>
   map(fixtureNames, n => ({ type: "build", fixture: n })).filter(a =>
     isLegalAction(state, a)
   );
+
+export const legalPatrollers = state =>
+  Object.values(state.entities)
+    .filter(
+      e =>
+        e.current.controller == getAP(state).id &&
+        (e.current.type == types.unit || e.current.type == types.hero) &&
+        e.ready
+    )
+    .map(e => e.id);

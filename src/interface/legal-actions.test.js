@@ -6,7 +6,8 @@ import {
   legalPlayActions,
   legalSummonActions,
   legalLevelActionTree,
-  legalBuildActions
+  legalBuildActions,
+  legalPatrollers
 } from "./legal-actions";
 
 test("Check if you can worker", () => {
@@ -82,4 +83,16 @@ test("Check legal build actions list", () => {
     { type: "build", fixture: "surplus" },
     { type: "build", fixture: "tower" }
   ]);
+});
+
+test("Check list of legal patrollers", () => {
+  const tg = new TestGame();
+  tg.insertEntities(testp1Id, [
+    "troq_bashar",
+    "iron_man",
+    "older_brother"
+  ]).insertEntities(testp2Id, ["river_montoya", "tenderfoot"]);
+  const [troq, im, ob, river, tf] = tg.insertedEntityIds;
+  tg.modifyEntity(ob, { ready: false });
+  expect(legalPatrollers(tg.state).sort()).toEqual([troq, im].sort());
 });
