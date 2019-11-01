@@ -11,7 +11,8 @@ export {
   legalPlayActions,
   legalSummonActions,
   legalLevelActionTree,
-  legalBuildActions
+  legalBuildActions,
+  legalPatrollers
 } from "./legal-actions";
 
 export function getCardInfo(card) {
