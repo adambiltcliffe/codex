@@ -34,6 +34,11 @@ export const describeQueueItem = trigger => {
   return `${prefix}${sourceDesc} (${text})`;
 };
 
+export const getCurrentPromptMode = state => {
+  const stepDef = currentStepDefinition(state);
+  return stepDef.targetMode;
+};
+
 export const getCurrentPrompt = state => {
   const stepDef = currentStepDefinition(state);
   return stepDef.prompt;

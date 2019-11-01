@@ -7,6 +7,7 @@ export {
   describeFixture,
   describeEntityAbility,
   describeQueueItem,
+  getCurrentPromptMode,
   getCurrentPrompt
 } from "./describe";
 export { makeWorkerAction, makeTechChoiceAction } from "./secrets";

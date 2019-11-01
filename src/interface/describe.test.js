@@ -4,7 +4,8 @@ import {
   describeFixture,
   describeQueueItem,
   describeEntityAbility,
-  getCurrentPrompt
+  getCurrentPrompt,
+  getCurrentPromptMode
 } from "./describe";
 import { phases } from "../phases";
 import { patrolSlots } from "../patrolzone";
@@ -13,6 +14,7 @@ import { fixtureNames } from "../fixtures";
 import { TestGame, testp1Id } from "../testutil";
 
 import findIndex from "lodash/findIndex";
+import { targetMode } from "../cardinfo";
 
 test("Describing phases", () => {
   expect(describePhase(phases.ready)).toEqual("ready phase");
@@ -81,4 +83,5 @@ test("Getting the prompt for the currently-resolving trigger", () => {
   tg.putCardsInHand(testp1Id, ["brick_thief"]);
   tg.playAction({ type: "play", card: "brick_thief" });
   expect(getCurrentPrompt(tg.state)).toEqual("Choose a building to damage");
+  expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.single);
 });
