@@ -39,6 +39,11 @@ export const getCurrentPromptMode = state => {
   return stepDef.targetMode;
 };
 
+export const getCurrentPromptOptions = state => {
+  const stepDef = currentStepDefinition(state);
+  return stepDef.options;
+};
+
 export const getCurrentPrompt = state => {
   const stepDef = currentStepDefinition(state);
   return stepDef.prompt;

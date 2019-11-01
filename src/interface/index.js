@@ -8,6 +8,7 @@ export {
   describeEntityAbility,
   describeQueueItem,
   getCurrentPromptMode,
+  getCurrentPromptOptions,
   getCurrentPrompt
 } from "./describe";
 export { makeWorkerAction, makeTechChoiceAction } from "./secrets";

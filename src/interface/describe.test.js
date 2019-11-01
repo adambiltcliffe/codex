@@ -5,7 +5,8 @@ import {
   describeQueueItem,
   describeEntityAbility,
   getCurrentPrompt,
-  getCurrentPromptMode
+  getCurrentPromptMode,
+  getCurrentPromptOptions
 } from "./describe";
 import { phases } from "../phases";
 import { patrolSlots } from "../patrolzone";
@@ -84,4 +85,23 @@ test("Getting the prompt for the currently-resolving trigger", () => {
   tg.playAction({ type: "play", card: "brick_thief" });
   expect(getCurrentPrompt(tg.state)).toEqual("Choose a building to damage");
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.single);
+});
+
+test("Getting the prompt for a modal trigger", () => {
+  const tg = new TestGame();
+  tg.insertEntity(testp1Id, "river_montoya").putCardsInHand(testp1Id, [
+    "appel_stomp"
+  ]);
+  const [river] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { level: 5, controlledSince: -1, maxedSince: -1 });
+  tg.playAction({ type: "play", card: "appel_stomp" });
+  expect(tg.state.log).toContain(
+    "Choose a patroller to sideline: No legal choices."
+  );
+  expect(getCurrentPrompt(tg.state)).toEqual("Choose where to put Appel Stomp");
+  expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.modal);
+  expect(getCurrentPromptOptions(tg.state)).toEqual([
+    "On top of your draw pile",
+    "In your discard pile"
+  ]);
 });
