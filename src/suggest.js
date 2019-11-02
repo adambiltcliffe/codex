@@ -71,7 +71,12 @@ function getChoiceCandidates(state) {
   const ap = getAP(state);
   const stepDef = currentStepDefinition(state);
   switch (stepDef.targetMode) {
-    case targetMode.single:
+    case targetMode.single: {
+      return getLegalChoicesForCurrentTrigger(state).map(c => ({
+        type: "choice",
+        target: c
+      }));
+    }
     case targetMode.modal: {
       return getLegalChoicesForCurrentTrigger(state).map(c => ({
         type: "choice",

@@ -3,7 +3,6 @@ import { patrolSlotNames } from "../patrolzone";
 import fixtures from "../fixtures";
 import { getAbilityDefinition } from "../entities";
 import cardInfo from "../cardinfo";
-import { currentStepDefinition } from "../triggers";
 
 const phaseNames = {
   [phases.tech]: "tech phase",
@@ -32,19 +31,4 @@ export const describeQueueItem = trigger => {
   const prefix = trigger.isActivatedAbility ? "Ability" : "Triggered action";
   const sourceDesc = trigger.sourceName ? ` of ${trigger.sourceName}` : "";
   return `${prefix}${sourceDesc} (${text})`;
-};
-
-export const getCurrentPromptMode = state => {
-  const stepDef = currentStepDefinition(state);
-  return stepDef.targetMode;
-};
-
-export const getCurrentPromptOptions = state => {
-  const stepDef = currentStepDefinition(state);
-  return stepDef.options;
-};
-
-export const getCurrentPrompt = state => {
-  const stepDef = currentStepDefinition(state);
-  return stepDef.prompt;
 };

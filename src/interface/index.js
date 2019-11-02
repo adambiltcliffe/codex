@@ -6,10 +6,7 @@ export {
   describePatrolSlot,
   describeFixture,
   describeEntityAbility,
-  describeQueueItem,
-  getCurrentPromptMode,
-  getCurrentPromptOptions,
-  getCurrentPrompt
+  describeQueueItem
 } from "./describe";
 export { makeWorkerAction, makeTechChoiceAction } from "./secrets";
 export {
@@ -23,6 +20,11 @@ export {
   legalBuildActions,
   legalPatrollers
 } from "./legal-actions";
+export {
+  getCurrentPromptMode,
+  getCurrentPromptModalOptions,
+  getCurrentPrompt
+} from "./prompt";
 
 export function getCardInfo(card) {
   return cardInfo[card];

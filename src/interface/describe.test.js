@@ -3,10 +3,7 @@ import {
   describePatrolSlot,
   describeFixture,
   describeQueueItem,
-  describeEntityAbility,
-  getCurrentPrompt,
-  getCurrentPromptMode,
-  getCurrentPromptOptions
+  describeEntityAbility
 } from "./describe";
 import { phases } from "../phases";
 import { patrolSlots } from "../patrolzone";
@@ -15,7 +12,6 @@ import { fixtureNames } from "../fixtures";
 import { TestGame, testp1Id } from "../testutil";
 
 import findIndex from "lodash/findIndex";
-import { targetMode } from "../cardinfo";
 
 test("Describing phases", () => {
   expect(describePhase(phases.ready)).toEqual("ready phase");
@@ -77,31 +73,4 @@ test("Describing activated abilities in the queue", () => {
   expect(describeQueueItem(tg.state.currentTrigger)).toEqual(
     "Ability of Nimble Fencer (⤵ → Deal 2 damage to a building. ◎)"
   );
-});
-
-test("Getting the prompt for the currently-resolving trigger", () => {
-  const tg = new TestGame();
-  tg.putCardsInHand(testp1Id, ["brick_thief"]);
-  tg.playAction({ type: "play", card: "brick_thief" });
-  expect(getCurrentPrompt(tg.state)).toEqual("Choose a building to damage");
-  expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.single);
-});
-
-test("Getting the prompt for a modal trigger", () => {
-  const tg = new TestGame();
-  tg.insertEntity(testp1Id, "river_montoya").putCardsInHand(testp1Id, [
-    "appel_stomp"
-  ]);
-  const [river] = tg.insertedEntityIds;
-  tg.modifyEntity(river, { level: 5, controlledSince: -1, maxedSince: -1 });
-  tg.playAction({ type: "play", card: "appel_stomp" });
-  expect(tg.state.log).toContain(
-    "Choose a patroller to sideline: No legal choices."
-  );
-  expect(getCurrentPrompt(tg.state)).toEqual("Choose where to put Appel Stomp");
-  expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.modal);
-  expect(getCurrentPromptOptions(tg.state)).toEqual([
-    "On top of your draw pile",
-    "In your discard pile"
-  ]);
 });
