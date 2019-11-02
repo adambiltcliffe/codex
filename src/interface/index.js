@@ -22,6 +22,7 @@ export {
 } from "./legal-actions";
 export {
   getCurrentPromptMode,
+  getCurrentPromptCountAndTargets,
   getCurrentPromptModalOptions,
   getCurrentPrompt
 } from "./prompt";
