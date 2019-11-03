@@ -9,3 +9,5 @@ export default CodexGame;
 
 import * as constants from "./cardinfo/constants";
 export { constants };
+
+export { TestGame } from "./testutil";
