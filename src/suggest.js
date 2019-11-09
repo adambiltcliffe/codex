@@ -22,8 +22,10 @@ import map from "lodash/map";
 import partition from "lodash/partition";
 import range from "lodash/range";
 import slice from "lodash/slice";
+import sortBy from "lodash/sortBy";
 import take from "lodash/take";
 import uniq from "lodash/uniq";
+
 import { fixtureNames } from "./fixtures";
 import { wrapSecrets } from "./targets";
 import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
@@ -87,15 +89,10 @@ function getChoiceCandidates(state) {
       let choices = getLegalChoicesForCurrentTrigger(state);
       if (stepDef.hasTargetSymbol) {
         choices = sortBy(choices, id =>
-          state.entities[id].current.subtypes.includes("Flagbearer")
-        )
-          ? 0
-          : 1;
+          state.entities[id].current.subtypes.includes("Flagbearer") ? 0 : 1
+        );
       }
-      return take(choices, stepDef.targetCount).map(ts => ({
-        type: "choice",
-        targets: ts
-      }));
+      return [{ type: "choice", targets: take(choices, stepDef.targetCount) }];
     }
     case targetMode.obliterate: {
       const dpId = state.currentAttack.defendingPlayer;
@@ -104,10 +101,14 @@ function getChoiceCandidates(state) {
         dpId,
         stepDef.targetCount
       );
-      return take(maybe, stepDef.targetCount).map(es => ({
-        type: "choice",
-        targets: es.map(e => e.id)
-      }));
+      return [
+        {
+          type: "choice",
+          targets: take(maybe, stepDef.targetCount - definitely.length).map(
+            e => e.id
+          )
+        }
+      ];
     }
     case targetMode.codex: {
       const realIndexList = flatMap(ap.codex, ({ card, n }, ix) =>
