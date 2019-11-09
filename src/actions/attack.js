@@ -16,6 +16,7 @@ import { patrolSlots } from "../patrolzone";
 import { fixtureNames } from "../fixtures";
 
 import invert from "lodash/invert";
+import { createTrigger } from "../triggers";
 
 function isAttackableType(t) {
   return t == types.unit || t == types.hero || t == types.building;
@@ -221,7 +222,7 @@ export function doAttackAction(state, action) {
   u.current.abilities.forEach((a, index) => {
     const ad = getAbilityDefinition(a);
     if (ad.triggerOnAttack) {
-      state.newTriggers.push({
+      createTrigger(state, {
         path: a.path,
         sourceId: u.id
       });

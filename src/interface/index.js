@@ -10,6 +10,7 @@ export {
 } from "./describe";
 export { makeWorkerAction, makeTechChoiceAction } from "./secrets";
 export {
+  requiredActionType,
   isLegalAction,
   canTakeWorkerAction,
   legalAttackActionTree,

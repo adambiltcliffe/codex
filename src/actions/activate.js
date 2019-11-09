@@ -2,6 +2,7 @@ import { killEntity, getAbilityDefinition } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/abilities/keywords";
 import { getAP } from "../util";
 import log from "../log";
+import { createTrigger } from "../triggers";
 
 export function checkActivateAction(state, action) {
   const ap = getAP(state);
@@ -41,7 +42,7 @@ export function checkActivateAction(state, action) {
 export function doActivateAction(state, action) {
   const source = state.entities[action.source];
   const ability = source.current.abilities[action.index];
-  state.newTriggers.push({
+  createTrigger(state, {
     path: ability.path,
     sourceId: source.id,
     isActivatedAbility: true

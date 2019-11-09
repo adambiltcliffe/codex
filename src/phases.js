@@ -12,6 +12,7 @@ import fixtures, { fixtureNames } from "./fixtures";
 import forEach from "lodash/forEach";
 import upperFirst from "lodash/upperFirst";
 import { drawCards } from "./draw";
+import { createTrigger } from "./triggers";
 
 export const phases = {
   tech: "P_TECH",
@@ -50,7 +51,7 @@ export function enterTechPhase(state) {
     // it's a player's first turn so they cannot tech
     return;
   }
-  state.newTriggers.push({
+  createTrigger(state, {
     path: "triggerInfo.tech",
     triggerSilently: true
   });
@@ -90,7 +91,7 @@ export function enterUpkeepPhase(state) {
       forEach(vals.abilities, (a, index) => {
         const ad = getAbilityDefinition(a);
         if (ad.triggerOnUpkeep) {
-          state.newTriggers.push({
+          createTrigger(state, {
             path: a.path,
             sourceId: u.id
           });

@@ -73,6 +73,7 @@ export const frenzy = n => ({
 });
 
 export const healing = n => ({
+  text: `Healing ${n}`,
   triggerOnUpkeep: true,
   action: ({ state, source }) => {
     const healed = [];

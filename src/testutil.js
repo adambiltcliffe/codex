@@ -23,8 +23,9 @@ import isUndefined from "lodash/isUndefined";
 import isPlainObject from "lodash/isPlainObject";
 import isString from "lodash/isString";
 import overSome from "lodash/overSome";
-import pickBy from "lodash/pickby";
+import pickBy from "lodash/pickBy";
 import produce from "immer";
+import { buildSingleCodex } from "./codex";
 
 export const testp1Id = "test_player1";
 export const testp2Id = "test_player2";
@@ -203,6 +204,10 @@ export class TestGame {
     this.state = produce(this.state, draft => {
       draft.players[playerId].codex = codex;
     });
+    return this;
+  }
+  setCodexBySpec(playerId, spec) {
+    this.setCodex(playerId, buildSingleCodex(spec));
     return this;
   }
   insertFixture(playerId, fixture) {

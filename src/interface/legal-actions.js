@@ -13,6 +13,16 @@ import { getAbilityDefinition } from "../entities";
 import { types } from "../cardinfo";
 import { fixtureNames } from "../fixtures";
 
+export function requiredActionType(state) {
+  if (state.newTriggers && state.newTriggers.length > 0) {
+    return "queue";
+  }
+  if (state.currentTrigger) {
+    return "choice";
+  }
+  return null;
+}
+
 export function isLegalAction(state, act) {
   try {
     CodexGame.checkAction(state, act);

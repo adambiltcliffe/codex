@@ -9,7 +9,7 @@ import { phases } from "../phases";
 import { patrolSlots } from "../patrolzone";
 import { fixtureNames } from "../fixtures";
 
-import { TestGame, testp1Id } from "../testutil";
+import { TestGame, testp1Id, testp2Id } from "../testutil";
 
 import findIndex from "lodash/findIndex";
 
@@ -72,5 +72,18 @@ test("Describing activated abilities in the queue", () => {
   tg.playAction({ type: "activate", source: nf, index });
   expect(describeQueueItem(tg.state.currentTrigger)).toEqual(
     "Ability of Nimble Fencer (⤵ → Deal 2 damage to a building. ◎)"
+  );
+});
+
+test("Describing new triggers that have not been queued yet", () => {
+  const tg = new TestGame();
+  tg.insertEntities(testp2Id, ["helpful_turtle", "starcrossed_starlet"]);
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.newTriggers).toHaveLength(2);
+  expect(describeQueueItem(tg.state.newTriggers[0])).toEqual(
+    "Triggered action of Helpful Turtle (Healing 1)"
+  );
+  expect(describeQueueItem(tg.state.newTriggers[1])).toEqual(
+    "Triggered action of Star-Crossed Starlet (Upkeep: This takes 1 damage.)"
   );
 });

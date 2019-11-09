@@ -7,7 +7,7 @@ const doublePass = [{ type: "endTurn" }, { type: "endTurn" }];
 
 test("Can tech first card from codex", () => {
   const tg = new TestGame()
-    .setCodex(testp1Id, buildSingleCodex(specs.bashing))
+    .setCodexBySpec(testp1Id, specs.bashing)
     .playActions(doublePass);
   expect(tg.state.currentTrigger.path).toEqual("triggerInfo.tech");
   const indices = wrapSecrets(
@@ -23,7 +23,7 @@ test("Can tech first card from codex", () => {
 
 test("Can tech cards, as long as they're still in codex", () => {
   const tg = new TestGame();
-  tg.setCodex(testp1Id, buildSingleCodex(specs.bashing));
+  tg.setCodexBySpec(testp1Id, specs.bashing);
   tg.playActions(doublePass);
   let n = tg.state.players[testp1Id].codex.length;
   const indices = wrapSecrets(tg.state, testp1Id, [4, 5], n);
@@ -76,7 +76,7 @@ test("Can't tech cards if all copies teched already'", () => {
 
 test("Can't tech more or less than 2 cards while workers < 10", () => {
   const tg = new TestGame()
-    .setCodex(testp1Id, buildSingleCodex(specs.bashing))
+    .setCodexBySpec(testp1Id, specs.bashing)
     .playActions(doublePass);
   expect(tg.state.currentTrigger.path).toEqual("triggerInfo.tech");
   expect(() => tg.checkAction({ type: "choice", indices: [0] })).toThrow(
@@ -89,7 +89,7 @@ test("Can't tech more or less than 2 cards while workers < 10", () => {
 
 test("Can tech less than 2 cards when workers >= 10", () => {
   const tg = new TestGame()
-    .setCodex(testp1Id, buildSingleCodex(specs.bashing))
+    .setCodexBySpec(testp1Id, specs.bashing)
     .setWorkers(testp1Id, 10)
     .playActions(doublePass);
   expect(tg.state.currentTrigger.path).toEqual("triggerInfo.tech");

@@ -8,7 +8,7 @@ import {
   getAbilityDefinition
 } from "../entities";
 import { types, colors } from "../cardinfo/constants";
-import { addSpellToQueue } from "../triggers";
+import { addSpellToQueue, createTrigger } from "../triggers";
 
 import findIndex from "lodash/findIndex";
 import forEach from "lodash/forEach";
@@ -91,7 +91,7 @@ export function doPlayAction(state, action) {
         (!ad.shouldTrigger ||
           ad.shouldTrigger({ state, cardInfo: ci, source: e }))
       ) {
-        state.newTriggers.push({
+        createTrigger(state, {
           path: a.path,
           sourceId: e.id
         });
@@ -134,7 +134,7 @@ export function putUnitIntoPlay(state, playerId, card) {
   forEach(newUnit.current.abilities, a => {
     const ad = getAbilityDefinition(a);
     if (ad.triggerOnOwnArrival) {
-      state.newTriggers.push({
+      createTrigger(state, {
         path: a.path,
         sourceId: newUnit.id
       });

@@ -21,7 +21,7 @@ export function addSpellToQueue(state, trigger) {
   state.queue.push(trigger);
 }
 
-export function addTriggerToQueue(state, trigger) {
+export function createTrigger(state, trigger) {
   if (trigger.sourceId) {
     const source = state.entities[trigger.sourceId];
     if (source) {
@@ -29,6 +29,10 @@ export function addTriggerToQueue(state, trigger) {
       trigger.sourceName = source.current.name;
     }
   }
+  state.newTriggers.push(trigger);
+}
+
+export function addTriggerToQueue(state, trigger) {
   state.queue.push(trigger);
   if (!trigger.isActivatedAbility && !trigger.triggerSilently) {
     const desc =

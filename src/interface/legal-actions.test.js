@@ -7,8 +7,22 @@ import {
   legalSummonActions,
   legalLevelActionTree,
   legalBuildActions,
-  legalPatrollers
+  legalPatrollers,
+  requiredActionType
 } from "./legal-actions";
+
+test("Check required action types", () => {
+  const tg = new TestGame();
+  tg.insertEntity(testp1Id, "troq_bashar")
+    .insertEntities(testp2Id, ["helpful_turtle", "starcrossed_starlet"])
+    .putCardsInHand(testp1Id, ["bloom"]);
+  const [troq, ht, ss] = tg.insertedEntityIds;
+  expect(requiredActionType(tg.state)).toBeNull();
+  tg.playAction({ type: "play", card: "bloom" });
+  expect(requiredActionType(tg.state)).toEqual("choice");
+  tg.playActions([{ type: "choice", target: ht }, { type: "endTurn" }]);
+  expect(requiredActionType(tg.state)).toEqual("queue");
+});
 
 test("Check if you can worker", () => {
   const tg = new TestGame();
