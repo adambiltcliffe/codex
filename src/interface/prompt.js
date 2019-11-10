@@ -4,6 +4,7 @@ import {
 } from "../triggers";
 import { targetMode } from "../cardinfo";
 import { getObliterateTargets } from "../cardinfo/abilities/obliterate";
+import { getAP } from "../util";
 
 export const getCurrentPromptMode = state => {
   const stepDef = currentStepDefinition(state);
@@ -36,7 +37,8 @@ export const getCurrentPromptCountAndTargets = state => {
       );
       return {
         count: stepDef.targetCount - definitely.length,
-        targets: maybe.map(e => e.id)
+        targets: maybe.map(e => e.id),
+        fixed: definitely.map(e => e.id)
       };
     }
   }
@@ -45,4 +47,9 @@ export const getCurrentPromptCountAndTargets = state => {
 export const getCurrentPromptModalOptions = state => {
   const stepDef = currentStepDefinition(state);
   return stepDef.options;
+};
+
+export const getCurrentPromptCodexCards = state => {
+  const ap = getAP(state);
+  return ap.codex;
 };

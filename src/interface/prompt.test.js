@@ -2,12 +2,13 @@ import {
   getCurrentPrompt,
   getCurrentPromptMode,
   getCurrentPromptModalOptions,
-  getCurrentPromptCountAndTargets
+  getCurrentPromptCountAndTargets,
+  getCurrentPromptCodexCards
 } from "./prompt";
 
 import { TestGame, testp1Id, testp2Id } from "../testutil";
 
-import { targetMode } from "../cardinfo";
+import { targetMode, specs } from "../cardinfo";
 
 test("Getting the prompt for a single-target trigger", () => {
   const tg = new TestGame();
@@ -80,7 +81,8 @@ test("Getting the prompt for an obliterate trigger, no forced targets", () => {
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.obliterate);
   expect(getCurrentPromptCountAndTargets(tg.state)).toEqual({
     count: 2,
-    targets: [tf, ob, bt]
+    targets: [tf, ob, bt],
+    fixed: []
   });
 });
 
@@ -100,6 +102,18 @@ test("Getting the prompt for an obliterate trigger with a forced target", () => 
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.obliterate);
   expect(getCurrentPromptCountAndTargets(tg.state)).toEqual({
     count: 1,
-    targets: [im, ro]
+    targets: [im, ro],
+    fixed: [tf]
   });
+});
+
+test("Getting the active player's codex", () => {
+  const tg = new TestGame()
+    .setCodexBySpec(testp1Id, specs.bashing)
+    .playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(getCurrentPrompt(tg.state)).toEqual("Choose cards to tech");
+  expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.codex);
+  const cc = getCurrentPromptCodexCards(tg.state);
+  expect(cc).toHaveLength(12);
+  expect(cc[0]).toEqual({ card: "wrecking_ball", n: 2 });
 });
