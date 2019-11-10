@@ -52,5 +52,5 @@ export const getCurrentPromptModalOptions = state => {
 export const getCurrentPromptCountAndCodex = state => {
   const ap = getAP(state);
   const stepDef = currentStepDefinition(state);
-  return { count: stepDef.targetCount, options: ap.codex };
+  return { count: stepDef.cardCount, options: ap.codex };
 };

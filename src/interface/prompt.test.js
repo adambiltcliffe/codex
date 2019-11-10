@@ -3,7 +3,7 @@ import {
   getCurrentPromptMode,
   getCurrentPromptModalOptions,
   getCurrentPromptCountAndTargets,
-  getCurrentPromptCodexCards
+  getCurrentPromptCountAndCodex
 } from "./prompt";
 
 import { TestGame, testp1Id, testp2Id } from "../testutil";
@@ -22,7 +22,7 @@ test("Getting the prompt for a single-target trigger", () => {
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.single);
   expect(getCurrentPromptCountAndTargets(tg.state)).toEqual({
     count: 1,
-    targets: [p1base, p2base]
+    options: [p1base, p2base]
   });
 });
 
@@ -42,7 +42,7 @@ test("Getting the prompt for a multi-target trigger", () => {
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.multiple);
   expect(getCurrentPromptCountAndTargets(tg.state)).toEqual({
     count: 2,
-    targets: [tf, ob, fn]
+    options: [tf, ob, fn]
   });
 });
 
@@ -81,7 +81,7 @@ test("Getting the prompt for an obliterate trigger, no forced targets", () => {
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.obliterate);
   expect(getCurrentPromptCountAndTargets(tg.state)).toEqual({
     count: 2,
-    targets: [tf, ob, bt],
+    options: [tf, ob, bt],
     fixed: []
   });
 });
@@ -102,7 +102,7 @@ test("Getting the prompt for an obliterate trigger with a forced target", () => 
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.obliterate);
   expect(getCurrentPromptCountAndTargets(tg.state)).toEqual({
     count: 1,
-    targets: [im, ro],
+    options: [im, ro],
     fixed: [tf]
   });
 });
@@ -113,7 +113,8 @@ test("Getting the active player's codex", () => {
     .playActions([{ type: "endTurn" }, { type: "endTurn" }]);
   expect(getCurrentPrompt(tg.state)).toEqual("Choose cards to tech");
   expect(getCurrentPromptMode(tg.state)).toEqual(targetMode.codex);
-  const cc = getCurrentPromptCodexCards(tg.state);
+  const { count, options: cc } = getCurrentPromptCountAndCodex(tg.state);
+  expect(count).toEqual(2);
   expect(cc).toHaveLength(12);
   expect(cc[0]).toEqual({ card: "wrecking_ball", n: 2 });
 });
