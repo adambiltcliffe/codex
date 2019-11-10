@@ -85,6 +85,9 @@ test("Obliterate lets you choose targets if there are several options", () => {
   expect(() =>
     tg.checkAction({ type: "choice", targets: [tf, ob, bt] })
   ).toThrow("Wrong number");
+  expect(() => tg.checkAction({ type: "choice", targets: [tf, tf] })).toThrow(
+    "duplicate"
+  );
   expect(() => tg.checkAction({ type: "choice", targets: [tf, es] })).toThrow(
     "not among valid choices"
   );

@@ -533,6 +533,9 @@ test("Two Step requires exactly two targets and you must control them", () => {
   expect(() => tg.checkAction({ type: "choice", targets: [tf] })).toThrow(
     "Too few"
   );
+  expect(() => tg.checkAction({ type: "choice", targets: [tf, tf] })).toThrow(
+    "duplicate"
+  );
   expect(() =>
     tg.checkAction({ type: "choice", targets: [tf, ob, fn] })
   ).toThrow("Too many");

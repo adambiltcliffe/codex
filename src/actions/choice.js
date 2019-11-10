@@ -10,12 +10,13 @@ import log from "../log";
 import { targetMode } from "../cardinfo";
 import { getObliterateTargets } from "../cardinfo/abilities/obliterate";
 import { hasKeyword, invisible } from "../cardinfo/abilities/keywords";
+import { fixtureNames } from "../fixtures";
 
 import countBy from "lodash/countBy";
 import forEach from "lodash/forEach";
 import some from "lodash/some";
 import sumBy from "lodash/sumBy";
-import { fixtureNames } from "../fixtures";
+import uniq from "lodash/uniq";
 
 export function checkChoiceAction(state, action) {
   if (state.currentTrigger === null) {
@@ -37,6 +38,9 @@ export function checkChoiceAction(state, action) {
     case targetMode.multiple:
       if (!Array.isArray(action.targets)) {
         throw new Error("action.targets must be an array");
+      }
+      if (uniq(action.targets).length !== action.targets.length) {
+        throw new Error("action.targets contains duplicates");
       }
       if (action.targets.length > stepDef.targetCount) {
         throw new Error("Too many targets");
@@ -60,6 +64,12 @@ export function checkChoiceAction(state, action) {
       validateTargetCombination(state, legalChoices, action.targets);
       return true;
     case targetMode.obliterate:
+      if (!Array.isArray(action.targets)) {
+        throw new Error("action.targets must be an array");
+      }
+      if (uniq(action.targets).length !== action.targets.length) {
+        throw new Error("action.targets contains duplicates");
+      }
       const dpId = state.currentAttack.defendingPlayer;
       const [definitely, maybe] = getObliterateTargets(
         state,
