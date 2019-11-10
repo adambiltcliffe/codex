@@ -25,7 +25,7 @@ export {
   getCurrentPromptMode,
   getCurrentPromptCountAndTargets,
   getCurrentPromptModalOptions,
-  getCurrentPromptCodexCards,
+  getCurrentPromptCountAndCodex,
   getCurrentPrompt
 } from "./prompt";
 
