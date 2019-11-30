@@ -38,6 +38,7 @@ export function partitionObliterateTargets(units, n) {
 }
 
 export const obliterate = n => ({
+  text: `Obliterate ${n}`,
   prompt: "Choose units to obliterate",
   triggerOnAttack: true,
   targetMode: targetMode.obliterate,

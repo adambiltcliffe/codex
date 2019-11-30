@@ -419,6 +419,7 @@ export function applyStateBasedEffects(state) {
 }
 
 function checkForEndOfGame(state) {
+  if (state.result) return;
   const baseDmg = map(
     state.players,
     p => state.entities[p.current.fixtures[fixtureNames.base]].damage

@@ -8,6 +8,7 @@ import {
   flagbearer
 } from "./abilities/keywords";
 import { damageEntity } from "../entities";
+import { getAP } from "../util";
 
 const neutralCardInfo = {
   timely_messenger: {
@@ -83,7 +84,9 @@ const neutralCardInfo = {
                 state.entities[choices.targetId].damage -= 1;
                 log.add(
                   state,
-                  `${source.current.name} repairs 1 damage from ${state.entities[choices.targetId].current.name}.`
+                  `${source.current.name} repairs 1 damage from ${
+                    state.entities[choices.targetId].current.name
+                  }.`
                 );
               }
             }
@@ -170,12 +173,15 @@ const neutralCardInfo = {
         hasTargetSymbol: true,
         targetMode: targetMode.single,
         targetTypes: [types.unit, types.hero],
-        canTarget: ({ state, target }) => target.runes <= 0,
+        canTarget: ({ state, target }) =>
+          target.runes <= 0 && target.current.controller == getAP(state).id,
         action: ({ state, choices }) => {
           state.entities[choices.targetId].runes += 1;
           log.add(
             state,
-            `Bloom adds a +1/+1 rune to ${state.entities[choices.targetId].current.name}.`
+            `Bloom adds a +1/+1 rune to ${
+              state.entities[choices.targetId].current.name
+            }.`
           );
         }
       }
@@ -200,7 +206,9 @@ const neutralCardInfo = {
           state.entities[choices.targetId].runes -= 1;
           log.add(
             state,
-            `Wither adds a -1/-1 rune to ${state.entities[choices.targetId].current.name}.`
+            `Wither adds a -1/-1 rune to ${
+              state.entities[choices.targetId].current.name
+            }.`
           );
         }
       }

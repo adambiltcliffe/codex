@@ -254,7 +254,7 @@ export class TestGame {
   }
   queueByPath(path) {
     const index = this.findTriggerIndex(t => t.path == path);
-    this.playAction({ type: "queue", index });
+    return this.playAction({ type: "queue", index });
   }
   checkAction(action) {
     return CodexGame.checkAction(this.state, action);

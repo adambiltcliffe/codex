@@ -310,7 +310,7 @@ test("Harmony creates a token when you cast a spell, but only after resolving it
   const tg = new TestGame()
     .insertEntity(testp1Id, "river_montoya")
     .putCardsInHand(testp1Id, ["harmony", "bloom"])
-    .insertEntity(testp2Id, "iron_man");
+    .insertEntity(testp1Id, "iron_man");
   const [river, im] = tg.insertedEntityIds;
   tg.playAction({ type: "play", card: "harmony" });
   expect(tg.state.log).not.toContain("Harmony creates a Dancer token.");

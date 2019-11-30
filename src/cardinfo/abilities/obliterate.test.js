@@ -1,6 +1,7 @@
 import { TestGame, testp1Id, testp2Id } from "../../testutil";
 import { partitionObliterateTargets } from "./obliterate";
 import { fixtureNames } from "../../fixtures";
+import { currentTriggerDefinition } from "../../triggers";
 
 test("Correct behaviour of (internal) function partitionObliterateTargets", () => {
   const fakeTf = { current: { name: "Tenderfoot", tech: 0 } };
@@ -39,7 +40,10 @@ test("Correct behaviour of (internal) function partitionObliterateTargets", () =
       [fakeTd, fakeTf, fakeIm, fakeEs, fakeLl, fakeBm, fakeSp],
       4
     )
-  ).toEqual([[fakeTf, fakeIm], [fakeEs, fakeLl, fakeSp]]);
+  ).toEqual([
+    [fakeTf, fakeIm],
+    [fakeEs, fakeLl, fakeSp]
+  ]);
 });
 
 test("Obliterate destroys correct number of targets when choice is forced", () => {
@@ -82,6 +86,7 @@ test("Obliterate lets you choose targets if there are several options", () => {
   const p2base = tg.findBaseId(testp2Id);
   const [pg, tf, ob, bt, es] = tg.insertedEntityIds;
   tg.playAction({ type: "attack", attacker: pg, target: p2base });
+  expect(currentTriggerDefinition(tg.state).text).toEqual("Obliterate 2");
   expect(() =>
     tg.checkAction({ type: "choice", targets: [tf, ob, bt] })
   ).toThrow("Wrong number");

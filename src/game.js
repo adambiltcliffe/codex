@@ -93,7 +93,7 @@ class CodexGame extends Game {
       if (state.currentTrigger == null && state.queue.length > 0) {
         enqueueNextTrigger(state);
       }
-      while (state.currentTrigger) {
+      while (state.currentTrigger && !state.result) {
         if (canResolveCurrentTrigger(state)) {
           resolveCurrentTrigger(state);
         } else {
@@ -102,7 +102,7 @@ class CodexGame extends Game {
           break;
         }
       }
-      if (needAction) {
+      if (needAction || state.result) {
         break;
       }
       // If we get this far, we dealt with the current trigger if there was one

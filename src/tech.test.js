@@ -2,6 +2,7 @@ import { TestGame, testp1Id } from "./testutil";
 import { specs } from "./cardinfo";
 import { buildSingleCodex } from "./codex";
 import { wrapSecrets } from "./targets";
+import { currentTriggerDefinition } from "./triggers";
 
 const doublePass = [{ type: "endTurn" }, { type: "endTurn" }];
 
@@ -10,6 +11,9 @@ test("Can tech first card from codex", () => {
     .setCodexBySpec(testp1Id, specs.bashing)
     .playActions(doublePass);
   expect(tg.state.currentTrigger.path).toEqual("triggerInfo.tech");
+  expect(currentTriggerDefinition(tg.state).text).toEqual(
+    "Add teched cards to discard."
+  );
   const indices = wrapSecrets(
     tg.state,
     testp1Id,

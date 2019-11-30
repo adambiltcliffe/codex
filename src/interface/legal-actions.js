@@ -112,12 +112,14 @@ export const legalLevelActionTree = state => {
     e => e.current.type == types.hero && e.current.controller == ap.id
   );
   return fromPairs(
-    heroes.map(h => [
-      h.id,
-      range(1, 1 + h.current.maxbandLevel - h.level).filter(n =>
-        isLegalAction(state, { type: "level", hero: h.id, amount: n })
-      )
-    ])
+    heroes
+      .map(h => [
+        h.id,
+        range(1, 1 + h.current.maxbandLevel - h.level).filter(n =>
+          isLegalAction(state, { type: "level", hero: h.id, amount: n })
+        )
+      ])
+      .filter(([id, acts]) => acts.length > 0)
   );
 };
 

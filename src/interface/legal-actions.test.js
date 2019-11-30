@@ -13,14 +13,14 @@ import {
 
 test("Check required action types", () => {
   const tg = new TestGame();
-  tg.insertEntity(testp1Id, "troq_bashar")
+  tg.insertEntities(testp1Id, ["troq_bashar", "older_brother"])
     .insertEntities(testp2Id, ["helpful_turtle", "starcrossed_starlet"])
     .putCardsInHand(testp1Id, ["bloom"]);
-  const [troq, ht, ss] = tg.insertedEntityIds;
+  const [troq, ob, ht, ss] = tg.insertedEntityIds;
   expect(requiredActionType(tg.state)).toBeNull();
   tg.playAction({ type: "play", card: "bloom" });
   expect(requiredActionType(tg.state)).toEqual("choice");
-  tg.playActions([{ type: "choice", target: ht }, { type: "endTurn" }]);
+  tg.playActions([{ type: "choice", target: ob }, { type: "endTurn" }]);
   expect(requiredActionType(tg.state)).toEqual("queue");
 });
 
@@ -84,6 +84,10 @@ test("Check level up action tree is correct", () => {
   expect(legalLevelActionTree(tg.state)).toEqual({
     [troq]: [1, 2],
     [river]: [1, 2]
+  });
+  tg.modifyEntity(river, { level: 5 });
+  expect(legalLevelActionTree(tg.state)).toEqual({
+    [troq]: [1, 2]
   });
 });
 

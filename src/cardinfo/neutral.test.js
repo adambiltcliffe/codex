@@ -14,6 +14,7 @@ import {
 } from "../testutil";
 import { getCurrentValues } from "../entities";
 import CodexGame from "../game";
+import { getLegalChoicesForCurrentTrigger } from "../triggers";
 
 test("Timely Messenger can attack with haste", () => {
   const tg = new TestGame()
@@ -245,10 +246,9 @@ test("Wither kills units with 1hp", () => {
 
 test("Bloom puts a +1/+1 rune on a unit, but only if it doesn't have one", () => {
   const tg = new TestGame()
-    .insertEntity(testp1Id, "troq_bashar")
-    .insertEntity(testp2Id, "older_brother")
+    .insertEntities(testp1Id, ["troq_bashar", "older_brother", "tenderfoot"])
     .putCardsInHand(testp1Id, ["bloom", "bloom"]);
-  const [troq, ob] = tg.insertedEntityIds;
+  const [troq, ob, tf] = tg.insertedEntityIds;
   const acts = [
     { type: "play", card: "bloom" },
     { type: "choice", target: ob }
@@ -260,4 +260,18 @@ test("Bloom puts a +1/+1 rune on a unit, but only if it doesn't have one", () =>
   expect(() => {
     tg.playActions(acts);
   }).toThrow();
+});
+
+test("Bloom can't target opponent's units", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["troq_bashar", "older_brother", "tenderfoot"])
+    .insertEntity(testp2Id, "timely_messenger")
+    .putCardsInHand(testp1Id, ["bloom"]);
+  const [troq, ob, tf, tm] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "bloom" });
+  expect(getLegalChoicesForCurrentTrigger(tg.state).sort()).toEqual([
+    troq,
+    ob,
+    tf
+  ]);
 });
