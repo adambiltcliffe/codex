@@ -1,6 +1,6 @@
 {
   "name": "@adam.biltcliffe/codex",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Game rules engine for Codex by Sirlin Games",
   "main": "./dist/main/index.js",
   "browser": "./dist/browser/index.js",
