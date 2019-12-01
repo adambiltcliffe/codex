@@ -3,8 +3,6 @@
 Healing heals buildings as well as heroes/units
 Unclear reporting of destroying own add-on
 Order of items in log when sacrificing Harmony
-Double reporting of victory sometimes (seen when base destroyed by building damage?)
-Suggested actions for targetMode.modal don't work (seen with Appel Stomp)
 sortBy is not defined in suggest.js:105 (targetMode.multiple? seen with Two Step/flagbearer)
 Brick Thief reports nothing when no damage healed
 Check that destroying your own add-on when your base has only 2hp makes you lose
@@ -29,33 +27,6 @@ Units which sacrifice as a cost have the ability resolve before triggers (eg. bu
 Triggers which must target some specific number of things >1 are skipped if unfulfillable (detector, resist)
 Stealing half of a Two-Step partnership causes Two-Step to be sacrificed
 
-# Game features not implemented, not needed for BvF:
-
-One reshuffle per main phase limit
-
-Multicolour tax
-Proper continuous effects ordering
-Building cards and upgrade cards
-
-Simultaneous hero limit
-Choice of tech specs to unlock and requirement to unlock right spec to play cards
-Tech Lab and Heroes' Hall
-
-Long-range, two lives, deathtouch, other abilities
-Permanent detector
-Damage modification effects
-
-Sparkshot stacking
-Make Flagbearer not an ability (to support Vortoss Emblem)
-
-Make hero level up on death happen faster than other death triggers
-
-Choosing an opponent (update Discord)
-
-# Stuff to do before initial "release"
-
-Make sure it works out of the box, i.e. without npm linking playground
-
 # Other stuff to do
 
 Write tests for suggest (particularly the non-exhaustive ones)
@@ -70,46 +41,16 @@ Move abilities/ out of cardinfo/ to untangle some imports
 Simplify attack logic now we have entity.current.patrolSlot
 Use a schema validation library to simplify action checking
 
-# Cards that will need special attention
+# Cards that will need special attention (not in the roadmap)
 
-Trigger on who-killed or how-killed:
-. Captain Zane (Red/Anarchy)
-. Gunpoint Taxman (Red/Anarchy)
-. Firehouse (Red/Fire)
-. Jandra, the Negator (Black/starter)
-. Shadow Blade (Black/Demonology)
 Delayed Trigger:
 . Desperation (Red/Blood)
 . Bloodlust (Red/Blood)
 . Vandy Anadrose (Black/Demonology)
 . Death Rites (Black/Necromancy)
 . Promise of Payment (Purple/Future)
-Modify arriving units:
-. Drakk Ramhorn
-Modifying ability damage:
-. Hotter Fire (Red/Fire)
-Damage prevention:
-. Focus Master (White/Discipline)
-. Morningstar Pass (White/Strength)
-. Sentry (Purple/Present)
-. Blackhand Dozer (Black/Demonology)
-Order of continous effects matters:
-. Master Midori (Green/Balance)
-. Behind the Ferns (Green/Feral)
-. Wandering Mimic (Green/Balance)
-. Fox's Den School (White/Ninjutsu)
-. Jade Fox, Den's Headmistress (White/Ninjutsu)
 Conditional stealth:
 . Stalking Tiger (Green/Feral)
-On-exhaust trigger:
-. Rampaging Elephant (Green/Feral)
-Copy and modify-printed-values effects:
-. Polymorph: Squirrel (Green/Growth)
-. Manufactured Truth (Blue/starter)
-. Chaos Mirror (Red/Anarchy)
-Copiable (T0/1) legends:
-. Galina Glimmer (Green/Growth)
-. Jandra, the Negator (Black/starter)
 Heroes can't level up:
 . Nether Drain (Black/Necromancy)
 . Chronofixer (Purple/Present)
@@ -117,21 +58,6 @@ Choice of how to pay costs:
 . Skeletal Lord (White/Necromancy)
 . True Power of Storms (White/Discipline)
 . Omegacron (Purple/Future)
-Replace units entering play:
-. Jail (Blue/starter)
-Replace units leaving play:
-. Reteller of Truths (Blue/Truth)
-. Graveyard (Black/starter)
-. Soul Stone (Black/Demonology)
-. Second Chances (Purple/Past)
-. Brave Knight (Blue/Peace)
-On-target trigger:
-. Dreamscape (Blue/Truth)
-. All Illusions (Blue/starter and Truth)
-. Smoker (White/starter)
-Damage Division:
-. Ember Sparks (Red/Fire)
-. Burning Volley (Red/Fire)
 Force sacrifice:
 . Sacrifice the Weak (Black/starter)
 Can't be sacrificed:
