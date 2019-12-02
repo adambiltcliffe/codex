@@ -4,6 +4,7 @@ import { getCurrentValues } from "../../entities";
 
 import forEach from "lodash/forEach";
 import sum from "lodash/sum";
+import { types } from "../constants";
 
 export { obliterate } from "./obliterate";
 
@@ -81,7 +82,8 @@ export const healing = n => ({
     forEach(state.entities, u => {
       if (
         allVals[u.id].controller == allVals[source.id].controller &&
-        u.damage > 0
+        u.damage > 0 &&
+        (u.current.type == types.unit || u.current.type == types.hero)
       ) {
         healed.push(u.current.name);
         u.damage -= n;
