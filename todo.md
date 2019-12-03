@@ -1,6 +1,5 @@
 # Possible bugs to investigate
 
-Healing heals buildings as well as heroes/units
 Unclear reporting of destroying own add-on
 Order of items in log when sacrificing Harmony
 sortBy is not defined in suggest.js:105 (targetMode.multiple? seen with Two Step/flagbearer)
