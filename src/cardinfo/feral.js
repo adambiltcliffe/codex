@@ -44,7 +44,7 @@ const feralCardInfo = {
         triggerOnExhaust: true,
         shouldTrigger: ({ state, source, cardInfo }) =>
           !source.lastElephantReady || source.lastElephantReady < state.turn,
-        action: ({ state, source}) => {
+        action: ({ state, source }) => {
           source.lastElephantReady = state.turn;
           source.ready = true;
           log.add(state, "The Rampaging Elephant readies itself!");
@@ -52,7 +52,6 @@ const feralCardInfo = {
       }
     ]
   }
-
 };
 
 export default feralCardInfo;
