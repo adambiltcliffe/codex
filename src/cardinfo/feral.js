@@ -43,11 +43,11 @@ const feralCardInfo = {
           "The first time Rampaging Elephant exhausts each turn, ready him.",
         triggerOnExhaust: true,
         shouldTrigger: ({ state, source, cardInfo }) =>
-          !source.lastElephantReady || source.lastElephantReady < state.turn,
+          !source.thisTurn.elephantReadied,
         action: ({ state, source }) => {
-          source.lastElephantReady = state.turn;
+          source.thisTurn.elephantReadied = true;
           source.ready = true;
-          log.add(state, "The Rampaging Elephant readies itself!");
+          log.add(state, `${source.current.name} readies itself!`);
         }
       }
     ]

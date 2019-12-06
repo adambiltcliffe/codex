@@ -17,7 +17,7 @@ test("Rampaging Elephant readies itself once per turn", () => {
     { type: "attack", attacker: elephant, target: p2Base }
   ]);
   expect(s1.entities[elephant].ready).toEqual(true);
-  expect(s1.log).toContain("The Rampaging Elephant readies itself!");
+  expect(s1.log).toContain("Rampaging Elephant readies itself!");
   const s2 = playActions(s1, [
     { type: "attack", attacker: elephant, target: p2Base }
   ]);
