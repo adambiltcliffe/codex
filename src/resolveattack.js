@@ -1,6 +1,6 @@
 import { targetMode, types } from "./cardinfo/constants";
 import { patrolSlots } from "./patrolzone";
-import { applyStateBasedEffects, damageEntity } from "./entities";
+import { applyStateBasedEffects, damageEntity, exhaustEntity } from "./entities";
 import {
   hasKeyword,
   antiAir,
@@ -151,7 +151,8 @@ const findDefenders = {
       `${attacker.current.name} attacks ${target.current.name}${flownOverText}.`
     );
     if (!hasKeyword(attacker.current, readiness)) {
-      attacker.ready = false;
+      exhaustEntity(state, attacker.id);
+      //attacker.ready = false;
     }
     attacker.thisTurn.attacks = 1 + (attacker.thisTurn.attacks || 0);
     state.currentAttack.flownOverIds = flownOver.map(e => e.id);

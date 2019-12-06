@@ -1,4 +1,4 @@
-import { killEntity, getAbilityDefinition } from "../entities";
+import { killEntity, getAbilityDefinition, exhaustEntity } from "../entities";
 import { hasKeyword, haste } from "../cardinfo/abilities/keywords";
 import { getAP } from "../util";
 import log from "../log";
@@ -49,7 +49,8 @@ export function doActivateAction(state, action) {
   });
   const ad = getAbilityDefinition(ability);
   if (ad.costsExhaustSelf) {
-    state.entities[source.id].ready = false;
+    exhaustEntity(state, source.id);
+    //state.entities[source.id].ready = false;
   }
   if (ad.costsSacrificeSelf) {
     killEntity(state, source.id, { verb: "is sacrificed" });

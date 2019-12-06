@@ -2,8 +2,8 @@ import { createDraft, finishDraft } from "immer";
 
 import fixtures, { fixtureNames } from "./fixtures";
 import log from "./log";
-import { patrolSlots } from "./patrolzone";
-import { triggerDefinitions } from "./triggers";
+import { patrolSlots, sideline } from "./patrolzone";
+import { triggerDefinitions, createTrigger } from "./triggers";
 import { getEffectDefinition, expireEffects } from "./effects";
 import cardInfo, { types } from "./cardinfo";
 
@@ -145,6 +145,28 @@ export function bounceEntity(state, entityId) {
       fs.players[e.owner].hand.push(e.card);
     });
   }
+}
+
+export function exhaustEntity(state, entityId) {
+  const e = state.entities[entityId];
+  const ci = cardInfo[e];
+  e.ready = false;
+  sideline(state, e);
+
+  //currently there are no cards that care about other cards exhausting, so we only need to check the current card's abilities
+  forEach(e.current.abilities, a => {
+    const ad = getAbilityDefinition(a);
+    if (
+      ad.triggerOnExhaust &&
+      (!ad.shouldTrigger ||
+        ad.shouldTrigger({ state, cardInfo: ci, source: e}))
+    ) {
+      createTrigger(state, {
+        path: a.path,
+        sourceId: e.id
+      });
+    }
+  });
 }
 
 export function killEntity(state, entityId, opts) {
