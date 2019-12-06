@@ -1,3 +1,4 @@
+import log from "../log";
 import { specs, colors, types } from "./constants";
 import { sparkshot, antiAir, resist, overpower } from "./abilities/keywords";
 
@@ -25,7 +26,33 @@ const feralCardInfo = {
     attack: 5,
     hp: 5,
     abilities: [resist(2), overpower]
+  },
+  rampaging_elephant: {
+    color: colors.green,
+    tech: 2,
+    spec: specs.feral,
+    name: "Rampaging Elephant",
+    type: types.unit,
+    subtypes: ["Elephant"],
+    cost: 6,
+    attack: 6,
+    hp: 7,
+    abilities: [
+      {
+        text:
+          "The first time Rampaging Elephant exhausts each turn, ready him.",
+        triggerOnExhaust: true,
+        shouldTrigger: ({ state, source, cardInfo }) =>
+          !source.lastElephantReady || source.lastElephantReady < state.turn,
+        action: ({ state, source}) => {
+          source.lastElephantReady = state.turn;
+          source.ready = true;
+          log.add(state, "The Rampaging Elephant readies itself!");
+        }
+      }
+    ]
   }
+
 };
 
 export default feralCardInfo;
