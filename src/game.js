@@ -102,6 +102,10 @@ class CodexGame extends Game {
           break;
         }
       }
+      // There is a problem here where new triggers don't get enqueued at this point
+      if (state.newTriggers.length > 0) {
+        continue;
+      }
       if (needAction || state.result) {
         break;
       }
@@ -140,6 +144,9 @@ class CodexGame extends Game {
     ) {
       throw new Error("Must add new triggers to the queue first");
     }
+    if (action.type == "queue") {
+      return actions.checkQueueAction(state, action);
+    }
     if (state.currentTrigger && action.type != "choice") {
       throw new Error(
         "Must finish making choices for the current trigger first"
@@ -148,8 +155,6 @@ class CodexGame extends Game {
     switch (action.type) {
       case "start":
         return actions.checkStartAction(state, action);
-      case "queue":
-        return actions.checkQueueAction(state, action);
       case "choice":
         return actions.checkChoiceAction(state, action);
       case "worker":
