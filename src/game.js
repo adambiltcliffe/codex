@@ -93,7 +93,11 @@ class CodexGame extends Game {
       if (state.currentTrigger == null && state.queue.length > 0) {
         enqueueNextTrigger(state);
       }
-      while (state.currentTrigger && !state.result) {
+      while (
+        state.currentTrigger &&
+        !state.result &&
+        state.newTriggers.length == 0
+      ) {
         if (canResolveCurrentTrigger(state)) {
           resolveCurrentTrigger(state);
         } else {
@@ -102,7 +106,6 @@ class CodexGame extends Game {
           break;
         }
       }
-      // There is a problem here where new triggers don't get enqueued at this point
       if (state.newTriggers.length > 0) {
         continue;
       }

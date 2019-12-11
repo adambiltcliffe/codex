@@ -88,9 +88,9 @@ test("Triggers arising between steps of a multi-step spell", () => {
   expect(tg.state.log).toEqual([
     `\${${testp1Id}} plays Final Smash.`,
     "Choose a tech 0 unit to destroy: Only one legal choice.",
-    "Tenderfoot dies."
+    "Tenderfoot dies.",
+    "Triggered action (Scavenger dies: Gain ①.) was added to the queue."
   ]);
-  // This is a bug but right now lets us fix another bug
-  expect(tg.state.newTriggers).toHaveLength(1);
-  expect(() => tg.checkAction({ type: "queue", index: 0 })).not.toThrow();
+  expect(tg.state.newTriggers).toHaveLength(0);
+  expect(tg.state.queue).toHaveLength(1);
 });

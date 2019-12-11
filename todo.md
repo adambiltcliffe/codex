@@ -25,6 +25,7 @@ Dancer tokens don't flip if you stop the music while they're polymorphed or copy
 Units which sacrifice as a cost have the ability resolve before triggers (eg. bugblatter)
 Triggers which must target some specific number of things >1 are skipped if unfulfillable (detector, resist)
 Stealing half of a Two-Step partnership causes Two-Step to be sacrificed
+When two new triggers arise halfway through a multi-step trigger, can queue them before continuing
 
 # Other stuff to do
 
