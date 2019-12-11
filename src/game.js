@@ -80,53 +80,46 @@ class CodexGame extends Game {
         actions.doEndTurnAction(state, action);
         break;
     }
-    // We stop the simulation when we can't continue without a player acting
-    let needAction = false;
-    while (needAction == false && !state.result) {
+    // Run the simulation until we can't continue without a player acting
+    while (!state.result) {
+      // If there's only one new trigger, enqueue it and then carry on
       if (state.newTriggers.length == 1) {
         addTriggerToQueue(state, state.newTriggers.shift());
-      }
-      if (state.newTriggers.length > 0) {
-        needAction = true;
-        break;
-      }
-      if (state.currentTrigger == null && state.queue.length > 0) {
-        enqueueNextTrigger(state);
-      }
-      while (
-        state.currentTrigger &&
-        !state.result &&
-        state.newTriggers.length == 0
-      ) {
-        if (canResolveCurrentTrigger(state)) {
-          resolveCurrentTrigger(state);
-        } else {
-          // Can't resolve trigger without further choices
-          needAction = true;
-          break;
-        }
-      }
-      if (state.newTriggers.length > 0) {
         continue;
       }
-      if (needAction || state.result) {
+      // If there are multiple new triggers, stop and wait for the player to queue one
+      else if (state.newTriggers.length > 0) {
         break;
       }
-      // If we get this far, we dealt with the current trigger if there was one
-      if (state.queue.length == 0) {
-        if (state.phase == phases.main) {
-          if (state.currentAttack == null) {
-            if (state.newTriggers.length == 0) {
-              needAction = true;
-            }
-          } else {
-            enqueueResolveAttack(state);
-          }
-        } else {
-          advancePhase(state);
-        }
+      // Now we know there are no new triggers
+      // If there is a current trigger, resolve it if possible
+      else if (state.currentTrigger && canResolveCurrentTrigger(state)) {
+        resolveCurrentTrigger(state);
+        continue;
       }
+      // If we couldn't resolve it, wait for the user to make a choice
+      else if (state.currentTrigger) {
+        break;
+      }
+      // Now we know there are no current triggers
+      // If the queue isn't empty, queue the next item from it
+      else if (state.queue.length > 0) {
+        enqueueNextTrigger(state);
+        continue;
+      }
+      // Now we know there are no triggers resolving, queued or floating
+      if (state.phase != phases.main) {
+        advancePhase(state);
+        continue;
+      }
+      if (state.currentAttack != null) {
+        enqueueResolveAttack(state);
+        continue;
+      }
+      // We are in the main phase and nothing is going on so wait for an action
+      break;
     }
+
     // clearCurrentValues(state)
     delete state.updateHidden;
   }
