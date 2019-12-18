@@ -293,7 +293,8 @@ test("Hero dies on opponent's turn, cooldown on your next turn", () => {
 test("Can play a different hero when one is on cooldown", () => {
   const tg = new TestGame()
     .insertEntity(testp1Id, "river_montoya")
-    .insertEntity(testp2Id, "eggship").putHeroInCommandZone(testp1Id,'troq_bashar')
+    .insertEntity(testp2Id, "eggship")
+    .putHeroInCommandZone(testp1Id, "troq_bashar");
   const [river, es] = tg.insertedEntityIds;
   tg.playActions([
     { type: "endTurn" },

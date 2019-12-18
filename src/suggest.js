@@ -160,7 +160,10 @@ function getMainPhaseCandidates(state) {
   const examplePatrolAction = [
     { type: "endTurn", patrollers: examplePatrollers }
   ];
-  const apUnitVals = getCurrentValues(state, apUnits.map(u => u.id));
+  const apUnitVals = getCurrentValues(
+    state,
+    apUnits.map(u => u.id)
+  );
   const activateActions = flatMap(apUnits, u =>
     apUnitVals[u.id].abilities.reduce(
       (acc, a, index) =>

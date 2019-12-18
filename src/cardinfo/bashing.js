@@ -86,7 +86,9 @@ const bashingCardInfo = {
           });
           log.add(
             state,
-            `${state.entities[choices.targetId].current.name} gets -4 ATK this turn.`
+            `${
+              state.entities[choices.targetId].current.name
+            } gets -4 ATK this turn.`
           );
         }
       }

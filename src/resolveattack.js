@@ -1,6 +1,10 @@
 import { targetMode, types } from "./cardinfo/constants";
 import { patrolSlots } from "./patrolzone";
-import { applyStateBasedEffects, damageEntity, exhaustEntity } from "./entities";
+import {
+  applyStateBasedEffects,
+  damageEntity,
+  exhaustEntity
+} from "./entities";
 import {
   hasKeyword,
   antiAir,

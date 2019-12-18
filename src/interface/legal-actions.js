@@ -27,7 +27,7 @@ export function isLegalAction(state, act) {
   try {
     CodexGame.checkAction(state, act);
     return true;
-  } catch {
+  } catch (e) {
     return false;
   }
 }

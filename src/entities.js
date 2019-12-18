@@ -159,7 +159,7 @@ export function exhaustEntity(state, entityId) {
     if (
       ad.triggerOnExhaust &&
       (!ad.shouldTrigger ||
-        ad.shouldTrigger({ state, cardInfo: ci, source: e}))
+        ad.shouldTrigger({ state, cardInfo: ci, source: e }))
     ) {
       createTrigger(state, {
         path: a.path,
