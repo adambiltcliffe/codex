@@ -2,7 +2,6 @@
 
 Unclear reporting of destroying own add-on
 Order of items in log when sacrificing Harmony
-sortBy is not defined in suggest.js:105 (targetMode.multiple? seen with Two Step/flagbearer)
 Brick Thief reports nothing when no damage healed
 Check that destroying your own add-on when your base has only 2hp makes you lose
 Does checkStartAction check each player has a spec?
