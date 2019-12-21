@@ -3,7 +3,7 @@ import { types, colors, specs, targetMode } from "./constants";
 import {
   conferComplexAbility,
   conferKeyword,
-  damageEntity,
+  queueDamage,
   applyStateBasedEffects,
   createOngoingSpell
 } from "../entities";
@@ -292,9 +292,10 @@ const finesseCardInfo = {
         text: "Upkeep: This takes 1 damage.",
         triggerOnUpkeep: true,
         action: ({ state, source }) => {
-          damageEntity(state, source, {
+          queueDamage(state, {
             amount: 1,
-            source,
+            sourceId: source.id,
+            subjectId: source.id,
             isAbilityDamage: true
           });
         }
@@ -376,9 +377,10 @@ const finesseCardInfo = {
       targetMode: targetMode.single,
       targetTypes: [types.building],
       action: ({ state, source, choices }) => {
-        damageEntity(state, state.entities[choices.targetId], {
+        queueDamage(state, {
           amount: 2,
-          source,
+          sourceId: source.id,
+          subjectId: choices.targetId,
           isAbilityDamage: true
         });
       }

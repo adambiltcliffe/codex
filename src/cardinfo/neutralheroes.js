@@ -4,8 +4,8 @@ import { readiness } from "./abilities/keywords";
 import log from "../log";
 
 import find from "lodash/find";
-import { isPatrolling, sideline } from "../patrolzone";
-import { damageEntity } from "../entities";
+import { sideline } from "../patrolzone";
+import { queueDamage } from "../entities";
 import { getAP } from "../util";
 
 const neutralHeroCardInfo = {
@@ -35,9 +35,10 @@ const neutralHeroCardInfo = {
                 ([id, e]) =>
                   e.fixture == fixtureNames.base && e.owner == defendingPlayer
               )[1];
-              damageEntity(state, base, {
+              queueDamage(state, {
                 amount: 1,
-                source,
+                sourceId: source.id,
+                subjectId: base.id,
                 isAbilityDamage: true
               });
             }

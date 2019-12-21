@@ -10,9 +10,9 @@ import {
 } from "./abilities/keywords";
 import {
   killEntity,
-  damageEntity,
   conferKeyword,
-  bounceEntity
+  bounceEntity,
+  queueDamage
 } from "../entities";
 import { attachEffectThisTurn } from "../effects";
 import { getAP } from "../util";
@@ -33,8 +33,9 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.building],
         action: ({ state, choices }) => {
-          damageEntity(state, state.entities[choices.targetId], {
+          queueDamage(state, {
             amount: 2,
+            subjectId: choices.targetId,
             isSpellDamage: true
           });
         }
@@ -201,9 +202,10 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.unit],
         action: ({ state, source, choices }) => {
-          damageEntity(state, state.entities[choices.targetId], {
+          queueDamage(state, {
             amount: 3,
-            source,
+            sourceId: source.id,
+            subjectId: choices.targetId,
             isAbilityDamage: true
           });
         }
@@ -295,9 +297,10 @@ const bashingCardInfo = {
         targetMode: targetMode.single,
         targetTypes: [types.building],
         action: ({ state, source, choices }) => {
-          damageEntity(state, state.entities[choices.targetId], {
+          queueDamage(state, {
             amount: 4,
-            source,
+            sourceId: source.id,
+            subjectId: choices.targetId,
             isAbilityDamage: true
           });
         }

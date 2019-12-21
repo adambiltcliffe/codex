@@ -1,6 +1,10 @@
 import { getAP } from "./util";
 import log from "./log";
-import { applyStateBasedEffects, getAbilityDefinition } from "./entities";
+import {
+  applyStateBasedEffects,
+  getAbilityDefinition,
+  reallyDamageEntity
+} from "./entities";
 import { getLegalChoicesForStep } from "./targets";
 
 import cardInfo, { targetMode } from "./cardinfo";
@@ -165,6 +169,13 @@ export function resolveCurrentTrigger(state) {
       source: state.entities[state.currentTrigger.sourceId],
       choices
     });
+  }
+  let n = 0;
+  while (state.pendingDamage.length > 0) {
+    console.log(state.pendingDamage);
+    reallyDamageEntity(state, state.pendingDamage.pop());
+    n++;
+    if (n > 1000) throw new Error("something went very badly wrong");
   }
   if (
     isMultiStepTrigger &&

@@ -1,4 +1,5 @@
 import { colors, types, targetMode } from "./constants";
+import { queueDamage } from "../entities";
 
 const redCardInfo = {
   scorch: {
@@ -22,8 +23,9 @@ const redCardInfo = {
             target.id
           ),
         action: ({ state, choices }) => {
-          damageEntity(state, state.entities[choices.targetId], {
+          queueDamage(state, {
             amount: 2,
+            subjectId: choices.targetId,
             isSpellDamage: true
           });
         }

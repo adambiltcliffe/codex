@@ -7,7 +7,7 @@ import {
   resist,
   flagbearer
 } from "./abilities/keywords";
-import { damageEntity } from "../entities";
+import { queueDamage } from "../entities";
 import { getAP } from "../util";
 
 const neutralCardInfo = {
@@ -64,9 +64,10 @@ const neutralCardInfo = {
             targetMode: targetMode.single,
             targetTypes: [types.building],
             action: ({ state, source, choices }) => {
-              damageEntity(state, state.entities[choices.targetId], {
+              queueDamage(state, {
                 amount: 1,
-                source,
+                sourceId: source.id,
+                subjectId: choices.targetId,
                 isAbilityDamage: true
               });
             }
@@ -149,8 +150,9 @@ const neutralCardInfo = {
             target.id
           ),
         action: ({ state, choices }) => {
-          damageEntity(state, state.entities[choices.targetId], {
+          queueDamage(state, {
             amount: 1,
+            subjectId: choices.targetId,
             isSpellDamage: true
           });
         }

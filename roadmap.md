@@ -8,15 +8,32 @@ to modify existing cards.
 
 ## Engine features to support missing cards
 
-Make a function for exhausting entities rather than just setting ready=false
-so that abilities can trigger when something becomes exhausted:
-. Rampaging Elephant (Green/Feral)
-Add a source to damage-dealing events so that things can trigger on killing
-another unit:
+Various ways that things can trigger when they damage/kill things:
 . Captain Zane (Red/Anarchy)
+. . triggerOnKillEntity
 . Gunpoint Taxman (Red/Anarchy)
+. . triggerOnKillEntity
 . Firehouse (Red/Fire)
+. . (some sort of way to work out if our damage killed the target)
+. . maybe triggerOnDealDamage with a killedTarget parameter?
 . Shadow Blade (Black/Demonology)
+. . (some sort of way to work out if the target died, but could be because
+it was an illusion)
+. . Could be in a second step of the ability resolution?
+. Cursed Crow (Black/Disease)
+. . triggerOnDealDamage
+. Molting Firebird (Red/Fire)
+. . triggerOnDealDamage
+. Might of Leaf and Claw
+. . some different thing that also triggers when something else dealt damage
+triggerOnDealDamage triggers go onto the queue before anything dies; when they
+resolve, we have to have worked out somehow whether the target died
+When we applyStateBasedEffects and see that an entity dies, we can look at
+recent damage packets and match up damage source -> pending trigger source ->
+set a field on the trigger that says the victim died
+[but this is bad because we can't call shouldTrigger with the knowledge of
+whether it died or not]
+
 Instead of actions dealing damage directly, have them add to a list of pending
 damage packets so that effects can replace damage before it's dealt:
 . Focus Master (White/Discipline)

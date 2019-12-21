@@ -102,28 +102,45 @@ export function createOngoingSpell(state, owner, card, suppressUpdate) {
   return newOngoingSpell;
 }
 
-export function damageEntity(state, entity, damage) {
+// Not sure where this should be
+export function queueDamage(state, damage) {
+  if (!damage.sourceId && !damage.isSpellDamage) {
+    throw new Error("no sourceId");
+  }
+  if (!damage.subjectId) {
+    throw new Error("no subjectId");
+  }
+  if (damage.isSpellDamage) {
+    damage.sourceCard = state.playedCard;
+  }
+  state.pendingDamage.push(damage);
+}
+
+// This should probably move too
+export function reallyDamageEntity(state, damage) {
   if (damage.amount < 1) {
     return;
   }
+  const subject = state.entities[damage.subjectId];
+  const source = state.entities[damage.sourceId];
   const sourceName = upperFirst(
     damage.isSpellDamage
-      ? cardInfo[state.playedCard].name
-      : damage.source.current.name
+      ? cardInfo[damage.sourceCard].name
+      : source.current.name
   );
-  if (damage.source && damage.source == entity) {
+  if (source && source == subject) {
     log.add(state, `${sourceName} deals ${damage.amount} damage to itself.`);
   } else {
     log.add(
       state,
-      `${sourceName} deals ${damage.amount} damage to ${entity.current.name}.`
+      `${sourceName} deals ${damage.amount} damage to ${subject.current.name}.`
     );
   }
-  if (damage.amount > entity.armor) {
-    entity.damage += damage.amount - entity.armor;
-    entity.armor = 0;
+  if (damage.amount > subject.armor) {
+    subject.damage += damage.amount - subject.armor;
+    subject.armor = 0;
   } else {
-    entity.armor -= damage.amount;
+    subject.armor -= damage.amount;
   }
 }
 

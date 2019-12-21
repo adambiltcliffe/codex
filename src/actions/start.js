@@ -76,6 +76,7 @@ export function doStartAction(state, action) {
   state.currentTrigger = null;
   state.currentAttack = null;
   state.newTriggers = [];
+  state.pendingDamage = [];
   state.constructing = [];
   log.add(state, "Game started.");
   updateCurrentValues(state);

@@ -1,10 +1,6 @@
 import { targetMode, types } from "./cardinfo/constants";
 import { patrolSlots } from "./patrolzone";
-import {
-  applyStateBasedEffects,
-  damageEntity,
-  exhaustEntity
-} from "./entities";
+import { applyStateBasedEffects, exhaustEntity, queueDamage } from "./entities";
 import {
   hasKeyword,
   antiAir,
@@ -235,9 +231,10 @@ const resolveAttackTriggers = {
               hasKeyword(e.current, swiftStrike)
             );
             swiftDefenders.forEach(e => {
-              damageEntity(state, attacker, {
+              queueDamage(state, {
                 amount: e.current.attack,
-                source: e,
+                sourceId: e.id,
+                subjectId: attacker.id,
                 isCombatDamage: true
               });
             });
@@ -272,10 +269,10 @@ const resolveAttackTriggers = {
             }
             state.currentAttack.slowDefenderIds.forEach(id => {
               if (state.entities[id] != undefined) {
-                const e = state.entities[id];
-                damageEntity(state, attacker, {
-                  amount: e.current.attack,
-                  source: e,
+                queueDamage(state, {
+                  amount: state.entities[id].current.attack,
+                  sourceId: id,
+                  subjectId: attacker.id,
                   isCombatDamage: true
                 });
               }
@@ -299,22 +296,25 @@ function dealAttackerDamage(state, attacker, target) {
     // It's possible no overpower target was chosen because there were no choices
     !state.currentTrigger.choices[overpowerStep].skipped
   ) {
-    damageEntity(state, target, {
+    queueDamage(state, {
       amount: lethal,
-      source: attacker,
+      sourceId: attacker.id,
+      subjectId: target.id,
       isCombatDamage: true
     });
     const overpowerTarget =
       state.entities[state.currentTrigger.choices[overpowerStep].targetId];
-    damageEntity(state, overpowerTarget, {
+    queueDamage(state, {
       amount: attacker.current.attack - lethal,
-      source: attacker,
+      sourceId: attacker.id,
+      subjectId: overpowerTarget.id,
       isCombatDamage: true
     });
   } else {
-    damageEntity(state, target, {
+    queueDamage(state, {
       amount: attacker.current.attack,
-      source: attacker,
+      sourceId: attacker.id,
+      subjectId: target.id,
       isCombatDamage: true
     });
   }
@@ -322,9 +322,10 @@ function dealAttackerDamage(state, attacker, target) {
     const sparkshotTarget =
       state.entities[state.currentTrigger.choices[sparkshotStep].targetId];
     if (sparkshotTarget !== undefined) {
-      damageEntity(state, sparkshotTarget, {
+      queueDamage(state, {
         amount: 1,
-        source: attacker,
+        subjectId: sparkshotTarget.id,
+        sourceId: attacker.id,
         isCombatDamage: true,
         isAbilityDamage: true
       });
@@ -334,9 +335,10 @@ function dealAttackerDamage(state, attacker, target) {
   const tower =
     state.entities[state.players[dpId].current.fixtures[fixtureNames.tower]];
   if (tower !== undefined && !hasUsableStealthAbility(state, attacker, dpId)) {
-    damageEntity(state, attacker, {
+    queueDamage(state, {
       amount: 1,
-      source: tower,
+      sourceId: tower.id,
+      subjectId: attacker.id,
       isCombatDamage: true
     });
   }
