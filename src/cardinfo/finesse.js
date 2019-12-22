@@ -3,10 +3,10 @@ import { types, colors, specs, targetMode } from "./constants";
 import {
   conferComplexAbility,
   conferKeyword,
-  queueDamage,
   applyStateBasedEffects,
   createOngoingSpell
 } from "../entities";
+import { queueDamage } from "../damage";
 import {
   channeling,
   haste,

@@ -15,6 +15,9 @@ test("Unit with overpower can deal excess damage to another unit", () => {
     [ob, p1base].sort()
   );
   tg.playAction({ type: "choice", target: ob });
+  expect(tg.state.log).toContain(
+    "Harvest Reaper deals 4 damage to Iron Man and 2 overpower damage to Older Brother."
+  );
   expect(tg.state.log).toContain("Iron Man dies.");
   expect(tg.state.log).toContain("Older Brother dies.");
   expect(tg.state.log).not.toContain("Harvest Reaper dies.");
@@ -77,6 +80,9 @@ test("Overpower functions correctly when the unit has swift strike", () => {
     [ob, p1base].sort()
   );
   tg.playAction({ type: "choice", target: ob });
+  expect(tg.state.log).toContain(
+    "Harvest Reaper deals 4 swift strike damage to Iron Man and 2 overpower damage to Older Brother."
+  );
   expect(tg.state.log).toContain("Iron Man dies.");
   expect(tg.state.log).toContain("Older Brother dies.");
   expect(tg.state.log).not.toContain("Harvest Reaper dies.");
@@ -94,6 +100,7 @@ test("Overpower doesn't redirect damage if there are no other targets", () => {
   expect(tg.state.log).toContain(
     "Choose where to deal excess damage with overpower: No legal choices."
   );
+  expect(tg.state.log).toContain("Harvest Reaper deals 6 damage to base.");
   expect(tg.state.entities[p1base].damage).toEqual(25);
 });
 

@@ -1,6 +1,6 @@
 import { colors, types, specs, targetMode } from "./constants";
 import { sparkshot } from "./abilities/keywords";
-import { queueDamage } from "../entities";
+import { queueDamage } from "../damage";
 
 const fireHeroCardInfo = {
   jaina_stormborne: {

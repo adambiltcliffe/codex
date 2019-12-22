@@ -1,5 +1,5 @@
 import { specs, colors, types, targetMode } from "./constants";
-import { queueDamage } from "../entities";
+import { queueDamage } from "../damage";
 
 const fireCardInfo = {
   fire_dart: {

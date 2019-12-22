@@ -30,7 +30,6 @@ When two new triggers arise halfway through a multi-step trigger, can queue them
 
 Write tests for suggest (particularly the non-exhaustive ones)
 Tidy up the way making choices and queuing triggers is reported
-Make damage reporting call out swift strike/overpower/sparkshot damage
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities

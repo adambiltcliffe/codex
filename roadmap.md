@@ -26,16 +26,8 @@ it was an illusion)
 . . triggerOnDealDamage
 . Might of Leaf and Claw
 . . some different thing that also triggers when something else dealt damage
-triggerOnDealDamage triggers go onto the queue before anything dies; when they
-resolve, we have to have worked out somehow whether the target died
-When we applyStateBasedEffects and see that an entity dies, we can look at
-recent damage packets and match up damage source -> pending trigger source ->
-set a field on the trigger that says the victim died
-[but this is bad because we can't call shouldTrigger with the knowledge of
-whether it died or not]
 
-Instead of actions dealing damage directly, have them add to a list of pending
-damage packets so that effects can replace damage before it's dealt:
+Now we have a single place where damage is dealt, prevention effects can modify it:
 . Focus Master (White/Discipline)
 . Morningstar Pass (White/Strength)
 . Sentry (Purple/Present)

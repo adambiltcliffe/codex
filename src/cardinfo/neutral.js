@@ -7,7 +7,7 @@ import {
   resist,
   flagbearer
 } from "./abilities/keywords";
-import { queueDamage } from "../entities";
+import { queueDamage } from "../damage";
 import { getAP } from "../util";
 
 const neutralCardInfo = {

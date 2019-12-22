@@ -1,10 +1,6 @@
 import { getAP } from "./util";
 import log from "./log";
-import {
-  applyStateBasedEffects,
-  getAbilityDefinition,
-  reallyDamageEntity
-} from "./entities";
+import { applyStateBasedEffects, getAbilityDefinition } from "./entities";
 import { getLegalChoicesForStep } from "./targets";
 
 import cardInfo, { targetMode } from "./cardinfo";
@@ -14,6 +10,7 @@ import effectInfo from "./effectinfo";
 import get from "lodash/get";
 import { getObliterateTargets } from "./cardinfo/abilities/obliterate";
 import { doTargetSymbolEffects } from "./actions/choice";
+import { reallyDamageEntity, applyPendingDamage } from "./damage";
 
 export const triggerDefinitions = {
   cardInfo,
@@ -170,13 +167,7 @@ export function resolveCurrentTrigger(state) {
       choices
     });
   }
-  let n = 0;
-  while (state.pendingDamage.length > 0) {
-    console.log(state.pendingDamage);
-    reallyDamageEntity(state, state.pendingDamage.pop());
-    n++;
-    if (n > 1000) throw new Error("something went very badly wrong");
-  }
+  applyPendingDamage(state);
   if (
     isMultiStepTrigger &&
     state.currentTrigger.stepIndex < def.steps.length - 1

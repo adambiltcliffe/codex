@@ -12,6 +12,9 @@ test("Unit with sparkshot can attack Squad Leader and deal damage to adjacent pa
   expect(tg.state.log).toContain(
     "Choose a patroller to receive sparkshot damage: Only one legal choice."
   );
+  expect(tg.state.log).toContain(
+    "Revolver Ocelot deals 3 damage to Older Brother and 1 sparkshot damage to Timely Messenger."
+  );
   expect(tg.state.log).toContain("Older Brother dies.");
   expect(tg.state.log).toContain("Timely Messenger dies.");
   expect(tg.state.log).not.toContain("Revolver Ocelot dies.");
@@ -29,6 +32,9 @@ test("Unit with sparkshot can attack Lookout and deal damage to adjacent patroll
   ]);
   expect(tg.state.log).toContain(
     "Choose a patroller to receive sparkshot damage: Only one legal choice."
+  );
+  expect(tg.state.log).toContain(
+    "Revolver Ocelot deals 3 damage to Older Brother and 1 sparkshot damage to Timely Messenger."
   );
   expect(tg.state.log).toContain("Older Brother dies.");
   expect(tg.state.log).toContain("Timely Messenger dies.");
@@ -51,6 +57,9 @@ test("Unit with sparkshot can attack middle patroller and choose where to deal d
   ]);
   expect(tg.getLegalChoices().sort()).toEqual([bt, tm].sort());
   tg.playAction({ type: "choice", target: bt });
+  expect(tg.state.log).toContain(
+    "Revolver Ocelot deals 3 damage to Older Brother and 1 sparkshot damage to Brick Thief."
+  );
   expect(tg.state.log).toContain("Older Brother dies.");
   expect(tg.state.log).toContain("Brick Thief dies.");
   expect(tg.state.log).not.toContain("Revolver Ocelot dies.");
@@ -68,6 +77,9 @@ test("Unit with sparkshot can attack middle patroller and choose only target aut
   ]);
   expect(tg.state.log).toContain(
     "Choose a patroller to receive sparkshot damage: Only one legal choice."
+  );
+  expect(tg.state.log).toContain(
+    "Revolver Ocelot deals 3 damage to Older Brother and 1 sparkshot damage to Timely Messenger."
   );
   expect(tg.state.log).toContain("Older Brother dies.");
   expect(tg.state.log).toContain("Timely Messenger dies.");
@@ -103,6 +115,9 @@ test("Choosing a sparkshot target doesn't make you pay resist", () => {
   expect(tg.state.log).toContain(
     "Choose a patroller to receive sparkshot damage: Only one legal choice."
   );
+  expect(tg.state.log).toContain(
+    "Revolver Ocelot deals 3 damage to Older Brother and 1 sparkshot damage to Timely Messenger."
+  );
   expect(tg.state.players[testp2Id].gold).toEqual(5);
 });
 
@@ -121,6 +136,9 @@ test("Unit with sparkshot still deals its damage if it has swift strike", () => 
   ]);
   expect(tg.getLegalChoices().sort()).toEqual([bt, tm].sort());
   tg.playAction({ type: "choice", target: bt });
+  expect(tg.state.log).toContain(
+    "Revolver Ocelot deals 3 damage to Older Brother and 1 sparkshot damage to Brick Thief."
+  );
   expect(tg.state.log).toContain("Older Brother dies.");
   expect(tg.state.log).toContain("Brick Thief dies.");
   expect(tg.state.log).not.toContain("Revolver Ocelot dies.");

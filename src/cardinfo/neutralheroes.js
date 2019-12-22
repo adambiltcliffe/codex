@@ -5,7 +5,7 @@ import log from "../log";
 
 import find from "lodash/find";
 import { sideline } from "../patrolzone";
-import { queueDamage } from "../entities";
+import { queueDamage } from "../damage";
 import { getAP } from "../util";
 
 const neutralHeroCardInfo = {

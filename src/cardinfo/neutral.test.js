@@ -193,6 +193,7 @@ test("Spark can deal damage to patroller", () => {
     { type: "choice", target: ob1 }
   ]);
   expect(tg.state.entities[ob1].damage).toEqual(1);
+  expect(tg.state.log).toContain("Spark deals 1 damage to Older Brother.");
 });
 
 test("Spark can't target non-patroller", () => {

@@ -8,12 +8,8 @@ import {
   stealth,
   haste
 } from "./abilities/keywords";
-import {
-  killEntity,
-  conferKeyword,
-  bounceEntity,
-  queueDamage
-} from "../entities";
+import { killEntity, conferKeyword, bounceEntity } from "../entities";
+import { queueDamage } from "../damage";
 import { attachEffectThisTurn } from "../effects";
 import { getAP } from "../util";
 

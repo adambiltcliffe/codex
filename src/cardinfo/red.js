@@ -1,5 +1,5 @@
 import { colors, types, targetMode } from "./constants";
-import { queueDamage } from "../entities";
+import { queueDamage } from "../damage";
 
 const redCardInfo = {
   scorch: {

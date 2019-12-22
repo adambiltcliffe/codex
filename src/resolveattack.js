@@ -1,6 +1,6 @@
 import { targetMode, types } from "./cardinfo/constants";
 import { patrolSlots } from "./patrolzone";
-import { applyStateBasedEffects, exhaustEntity, queueDamage } from "./entities";
+import { applyStateBasedEffects, exhaustEntity } from "./entities";
 import {
   hasKeyword,
   antiAir,
@@ -22,6 +22,7 @@ import {
 import { fixtureNames } from "./fixtures";
 
 import partition from "lodash/partition";
+import { queueDamage } from "./damage";
 
 const findDefendersStep = 0;
 const retargetAttackStep = 1;
@@ -222,7 +223,7 @@ const resolveAttackTriggers = {
               defenders.push(target);
             }
             if (hasKeyword(attacker.current, swiftStrike)) {
-              dealAttackerDamage(state, attacker, target);
+              dealAttackerDamage(state, attacker, target, "swift strike");
               state.currentAttack.attackerDealtDamage = true;
             } else {
               state.currentAttack.attackerDealtDamage = false;
@@ -235,7 +236,8 @@ const resolveAttackTriggers = {
                 amount: e.current.attack,
                 sourceId: e.id,
                 subjectId: attacker.id,
-                isCombatDamage: true
+                isCombatDamage: true,
+                tag: "swift strike"
               });
             });
             state.currentAttack.slowDefenderIds = slowDefenders.map(e => e.id);
@@ -288,7 +290,7 @@ const resolveAttackTriggers = {
   }
 };
 
-function dealAttackerDamage(state, attacker, target) {
+function dealAttackerDamage(state, attacker, target, tag) {
   const lethal = target.current.hp - target.damage;
   if (
     hasKeyword(attacker.current, overpower) &&
@@ -300,7 +302,8 @@ function dealAttackerDamage(state, attacker, target) {
       amount: lethal,
       sourceId: attacker.id,
       subjectId: target.id,
-      isCombatDamage: true
+      isCombatDamage: true,
+      tag
     });
     const overpowerTarget =
       state.entities[state.currentTrigger.choices[overpowerStep].targetId];
@@ -308,7 +311,8 @@ function dealAttackerDamage(state, attacker, target) {
       amount: attacker.current.attack - lethal,
       sourceId: attacker.id,
       subjectId: overpowerTarget.id,
-      isCombatDamage: true
+      isCombatDamage: true,
+      tag: "overpower"
     });
   } else {
     queueDamage(state, {
@@ -327,7 +331,8 @@ function dealAttackerDamage(state, attacker, target) {
         subjectId: sparkshotTarget.id,
         sourceId: attacker.id,
         isCombatDamage: true,
-        isAbilityDamage: true
+        isAbilityDamage: true,
+        tag: "sparkshot"
       });
     }
   }

@@ -102,48 +102,6 @@ export function createOngoingSpell(state, owner, card, suppressUpdate) {
   return newOngoingSpell;
 }
 
-// Not sure where this should be
-export function queueDamage(state, damage) {
-  if (!damage.sourceId && !damage.isSpellDamage) {
-    throw new Error("no sourceId");
-  }
-  if (!damage.subjectId) {
-    throw new Error("no subjectId");
-  }
-  if (damage.isSpellDamage) {
-    damage.sourceCard = state.playedCard;
-  }
-  state.pendingDamage.push(damage);
-}
-
-// This should probably move too
-export function reallyDamageEntity(state, damage) {
-  if (damage.amount < 1) {
-    return;
-  }
-  const subject = state.entities[damage.subjectId];
-  const source = state.entities[damage.sourceId];
-  const sourceName = upperFirst(
-    damage.isSpellDamage
-      ? cardInfo[damage.sourceCard].name
-      : source.current.name
-  );
-  if (source && source == subject) {
-    log.add(state, `${sourceName} deals ${damage.amount} damage to itself.`);
-  } else {
-    log.add(
-      state,
-      `${sourceName} deals ${damage.amount} damage to ${subject.current.name}.`
-    );
-  }
-  if (damage.amount > subject.armor) {
-    subject.damage += damage.amount - subject.armor;
-    subject.armor = 0;
-  } else {
-    subject.armor -= damage.amount;
-  }
-}
-
 export function bounceEntity(state, entityId) {
   const e = state.entities[entityId];
   const ci = cardInfo[e.card];

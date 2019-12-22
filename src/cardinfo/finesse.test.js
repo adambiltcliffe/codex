@@ -464,7 +464,9 @@ test("If Blademaster dies on defense, others don't deal damage twice", () => {
     "Spectral Roc attacks Blademaster, flying over Fox Primus."
   );
   expect(tg.state.entities[sr].damage).toEqual(2);
-  expect(tg.state.log).toContain("Fox Primus deals 2 damage to Spectral Roc.");
+  expect(tg.state.log).toContain(
+    "Fox Primus deals 2 swift strike damage to Spectral Roc."
+  );
   expect(tg.state.log).toContain("Spectral Roc deals 4 damage to Blademaster.");
   expect(tg.state.log).toContain("Blademaster dies.");
   expect(tg.state.log).not.toContain("Spectral Roc dies.");
