@@ -9,21 +9,18 @@ to modify existing cards.
 ## Engine features to support missing cards
 
 Various ways that things can trigger when they damage/kill things:
-. Captain Zane (Red/Anarchy)
-. . triggerOnKillEntity
 . Gunpoint Taxman (Red/Anarchy)
-. . triggerOnKillEntity
+. . triggerOnDamageEntity with isLethal==true (now done)
+. Captain Zane (Red/Anarchy)
+. . triggerOnDamageEntity with isLethal==true
 . Firehouse (Red/Fire)
-. . (some sort of way to work out if our damage killed the target)
-. . maybe triggerOnDealDamage with a killedTarget parameter?
+. . triggerOnDamageEntity with isLethal==true
 . Shadow Blade (Black/Demonology)
-. . (some sort of way to work out if the target died, but could be because
-it was an illusion)
-. . Could be in a second step of the ability resolution?
+. . Check in a second step of the ability resolution if the target died, to account for illusions etc. as well
 . Cursed Crow (Black/Disease)
-. . triggerOnDealDamage
+. . triggerOnDamageEntity
 . Molting Firebird (Red/Fire)
-. . triggerOnDealDamage
+. . triggerOnDamageEntity
 . Might of Leaf and Claw
 . . some different thing that also triggers when something else dealt damage
 

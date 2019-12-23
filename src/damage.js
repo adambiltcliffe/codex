@@ -32,12 +32,14 @@ export function applyPendingDamage(state) {
     groupBy(state.pendingDamage, "subjectId"),
     packets => sum(packets.map(p => p.amount))
   );
-  const killedEntities = Object.entries(state.entities).filter(([id, e]) => {
-    return (
-      damagePerSubject[id] !== undefined &&
-      damagePerSubject[id] + e.damage > e.current.hp + e.armor
-    );
-  });
+  const killedEntityIds = Object.values(state.entities)
+    .filter(e => {
+      return (
+        damagePerSubject[e.id] !== undefined &&
+        damagePerSubject[e.id] + e.damage >= e.current.hp + e.armor
+      );
+    })
+    .map(e => e.id);
   Object.keys(packetsPerSource).forEach(id => {
     const e = state.entities[id];
     if (e !== undefined) {
@@ -45,7 +47,7 @@ export function applyPendingDamage(state) {
         const ad = getAbilityDefinition(a);
         if (ad.triggerOnDamageEntity) {
           packetsPerSource[id].forEach(packet => {
-            const isLethal = killedEntities[subjectId] !== undefined;
+            const isLethal = killedEntityIds.includes(packet.subjectId);
             if (
               !ad.shouldTrigger ||
               ad.shouldTrigger({ state, packet, isLethal })
