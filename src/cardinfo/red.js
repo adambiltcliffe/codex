@@ -86,7 +86,7 @@ const redCardInfo = {
         isSpellEffect: true,
         hasTargetSymbol: true,
         targetMode: targetMode.single,
-        targetTypes: [types.unit, types.building],
+        targetTypes: [types.unit, types.building, types.hero],
         canTarget: ({ state, target }) =>
           target.current.type == types.building ||
           state.players[target.current.controller].patrollerIds.includes(

@@ -41,3 +41,22 @@ test("Careless Musketeer can hurt your own units but still damages your own base
   expect(tg.state.log).toContain(`\${${testp2Id}} wins the game.`);
   expect(tg.state.result).toEqual({ winner: testp2Id });
 });
+
+test("Scorch can only target buildings and patrollers and deals 2 damage to them", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["iron_man", "iron_man", "troq_bashar"])
+    .insertEntities(testp2Id, ["jaina_stormborne", "nautical_dog"]);
+  const [im1, im2, troq, jaina, nd] = tg.insertedEntityIds;
+  const p1base = tg.findBaseId(testp1Id);
+  const p2base = tg.findBaseId(testp2Id);
+  tg.putCardsInHand(testp2Id, ["scorch"]).playActions([
+    { type: "endTurn", patrollers: [null, im1, troq, null, null] },
+    { type: "play", card: "scorch" }
+  ]);
+  expect(tg.getLegalChoices().sort()).toEqual(
+    [p1base, p2base, im1, troq].sort()
+  );
+  tg.playAction({ type: "choice", target: im1 });
+  expect(tg.state.entities[im1].damage).toEqual(2);
+  expect(tg.state.log).toContain("Scorch deals 2 damage to Iron Man.");
+});
