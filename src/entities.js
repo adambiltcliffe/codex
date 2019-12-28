@@ -113,6 +113,12 @@ export function bounceEntity(state, entityId) {
     }'s ${dest}.`
   );
   delete state.entities[e.id];
+  const pz = state.players[e.current.controller].patrollerIds;
+  pz.forEach((id, index) => {
+    if (id == e.id) {
+      pz[index] = null;
+    }
+  });
   if (ci.type == types.hero) {
     state.players[e.owner].commandZone.push(e.card);
   } else {

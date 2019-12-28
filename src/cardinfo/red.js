@@ -3,7 +3,7 @@ import { queueDamage } from "../damage";
 import { haste, frenzy } from "./abilities/keywords";
 import { fixtureNames } from "../fixtures";
 import { getAP } from "../util";
-import { conferKeyword } from "../entities";
+import { conferKeyword, bounceEntity } from "../entities";
 
 import find from "lodash/find";
 import { attachEffectThisTurn } from "../effects";
@@ -70,6 +70,33 @@ const redCardInfo = {
               isAbilityDamage: true
             });
           }
+        }
+      }
+    ]
+  },
+  bloodrage_ogre: {
+    color: colors.red,
+    tech: 0,
+    name: "Bloodrage Ogre",
+    type: types.unit,
+    subtypes: ["Ogre"],
+    cost: 2,
+    attack: 3,
+    hp: 2,
+    abilities: [
+      {
+        text:
+          "End of turn: Return Bloodrage Ogre to his owner's hand if he didn't arrive or attack this turn.",
+        triggerAtEndOfTurn: true,
+        shouldTrigger: ({ state, source }) => {
+          return (
+            getAP(state).id == source.current.controller &&
+            !source.thisTurn.arrived &&
+            source.thisTurn.attacks === undefined
+          );
+        },
+        action: ({ state, source }) => {
+          bounceEntity(state, source.id);
         }
       }
     ]

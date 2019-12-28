@@ -232,5 +232,6 @@ export function doAttackAction(state, action) {
     state,
     log.fmt`${getAP(state)} declares an attack with ${u.current.name}.`
   );
+  u.thisTurn.attacks = (u.thisTurn.attacks || 0) + 1;
   detectAttackerWithTower(state, u, defendingPlayer);
 }

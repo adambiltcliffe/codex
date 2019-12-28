@@ -11,7 +11,7 @@ import fixtures, { fixtureNames } from "./fixtures";
 
 import forEach from "lodash/forEach";
 import upperFirst from "lodash/upperFirst";
-import { drawCards } from "./draw";
+import { drawCards, doDrawPhase } from "./draw";
 import { createTrigger } from "./triggers";
 
 export const phases = {
@@ -40,6 +40,11 @@ export function advancePhase(state) {
     enterUpkeepPhase(state);
   } else if (state.phase == phases.upkeep) {
     enterMainPhase(state);
+  } else if (state.phase == phases.main) {
+    enterDrawPhase(state);
+  } else if (state.phase == phases.draw) {
+    doEndOfTurnEffects(state);
+    advanceTurn(state);
   }
 }
 
@@ -103,6 +108,25 @@ export function enterUpkeepPhase(state) {
 
 export function enterMainPhase(state) {
   state.phase = phases.main;
+}
+
+export function enterDrawPhase(state) {
+  state.phase = phases.draw;
+  doDrawPhase(state);
+  forEach(state.entities, e => {
+    forEach(e.current.abilities, a => {
+      const ad = getAbilityDefinition(a);
+      if (
+        ad.triggerAtEndOfTurn &&
+        (!ad.shouldTrigger || ad.shouldTrigger({ state, source: e }))
+      ) {
+        createTrigger(state, {
+          path: a.path,
+          sourceId: e.id
+        });
+      }
+    });
+  });
 }
 
 export function doEndOfTurnEffects(state) {

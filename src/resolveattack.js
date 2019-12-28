@@ -153,9 +153,7 @@ const findDefenders = {
     );
     if (!hasKeyword(attacker.current, readiness)) {
       exhaustEntity(state, attacker.id);
-      //attacker.ready = false;
     }
-    attacker.thisTurn.attacks = 1 + (attacker.thisTurn.attacks || 0);
     state.currentAttack.flownOverIds = flownOver.map(e => e.id);
   }
 };

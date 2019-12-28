@@ -1,4 +1,4 @@
-import { TestGame, testp1Id, testp2Id } from "../testutil";
+import { TestGame, testp1Id, testp2Id, findEntityIds } from "../testutil";
 import { hasKeyword, haste } from "./abilities/keywords";
 
 test("Careless Musketeer can targets units and buildings and damages the target and your base", () => {
@@ -41,6 +41,87 @@ test("Careless Musketeer can hurt your own units but still damages your own base
   expect(tg.state.log).toContain("Careless Musketeer dies.");
   expect(tg.state.log).toContain(`\${${testp2Id}} wins the game.`);
   expect(tg.state.result).toEqual({ winner: testp2Id });
+});
+
+test("Bloodrage Ogre returns to hand at the end of your turn if he doesn't attack", () => {
+  const tg = new TestGame().putCardsInHand(testp1Id, ["bloodrage_ogre"]);
+  tg.playAction({ type: "play", card: "bloodrage_ogre" });
+  const ids = findEntityIds(tg.state, e => e.card == "bloodrage_ogre");
+  expect(ids).toHaveLength(1);
+  const bo = ids[0];
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[bo]).not.toBeUndefined();
+  expect(tg.state.log).not.toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[bo]).not.toBeUndefined();
+  expect(tg.state.log).not.toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[bo]).toBeUndefined();
+  expect(tg.state.log).toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  expect(tg.state.players[testp1Id].hand).toContain("bloodrage_ogre");
+});
+
+test("Bloodrage Ogre stays in play if he attacks, but only if he keeps attacking", () => {
+  const tg = new TestGame().putCardsInHand(testp1Id, ["bloodrage_ogre"]);
+  const p2base = tg.findBaseId(testp2Id);
+  tg.playAction({ type: "play", card: "bloodrage_ogre" });
+  const ids = findEntityIds(tg.state, e => e.card == "bloodrage_ogre");
+  expect(ids).toHaveLength(1);
+  const bo = ids[0];
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[bo]).not.toBeUndefined();
+  expect(tg.state.log).not.toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[bo]).not.toBeUndefined();
+  expect(tg.state.log).not.toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  tg.playActions([
+    { type: "attack", attacker: bo, target: p2base },
+    { type: "endTurn" }
+  ]);
+  expect(tg.state.entities[bo]).not.toBeUndefined();
+  expect(tg.state.log).not.toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[bo]).not.toBeUndefined();
+  expect(tg.state.log).not.toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[bo]).toBeUndefined();
+  expect(tg.state.log).toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  expect(tg.state.players[testp1Id].hand).toContain("bloodrage_ogre");
+});
+
+test("Patrolling with Bloodrage Ogre doesn't break anything", () => {
+  const tg = new TestGame().insertEntities(testp1Id, [
+    "bloodrage_ogre",
+    "nautical_dog"
+  ]);
+  const [bo, nd] = tg.insertedEntityIds;
+  tg.playAction({ type: "endTurn", patrollers: [null, null, bo, nd, null] });
+  expect(tg.state.log).toContain(
+    `Bloodrage Ogre is returned to \${${testp1Id}}'s hand.`
+  );
+  expect(tg.state.players[testp1Id].patrollerIds).toEqual([
+    null,
+    null,
+    null,
+    nd,
+    null
+  ]);
 });
 
 test("Scorch can only target buildings and patrollers and deals 2 damage to them", () => {

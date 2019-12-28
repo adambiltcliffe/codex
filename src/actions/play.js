@@ -140,5 +140,6 @@ export function putUnitIntoPlay(state, playerId, card) {
       });
     }
   });
+  newUnit.thisTurn.arrived = true;
   return newUnit;
 }

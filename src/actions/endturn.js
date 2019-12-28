@@ -1,10 +1,11 @@
-import { phases, advanceTurn, doEndOfTurnEffects } from "../phases";
+import { advancePhase } from "../phases";
 import { getCurrentValues, applyStateBasedEffects } from "../entities";
 import { andJoin, getAP } from "../util";
 import { types } from "../cardinfo/constants";
 import log from "../log";
 import { emptyPatrolZone, patrolSlotNames } from "../patrolzone";
-import { doDrawPhase } from "../draw";
+
+import clone from "lodash/clone";
 
 export function checkEndTurnAction(state, action) {
   if (action.patrollers === undefined) {
@@ -44,7 +45,9 @@ export function checkEndTurnAction(state, action) {
 
 export function doEndTurnAction(state, action) {
   const ap = getAP(state);
-  ap.patrollerIds = action.patrollers || emptyPatrolZone;
+  // Beware of just using action.patrollers - if provided externally it will
+  // not be an immer proxy so it is mutable even if the rest of the state is not
+  ap.patrollerIds = clone(action.patrollers) || emptyPatrolZone;
   const patrolling = ap.patrollerIds
     .map((id, slotIndex) => ({ id, slotIndex }))
     .filter(({ id }) => id !== null)
@@ -64,9 +67,5 @@ export function doEndTurnAction(state, action) {
   }
   // have to do this because of "X while patrolling" and "X during your turn" effects
   applyStateBasedEffects(state);
-  state.phase = phases.draw;
-  // draw phase
-  doDrawPhase(state);
-  doEndOfTurnEffects(state);
-  advanceTurn(state);
+  advancePhase(state);
 }

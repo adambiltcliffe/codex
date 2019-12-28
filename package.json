@@ -28,7 +28,7 @@
   "repository": "https://github.com/adambiltcliffe/codex.git",
   "license": "ISC",
   "dependencies": {
-    "board-state": "^0.1.1",
+    "board-state": "^0.1.3",
     "knuth-shuffle": "^1.0.8",
     "lodash": "^4.17.15"
   },
