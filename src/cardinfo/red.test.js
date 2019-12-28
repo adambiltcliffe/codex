@@ -1,4 +1,5 @@
 import { TestGame, testp1Id, testp2Id } from "../testutil";
+import { hasKeyword, haste } from "./abilities/keywords";
 
 test("Careless Musketeer can targets units and buildings and damages the target and your base", () => {
   const tg = new TestGame()
@@ -59,4 +60,33 @@ test("Scorch can only target buildings and patrollers and deals 2 damage to them
   tg.playAction({ type: "choice", target: im1 });
   expect(tg.state.entities[im1].damage).toEqual(2);
   expect(tg.state.log).toContain("Scorch deals 2 damage to Iron Man.");
+});
+
+test("Charge gives a unit haste and +1 ATK but only for a turn", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "jaina_stormborne",
+      "careless_musketeer",
+      "nautical_dog"
+    ])
+    .insertEntity(testp2Id, "tiger_cub")
+    .putCardsInHand(testp1Id, ["charge"]);
+  const [jaina, cm, nd, tc] = tg.insertedEntityIds;
+  const p2base = tg.findBaseId(testp2Id);
+  const attackAct = { type: "attack", attacker: cm, target: p2base };
+  const activateAct = { type: "activate", source: cm, index: 0 };
+  expect(tg.state.entities[cm].current.attack).toEqual(2);
+  expect(hasKeyword(tg.state.entities[cm].current, haste)).toBeFalsy();
+  expect(() => tg.checkAction(attackAct)).toThrow("arrival fatigue");
+  expect(() => tg.checkAction(activateAct)).toThrow("arrival fatigue");
+  tg.playAction({ type: "play", card: "charge" });
+  expect(tg.getLegalChoices().sort()).toEqual([cm, nd].sort());
+  tg.playAction({ type: "choice", target: cm });
+  expect(tg.state.entities[cm].current.attack).toEqual(3);
+  expect(hasKeyword(tg.state.entities[cm].current, haste)).toBeTruthy();
+  expect(() => tg.checkAction(attackAct)).not.toThrow();
+  expect(() => tg.checkAction(activateAct)).not.toThrow();
+  tg.playAction({ type: "endTurn" });
+  expect(tg.state.entities[cm].current.attack).toEqual(2);
+  expect(hasKeyword(tg.state.entities[cm].current, haste)).toBeFalsy();
 });

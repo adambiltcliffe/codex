@@ -6,6 +6,8 @@ import { getAP } from "../util";
 import { conferKeyword } from "../entities";
 
 import find from "lodash/find";
+import { attachEffectThisTurn } from "../effects";
+import log from "../log";
 
 const redCardInfo = {
   nautical_dog: {
@@ -121,7 +123,7 @@ const redCardInfo = {
           target.current.controller == getAP(state).id,
         action: ({ state, choices }) => {
           attachEffectThisTurn(state, state.entities[choices.targetId], {
-            path: "cardInfo.intimidate.createdEffect"
+            path: "cardInfo.charge.createdEffect"
           });
           log.add(
             state,
@@ -134,7 +136,7 @@ const redCardInfo = {
     ],
     createdEffect: {
       modifySubjectValues: ({ subject }) => {
-        subject.current.attack -= 4;
+        subject.current.attack += 1;
         conferKeyword(subject, haste);
       }
     }
