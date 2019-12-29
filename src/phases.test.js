@@ -8,6 +8,7 @@ import {
   TestGame
 } from "./testutil";
 import CodexGame from "./game";
+import { getAP } from "./util";
 
 test("Workers generate gold during upkeep", () => {
   const s0 = getNewGame();
@@ -54,4 +55,17 @@ test("Units become exhausted when attacking and ready next turn", () => {
   const s3 = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
   expect(s3.entities[attackerId].ready).toBeTruthy();
   expect(s3.log).toContain(`\${${testp1Id}} readies Older Brother.`);
+});
+
+test("Correctly handle multiple triggers during the draw/discard step", () => {
+  const tg = new TestGame().insertEntities(testp1Id, [
+    "bloodrage_ogre",
+    "bloodrage_ogre"
+  ]);
+  tg.playActions([{ type: "endTurn" }, { type: "queue", index: 0 }]);
+  expect(getAP(tg.state).id).toEqual(testp2Id);
+  expect(tg.state.currentTrigger).toBeNull();
+  expect(
+    tg.state.players[testp1Id].hand.filter(c => c == "bloodrage_ogre")
+  ).toHaveLength(2);
 });
