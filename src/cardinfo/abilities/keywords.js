@@ -1,6 +1,6 @@
 import log from "../../log";
 import { andJoin, getAP } from "../../util";
-import { getCurrentValues } from "../../entities";
+import { getCurrentValues, killEntity } from "../../entities";
 
 import forEach from "lodash/forEach";
 import sum from "lodash/sum";
@@ -110,4 +110,13 @@ export const channeling = {
     return !state.players[p].current.heroSpecs.includes(source.current.spec);
   },
   renderKeyword: "channeling"
+};
+
+export const ephemeral = {
+  text: "ephemeral",
+  triggerAtEndOfTurn: true,
+  action: ({ state, source }) => {
+    killEntity(state, source.id);
+  },
+  renderKeyword: "ephemeral"
 };

@@ -27,6 +27,7 @@ Stealing half of a Two-Step partnership causes Two-Step to be sacrificed
 Two-Step not sacrificed if one partner would die but is saved by Soul Stone
 When two new triggers arise halfway through a multi-step trigger, can queue them before continuing
 Sacrifice a Bombaster with a Soul Stone on it (find out what should happen!)
+If you somehow control an ephemeral unit on opponent's turn, it still dies
 
 # Other stuff to do
 
@@ -39,6 +40,7 @@ Auto-resolve targetMode.multiple when there's only one valid combination
 Move abilities/ out of cardinfo/ to untangle some imports
 Simplify attack logic now we have entity.current.patrolSlot
 Use a schema validation library to simplify action checking
+Work out when it's possible to auto-queue stuff (e.g. ephemeral units dying simultaneously)
 
 # Cards that will need special attention (not in the roadmap)
 

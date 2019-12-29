@@ -5,6 +5,7 @@ import whiteCardInfo from "./white";
 import neutralCardInfo from "./neutral";
 import neutralHeroCardInfo from "./neutralheroes";
 import anarchyCardInfo from "./anarchy";
+import bloodCardInfo from "./blood";
 import fireCardInfo from "./fire";
 import balanceCardInfo from "./balance";
 import feralCardInfo from "./feral";
@@ -24,6 +25,7 @@ const cardInfo = {
   ...neutralCardInfo,
   ...neutralHeroCardInfo,
   ...anarchyCardInfo,
+  ...bloodCardInfo,
   ...fireCardInfo,
   ...balanceCardInfo,
   ...feralCardInfo,

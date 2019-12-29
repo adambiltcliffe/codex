@@ -47,7 +47,7 @@ export function doEndTurnAction(state, action) {
   const ap = getAP(state);
   // Beware of just using action.patrollers - if provided externally it will
   // not be an immer proxy so it is mutable even if the rest of the state is not
-  ap.patrollerIds = clone(action.patrollers) || emptyPatrolZone;
+  ap.patrollerIds = clone(action.patrollers || emptyPatrolZone);
   const patrolling = ap.patrollerIds
     .map((id, slotIndex) => ({ id, slotIndex }))
     .filter(({ id }) => id !== null)

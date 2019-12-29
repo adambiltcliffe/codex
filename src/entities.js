@@ -170,16 +170,17 @@ export function killEntity(state, entityId, opts) {
     log.add(state, log.fmt`${e.current.name} ${realVerb}.`);
   }
   delete state.entities[e.id];
+  const hasBegunPatrolling = getAP(state).id != e.current.controller;
   const pz = state.players[e.current.controller].patrollerIds;
   pz.forEach((id, index) => {
     if (id == e.id) {
-      if (index == patrolSlots.scavenger) {
+      if (hasBegunPatrolling && index == patrolSlots.scavenger) {
         state.newTriggers.push({
           path: "triggerInfo.scavenger",
           playerId: e.current.controller
         });
       }
-      if (index == patrolSlots.technician) {
+      if (hasBegunPatrolling && index == patrolSlots.technician) {
         state.newTriggers.push({
           path: "triggerInfo.technician",
           playerId: e.current.controller
