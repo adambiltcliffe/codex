@@ -41,7 +41,7 @@ well:
 . Reteller of Truths (Blue/Truth)
 . Graveyard (Black/starter)
 . Soul Stone (Black/Demonology)
-. Second Chances (Purple/Past)
+. Second Chances (Purple/Past) (note - this needs to also replace bounce/trash)
 . Brave Knight (Blue/Peace)
 Rewrite the "apply continuous effects" logic to allow modifying printed values
 or copying those of other entities before applying everything else:

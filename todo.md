@@ -31,7 +31,6 @@ If you somehow control an ephemeral unit on opponent's turn, it still dies
 
 # Other stuff to do
 
-Write tests for suggest (particularly the non-exhaustive ones)
 Tidy up the way making choices and queuing triggers is reported
 Change signature of hasKeyword
 Deprecate the use of getCurrentValues
