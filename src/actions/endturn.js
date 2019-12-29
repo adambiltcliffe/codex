@@ -6,6 +6,7 @@ import log from "../log";
 import { emptyPatrolZone, patrolSlotNames } from "../patrolzone";
 
 import clone from "lodash/clone";
+import { hasKeyword, cantPatrol } from "../cardinfo/abilities/keywords";
 
 export function checkEndTurnAction(state, action) {
   if (action.patrollers === undefined) {
@@ -37,6 +38,9 @@ export function checkEndTurnAction(state, action) {
       }
       if (!patroller.ready) {
         throw new Error("One of the patrollers is exhausted.");
+      }
+      if (hasKeyword(patroller.current, cantPatrol)) {
+        throw new Error("One of the patrollers can't patrol.");
       }
     }
   });

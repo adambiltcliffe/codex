@@ -48,6 +48,7 @@ export const swiftStrike = keyword("K_SWIFTSTRIKE", "swift strike");
 export const stealth = keyword("K_STEALTH", "stealth");
 export const unstoppable = keyword("K_UNSTOPPABLE", "unstoppable");
 export const longRange = keyword("K_LONGRANGE", "long-range");
+export const cantPatrol = keyword("K_CANTPATROL", "can't patrol");
 
 export const flippable = keyword(
   "K_FLIPPABLE",

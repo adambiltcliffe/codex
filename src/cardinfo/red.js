@@ -1,6 +1,6 @@
 import { colors, types, targetMode } from "./constants";
 import { queueDamage } from "../damage";
-import { haste, frenzy } from "./abilities/keywords";
+import { haste, frenzy, cantPatrol } from "./abilities/keywords";
 import { fixtureNames } from "../fixtures";
 import { getAP } from "../util";
 import { conferKeyword, bounceEntity } from "../entities";
@@ -99,6 +99,33 @@ const redCardInfo = {
           bounceEntity(state, source.id);
         }
       }
+    ]
+  },
+  makeshift_rambaster: {
+    color: colors.red,
+    tech: 0,
+    name: "Makeshift Rambaster",
+    type: types.unit,
+    subtypes: ["Contraption"],
+    cost: 2,
+    attack: 1,
+    hp: 2,
+    abilities: [
+      haste,
+      {
+        text: "+2 ATK when attacking buildings.",
+        modifyOwnValues: ({ state, self }) => {
+          if (
+            state.currentAttack &&
+            state.currentAttack.attacker == self.id &&
+            state.entities[state.currentAttack.target].current.type ==
+              types.building
+          ) {
+            self.current.attack += 2;
+          }
+        }
+      },
+      cantPatrol
     ]
   },
   scorch: {

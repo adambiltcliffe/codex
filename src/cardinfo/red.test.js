@@ -124,6 +124,35 @@ test("Patrolling with Bloodrage Ogre doesn't break anything", () => {
   ]);
 });
 
+test("Makeshift Rambaster has 1 ATK vs most things but 3 vs buildings", () => {
+  const tg = new TestGame();
+  tg.insertEntities(testp1Id, [
+    "makeshift_rambaster",
+    "makeshift_rambaster"
+  ]).insertEntity(testp2Id, "iron_man");
+  const [mr1, mr2, im] = tg.insertedEntityIds;
+  const p2base = tg.findBaseId(testp2Id);
+  tg.playAction({ type: "attack", attacker: mr1, target: im });
+  expect(tg.state.log).toContain(
+    "Makeshift Rambaster deals 1 damage to Iron Man."
+  );
+  expect(tg.state.entities[im].damage).toEqual(1);
+  tg.playAction({ type: "attack", attacker: mr2, target: p2base });
+  expect(tg.state.log).toContain("Makeshift Rambaster deals 3 damage to base.");
+  expect(tg.state.entities[p2base].damage).toEqual(3);
+});
+
+test("Makeshift Rambaster can't patrol", () => {
+  const tg = new TestGame().insertEntity(testp1Id, "makeshift_rambaster");
+  const [mr] = tg.insertedEntityIds;
+  expect(() =>
+    tg.checkAction({
+      type: "endTurn",
+      patrollers: [mr, null, null, null, null]
+    })
+  ).toThrow("can't patrol");
+});
+
 test("Scorch can only target buildings and patrollers and deals 2 damage to them", () => {
   const tg = new TestGame()
     .insertEntities(testp1Id, ["iron_man", "iron_man", "troq_bashar"])
