@@ -236,3 +236,18 @@ test("Squad Leader armor protects against ability damage", () => {
   expect(tg.state.entities[im].armor).toEqual(0);
   expect(tg.state.entities[im].damage).toEqual(2);
 });
+
+test("Squad Leader armor disappears if the Squad Leader is sidelined", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "older_brother")
+    .insertEntity(testp2Id, "river_montoya");
+  const [ob, river] = tg.insertedEntityIds;
+  tg.modifyEntity(river, { level: 3 }).playAction({
+    type: "endTurn",
+    patrollers: [ob, null, null, null, null]
+  });
+  expect(tg.state.entities[ob].armor).toEqual(1);
+  tg.playAction({ type: "activate", source: river, index: 0 });
+  expect(tg.state.log).toContain("Older Brother is sidelined.");
+  expect(tg.state.entities[ob].armor).toEqual(0);
+});

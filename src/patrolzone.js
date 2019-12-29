@@ -1,7 +1,7 @@
 import { getAP } from "./util";
 
 import forEach from "lodash/forEach";
-import { attachEffectThisTurn } from "./effects";
+import { attachEffectThisTurn, expireEffectsOnEntity } from "./effects";
 
 export const patrolSlots = {
   squadLeader: 0,
@@ -24,6 +24,7 @@ export function sideline(state, patroller) {
   if (slot !== null) {
     state.players[patroller.current.controller].patrollerIds[slot] = null;
   }
+  expireEffectsOnEntity(state, patroller);
 }
 
 export function applyPatrolzoneEffects(state) {
@@ -33,7 +34,8 @@ export function applyPatrolzoneEffects(state) {
       const sqlId = p.patrollerIds[patrolSlots.squadLeader];
       if (sqlId != null) {
         attachEffectThisTurn(state, state.entities[sqlId], {
-          path: "effectInfo.squadLeader"
+          path: "effectInfo.squadLeader",
+          isPatrolZoneEffect: true
         });
       }
     }

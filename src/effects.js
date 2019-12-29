@@ -21,18 +21,28 @@ export function getEffectDefinition(effect) {
   return get(triggerDefinitions, effect.path);
 }
 
+export function expireEffectsOnEntity(state, entity) {
+  const [expired, alive] = partition(
+    entity.effects,
+    fx =>
+      (fx.finalActiveTurn !== undefined && state.turn > fx.finalActiveTurn) ||
+      // Note: we cannot use entity.current.patrolSlot as it may be out-of-date
+      (fx.isPatrolZoneEffect &&
+        !state.players[entity.current.controller].patrollerIds.includes(
+          entity.id
+        ))
+  );
+  forEach(expired, fx => {
+    const fxDef = getEffectDefinition(fx);
+    if (fxDef.armor !== undefined) {
+      entity.armor = clamp(entity.armor - fxDef.armor, 0, entity.armor);
+    }
+  });
+  entity.effects = alive;
+}
+
 export function expireEffects(state) {
   forEach(state.entities, e => {
-    const [expired, alive] = partition(
-      e.effects,
-      fx => fx.finalActiveTurn !== undefined && state.turn > fx.finalActiveTurn
-    );
-    forEach(expired, fx => {
-      const fxDef = getEffectDefinition(fx);
-      if (fxDef.armor !== undefined) {
-        e.armor = clamp(e.armor - fxDef.armor, 0, e.armor);
-      }
-    });
-    e.effects = alive;
+    expireEffectsOnEntity(state, e);
   });
 }

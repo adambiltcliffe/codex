@@ -28,6 +28,8 @@ Two-Step not sacrificed if one partner would die but is saved by Soul Stone
 When two new triggers arise halfway through a multi-step trigger, can queue them before continuing
 Sacrifice a Bombaster with a Soul Stone on it (find out what should happen!)
 If you somehow control an ephemeral unit on opponent's turn, it still dies
+Make Squad Leader armor expire if it moves to another slot as well as if sidelined (by Zane)
+Check Ironbark Treant armor doesn't expire if Zane moves it
 
 # Other stuff to do
 
