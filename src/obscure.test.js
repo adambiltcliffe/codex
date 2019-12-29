@@ -41,3 +41,10 @@ Question. Wandering mimic gets sparkshot from a hero, when killing that hero do 
 CarpeToday at 7:51 PM
 Yes, combat damage is all dealt at once
  */
+
+// second chances can save hardened mox from its own trash effect but it immediately trashes itself again?
+
+// If you Manufactured Truth something into a Mirror Illusion, Quince can turn it into a copy of something else and
+// force it to be trashed at end of turn, but it's not a token, so Second Chances can save it ... ?
+
+// Trashing something with Geiger's maxband doesn't let Second Chances do anything but does use up the trigger?

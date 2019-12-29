@@ -38,11 +38,12 @@ Add a damage-division target mode:
 . Burning Volley (Red/Fire)
 Add a list for pending destruction of entities so that that can be replaced as
 well:
+. Soul Stone (Black/Demonology)
+. Brave Knight (Blue/Peace)
+Note - fast triggers when units die are a different thing:
 . Reteller of Truths (Blue/Truth)
 . Graveyard (Black/starter)
-. Soul Stone (Black/Demonology)
 . Second Chances (Purple/Past) (note - this needs to also replace bounce/trash)
-. Brave Knight (Blue/Peace)
 Rewrite the "apply continuous effects" logic to allow modifying printed values
 or copying those of other entities before applying everything else:
 . Polymorph: Squirrel (Green/Growth)
