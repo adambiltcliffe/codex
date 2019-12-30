@@ -200,3 +200,90 @@ test("Charge gives a unit haste and +1 ATK but only for a turn", () => {
   expect(tg.state.entities[cm].current.attack).toEqual(2);
   expect(hasKeyword(tg.state.entities[cm].current, haste)).toBeFalsy();
 });
+
+// Pillage deals 2 damage and steals 2 if you have pirate
+// Pillage deals 2 damage and steals 1 if that's all opponent has
+// Pillaging yourself damages your base but steals nothing
+
+test("Pillage deals 1 damage and steals 1 gold, but only if victim has it", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "jaina_stormborne")
+    .insertEntity(testp2Id, "gunpoint_taxman") // opponent's pirate should be ignored
+    .setGold(testp2Id, 1)
+    .putCardsInHand(testp1Id, ["pillage", "pillage"]);
+  const p2base = tg.findBaseId(testp2Id);
+  tg.playActions([
+    { type: "play", card: "pillage" },
+    { type: "choice", target: p2base }
+  ]);
+  expect(tg.state.log).toContain(
+    `\${${testp1Id}} steals 1 gold from \${${testp2Id}}.`
+  );
+  expect(tg.state.log).toContain("Pillage deals 1 damage to base.");
+  expect(tg.state.entities[p2base].damage).toEqual(1);
+  expect(tg.state.players[testp1Id].gold).toEqual(4);
+  expect(tg.state.players[testp2Id].gold).toEqual(0);
+  // Now do it again when opponent has no gold left
+  tg.playActions([
+    { type: "play", card: "pillage" },
+    { type: "choice", target: p2base }
+  ]);
+  expect(tg.state.log).not.toContain(
+    `\${${testp1Id}} steals 1 gold from \${${testp2Id}}.`
+  );
+  expect(tg.state.log).not.toContain(
+    `\${${testp1Id}} steals 0 gold from \${${testp2Id}}.`
+  );
+  expect(tg.state.log).toContain("Pillage deals 1 damage to base.");
+  expect(tg.state.entities[p2base].damage).toEqual(2);
+  expect(tg.state.players[testp1Id].gold).toEqual(3);
+  expect(tg.state.players[testp2Id].gold).toEqual(0);
+});
+
+test("Pillage deals 2 and steals 2 if you have a pirate", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["jaina_stormborne", "gunpoint_taxman"])
+    .setGold(testp2Id, 3)
+    .putCardsInHand(testp1Id, ["pillage", "pillage"]);
+  const p2base = tg.findBaseId(testp2Id);
+  tg.playActions([
+    { type: "play", card: "pillage" },
+    { type: "choice", target: p2base }
+  ]);
+  expect(tg.state.log).toContain(
+    `\${${testp1Id}} steals 2 gold from \${${testp2Id}}.`
+  );
+  expect(tg.state.log).toContain("Pillage deals 2 damage to base.");
+  expect(tg.state.entities[p2base].damage).toEqual(2);
+  expect(tg.state.players[testp1Id].gold).toEqual(5);
+  expect(tg.state.players[testp2Id].gold).toEqual(1);
+  // Now do it again when opponent has 1 gold left
+  tg.playActions([
+    { type: "play", card: "pillage" },
+    { type: "choice", target: p2base }
+  ]);
+  expect(tg.state.log).toContain(
+    `\${${testp1Id}} steals 1 gold from \${${testp2Id}}.`
+  );
+  expect(tg.state.log).toContain("Pillage deals 2 damage to base.");
+  expect(tg.state.entities[p2base].damage).toEqual(4);
+  expect(tg.state.players[testp1Id].gold).toEqual(5);
+  expect(tg.state.players[testp2Id].gold).toEqual(0);
+});
+
+test("Pillaging yourself doesn't steal any gold", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "jaina_stormborne")
+    .putCardsInHand(testp1Id, ["pillage"]);
+  const p1base = tg.findBaseId(testp1Id);
+  tg.playActions([
+    { type: "play", card: "pillage" },
+    { type: "choice", target: p1base }
+  ]);
+  expect(tg.state.log).not.toContain(
+    `\${${testp1Id}} steals 1 gold from \${${testp1Id}}.`
+  );
+  expect(tg.state.log).toContain("Pillage deals 1 damage to base.");
+  expect(tg.state.entities[p1base].damage).toEqual(1);
+  expect(tg.state.players[testp1Id].gold).toEqual(3);
+});

@@ -9,10 +9,10 @@ Does checkStartAction check each player has a spec?
 # Tests to write later
 
 Long-range
-Scorch and Fire Dart
+Fire Dart
 Starting with right cards in codex, command zone and deck for 3-hero game
 Spells are put in discard pile before resolving triggers they caused (need something with a death trigger)
-Flying plus overpower and legal targets to redirect to (Void Star)
+Flying plus overpower and legal targets to redirect to (needs Void Star)
 Sparkshot/overpower unit can't kill only additional patroller with SS and overpower to base (Blooming Elm)
 Swift strike flying attacker can kill the SL it flew over and not get hit (needs unit with sparkshot+flying)
 Flying plus stealth/invisible/unstoppable etc. and not taking AA damage if not using flying to evade
@@ -25,6 +25,7 @@ Units which sacrifice as a cost have the ability resolve before triggers (eg. bu
 Triggers which must target some specific number of things >1 are skipped if unfulfillable (detector, resist)
 Stealing half of a Two-Step partnership causes Two-Step to be sacrificed
 Two-Step not sacrificed if one partner would die but is saved by Soul Stone
+Two-Step _is_ sacrificed if one partner would die but is saved by Second Chances
 When two new triggers arise halfway through a multi-step trigger, can queue them before continuing
 Sacrifice a Bombaster with a Soul Stone on it (find out what should happen!)
 If you somehow control an ephemeral unit on opponent's turn, it still dies

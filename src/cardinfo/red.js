@@ -5,9 +5,12 @@ import { fixtureNames } from "../fixtures";
 import { getAP } from "../util";
 import { conferKeyword, bounceEntity } from "../entities";
 
-import find from "lodash/find";
 import { attachEffectThisTurn } from "../effects";
 import log from "../log";
+
+import find from "lodash/find";
+import some from "lodash/some";
+import clamp from "lodash/clamp";
 
 const redCardInfo = {
   nautical_dog: {
@@ -194,6 +197,53 @@ const redCardInfo = {
         conferKeyword(subject, haste);
       }
     }
+  },
+  pillage: {
+    color: colors.red,
+    name: "Pillage",
+    type: types.spell,
+    minor: true,
+    cost: 1,
+    abilities: [
+      {
+        text:
+          "Deal 1 damage to a base. Steal ① from that player. If you have a Pirate, instead deal 2 damage and steal ②.",
+        prompt: "Choose a base to pillage",
+        isSpellEffect: true,
+        hasTargetSymbol: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.building],
+        canTarget: ({ target }) => target.fixture == fixtureNames.base,
+        action: ({ state, choices }) => {
+          const ap = getAP(state);
+          const hasPirate = some(
+            state.entities,
+            e =>
+              e.current.controller == ap.id &&
+              e.current.subtypes.includes("Pirate")
+          );
+          const amount = hasPirate ? 2 : 1;
+          queueDamage(state, {
+            amount,
+            subjectId: choices.targetId,
+            isSpellDamage: true
+          });
+          const victim =
+            state.players[state.entities[choices.targetId].current.controller];
+          if (victim.id !== ap.id) {
+            const goldStolen = clamp(amount, 0, victim.gold);
+            if (goldStolen > 0) {
+              ap.gold += goldStolen;
+              victim.gold -= goldStolen;
+              log.add(
+                state,
+                log.fmt`${ap} steals ${goldStolen} gold from ${victim}.`
+              );
+            }
+          }
+        }
+      }
+    ]
   }
 };
 
