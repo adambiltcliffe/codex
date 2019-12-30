@@ -35,6 +35,36 @@ const redCardInfo = {
     hp: 1,
     abilities: [haste]
   },
+  bombaster: {
+    color: colors.red,
+    tech: 0,
+    name: "Bombaster",
+    type: types.unit,
+    subtypes: ["Pirate"],
+    cost: 2,
+    attack: 2,
+    hp: 2,
+    abilities: [
+      {
+        text: "①, Sacrifice Bombaster → Deal 2 damage to a patrolling unit.",
+        prompt: "Choose a patrolling unit to damage",
+        isActivatedAbility: true,
+        costsSacrificeSelf: true,
+        hasTargetSymbol: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.unit],
+        canTarget: ({ state, target }) => target.current.patrolSlot !== null,
+        action: ({ state, source, choices }) => {
+          queueDamage(state, {
+            amount: 2,
+            sourceName: state.currentTrigger.sourceName,
+            subjectId: choices.targetId,
+            isAbilityDamage: true
+          });
+        }
+      }
+    ]
+  },
   careless_musketeer: {
     color: colors.red,
     tech: 0,

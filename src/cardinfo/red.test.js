@@ -43,6 +43,23 @@ test("Careless Musketeer can hurt your own units but still damages your own base
   expect(tg.state.result).toEqual({ winner: testp2Id });
 });
 
+test("Bombaster can sacrifice to damage a patroller", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["iron_man", "iron_man", "iron_man"])
+    .insertEntity(testp2Id, "bombaster");
+  const [im1, im2, im3, bb] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, im1, im2, null, null] },
+    { type: "activate", source: bb, index: 0 }
+  ]);
+  expect(tg.state.log).toContain("Bombaster is sacrificed.");
+  expect(tg.getLegalChoices().sort()).toEqual([im1, im2].sort());
+  tg.playAction({ type: "choice", target: im1 });
+  expect(tg.state.entities[bb]).toBeUndefined();
+  expect(tg.state.entities[im1].damage).toEqual(2);
+  expect(tg.state.log).toContain("Bombaster deals 2 damage to Iron Man.");
+});
+
 test("Bloodrage Ogre returns to hand at the end of your turn if he doesn't attack", () => {
   const tg = new TestGame().putCardsInHand(testp1Id, ["bloodrage_ogre"]);
   tg.playAction({ type: "play", card: "bloodrage_ogre" });

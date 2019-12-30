@@ -50,13 +50,12 @@ export function doActivateAction(state, action) {
   const ad = getAbilityDefinition(ability);
   if (ad.costsExhaustSelf) {
     exhaustEntity(state, source.id);
-    //state.entities[source.id].ready = false;
-  }
-  if (ad.costsSacrificeSelf) {
-    killEntity(state, source.id, { verb: "is sacrificed" });
   }
   log.add(
     state,
     log.fmt`${getAP(state)} activates an ability of ${source.current.name}.`
   );
+  if (ad.costsSacrificeSelf) {
+    killEntity(state, source.id, { verb: "is sacrificed" });
+  }
 }

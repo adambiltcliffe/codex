@@ -4,7 +4,6 @@ import log from "./log";
 import groupBy from "lodash/groupBy";
 import mapValues from "lodash/mapValues";
 import partition from "lodash/partition";
-import pick from "lodash/pick";
 import sum from "lodash/sum";
 import upperFirst from "lodash/upperFirst";
 import { andJoin } from "./util";
@@ -16,7 +15,7 @@ export function queueDamage(state, damage) {
     return;
   }
   if (damage.isSpellDamage) {
-    damage.sourceCard = state.playedCard;
+    damage.sourceName = cardInfo[state.playedCard].name;
   }
   state.pendingDamage.push(damage);
 }
@@ -69,15 +68,15 @@ export function applyPendingDamage(state) {
 }
 
 function describeDamageAndQueueTriggers(state) {
-  const [spellDamage, entityDamage] = partition(
+  const [entityDamage, otherDamage] = partition(
     state.pendingDamage,
-    "isSpellDamage"
+    p => p.sourceId !== undefined
   );
-  const bySourceCard = groupBy(spellDamage, "sourceCard");
-  Object.entries(bySourceCard).forEach(([card, packets]) => {
+  const bySourceName = groupBy(otherDamage, "sourceName");
+  Object.entries(bySourceName).forEach(([name, packets]) => {
     log.add(
       state,
-      `${upperFirst(cardInfo[card].name)} deals ${andJoin(
+      `${upperFirst(name)} deals ${andJoin(
         packets.map(p => describeDamagePacket(state, p))
       )}.`
     );
@@ -85,9 +84,10 @@ function describeDamageAndQueueTriggers(state) {
   const bySourceId = groupBy(entityDamage, "sourceId");
   Object.entries(bySourceId).forEach(([id, packets]) => {
     const source = state.entities[id];
+    const sourceName = source ? source.current.name : "mystery";
     log.add(
       state,
-      `${upperFirst(source.current.name)} deals ${andJoin(
+      `${upperFirst(sourceName)} deals ${andJoin(
         packets.map(p => describeDamagePacket(state, p))
       )}.`
     );
