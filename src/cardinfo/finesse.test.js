@@ -1,7 +1,6 @@
 import {
   getNewGame,
   playActions,
-  putCardInHand,
   testp1Id,
   findEntityIds,
   testp2Id,
@@ -13,7 +12,6 @@ import {
   withCardsInHand,
   TestGame
 } from "../testutil";
-import { getCurrentValues } from "../entities";
 import { fixtureNames } from "../fixtures";
 import CodexGame from "../game";
 import {
@@ -34,17 +32,17 @@ test("Nimble Fencer gives herself and other Virtuosos haste", () => {
     s1,
     e => e.fixture == fixtureNames.base && e.owner == testp2Id
   )[0];
-  expect(hasKeyword(getCurrentValues(s1, tf), haste)).toBeFalsy();
+  expect(hasKeyword(s1.entities[tf].current, haste)).toBeFalsy();
   expect(() =>
     CodexGame.checkAction(s1, { type: "attack", attacker: tf, target: p2base })
   ).toThrow();
   const s2 = playActions(s1, [{ type: "play", card: "nimble_fencer" }]);
-  expect(hasKeyword(getCurrentValues(s2, tf), haste)).toBeTruthy();
+  expect(hasKeyword(s2.entities[tf].current, haste)).toBeTruthy();
   expect(() =>
     CodexGame.checkAction(s2, { type: "attack", attacker: tf, target: p2base })
   ).not.toThrow();
   const nf = findEntityIds(s2, e => e.card == "nimble_fencer")[0];
-  expect(hasKeyword(getCurrentValues(s2, nf), haste)).toBeTruthy();
+  expect(hasKeyword(s2.entities[nf].current, haste)).toBeTruthy();
   expect(() =>
     CodexGame.checkAction(s2, { type: "attack", attacker: nf, target: p2base })
   ).not.toThrow();
@@ -54,10 +52,10 @@ test("Star-Crossed Starlet buffs her attack with damage and kills herself after 
   const s0 = getNewGame();
   const [s1, scs] = withInsertedEntity(s0, testp1Id, "starcrossed_starlet");
   expect(s1.entities[scs].damage).toEqual(0);
-  expect(getCurrentValues(s1, scs).attack).toEqual(3);
+  expect(s1.entities[scs].current.attack).toEqual(3);
   const s2 = playActions(s1, [{ type: "endTurn" }, { type: "endTurn" }]);
   expect(s2.entities[scs].damage).toEqual(1);
-  expect(getCurrentValues(s2, scs).attack).toEqual(4);
+  expect(s2.entities[scs].current.attack).toEqual(4);
   expect(s2.log).toContain("Star-Crossed Starlet deals 1 damage to itself.");
   const s3 = playActions(s2, [{ type: "endTurn" }, { type: "endTurn" }]);
   expect(s3.entities[scs]).toBeUndefined();
@@ -80,25 +78,25 @@ test("Grounded Guide buffs Virtuosos and non-Virtuosos by appropriate amounts", 
   ]);
   const tf = findEntityIds(s1, u => u.card == "tenderfoot")[0];
   const ob = findEntityIds(s1, u => u.card == "older_brother")[0];
-  expect(getCurrentValues(s1, tf).attack).toEqual(1);
-  expect(getCurrentValues(s1, ob).attack).toEqual(2);
-  expect(getCurrentValues(s1, tf).hp).toEqual(2);
-  expect(getCurrentValues(s1, ob).hp).toEqual(2);
+  expect(s1.entities[tf].current.attack).toEqual(1);
+  expect(s1.entities[ob].current.attack).toEqual(2);
+  expect(s1.entities[tf].current.hp).toEqual(2);
+  expect(s1.entities[ob].current.hp).toEqual(2);
   const s2 = playActions(s1, [{ type: "play", card: "grounded_guide" }]);
-  expect(getCurrentValues(s2, tf).attack).toEqual(3);
-  expect(getCurrentValues(s2, ob).attack).toEqual(3);
-  expect(getCurrentValues(s2, tf).hp).toEqual(3);
-  expect(getCurrentValues(s2, ob).hp).toEqual(2);
+  expect(s2.entities[tf].current.attack).toEqual(3);
+  expect(s2.entities[ob].current.attack).toEqual(3);
+  expect(s2.entities[tf].current.hp).toEqual(3);
+  expect(s2.entities[ob].current.hp).toEqual(2);
   const gg1 = findEntityIds(s2, u => u.card == "grounded_guide")[0];
-  expect(getCurrentValues(s2, gg1).attack).toEqual(4);
-  expect(getCurrentValues(s2, gg1).hp).toEqual(4);
+  expect(s2.entities[gg1].current.attack).toEqual(4);
+  expect(s2.entities[gg1].current.hp).toEqual(4);
   const s3 = playActions(s2, [{ type: "play", card: "grounded_guide" }]);
-  expect(getCurrentValues(s3, tf).attack).toEqual(5);
-  expect(getCurrentValues(s3, ob).attack).toEqual(4);
-  expect(getCurrentValues(s3, tf).hp).toEqual(4);
-  expect(getCurrentValues(s3, ob).hp).toEqual(2);
-  expect(getCurrentValues(s3, gg1).attack).toEqual(5);
-  expect(getCurrentValues(s3, gg1).hp).toEqual(4);
+  expect(s3.entities[tf].current.attack).toEqual(5);
+  expect(s3.entities[ob].current.attack).toEqual(4);
+  expect(s3.entities[tf].current.hp).toEqual(4);
+  expect(s3.entities[ob].current.hp).toEqual(2);
+  expect(s3.entities[gg1].current.attack).toEqual(5);
+  expect(s3.entities[gg1].current.hp).toEqual(4);
 });
 
 test("Nimble Fencer and Grounded Guide don't buff opposing units", () => {
@@ -107,7 +105,7 @@ test("Nimble Fencer and Grounded Guide don't buff opposing units", () => {
     ["tenderfoot"]
   );
   const tf = findEntityIds(s0, e => e.card == "tenderfoot")[0];
-  const tfv = getCurrentValues(s0, tf);
+  const tfv = s0.entities[tf].current
   expect(tfv.attack).toEqual(1);
   expect(tfv.hp).toEqual(2);
   expect(hasKeyword(tfv, haste)).toBeFalsy();
@@ -123,9 +121,9 @@ test("Maestro confers its activated ability on Virtuosos", () => {
     s0,
     e => e.fixture == fixtureNames.base && e.owner == testp2Id
   )[0];
-  expect(getCurrentValues(s0, ma).abilities.length).toEqual(1);
-  expect(getCurrentValues(s0, tf).abilities.length).toEqual(1);
-  expect(getCurrentValues(s0, ob).abilities.length).toEqual(0);
+  expect(s0.entities[ma].current.abilities.length).toEqual(1);
+  expect(s0.entities[tf].current.abilities.length).toEqual(1);
+  expect(s0.entities[ob].current.abilities.length).toEqual(0);
   expect(() =>
     CodexGame.checkAction(s0, { type: "activate", source: tf, index: 0 })
   ).toThrow();
@@ -151,7 +149,7 @@ test("Maestro's conferred ability disappears if it dies", () => {
     "tenderfoot"
   ]);
   const s2 = playActions(s1, [{ type: "endTurn" }, { type: "endTurn" }]);
-  expect(getCurrentValues(s2, tf).abilities.length).toEqual(1);
+  expect(s2.entities[tf].current.abilities.length).toEqual(1);
   expect(() =>
     CodexGame.checkAction(s2, { type: "activate", source: tf, index: 0 })
   ).not.toThrow();
@@ -162,7 +160,7 @@ test("Maestro's conferred ability disappears if it dies", () => {
     { type: "endTurn" }
   ]);
   expect(s3.entities[ma]).toBeUndefined();
-  expect(getCurrentValues(s3, tf).abilities.length).toEqual(0);
+  expect(s3.entities[tf].current.abilities.length).toEqual(0);
   expect(() =>
     CodexGame.checkAction(s3, { type: "activate", source: tf, index: 0 })
   ).toThrow();

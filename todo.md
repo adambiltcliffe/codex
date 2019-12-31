@@ -36,7 +36,6 @@ Check Ironbark Treant armor doesn't expire if Zane moves it
 
 Tidy up the way making choices and queuing triggers is reported
 Change signature of hasKeyword
-Deprecate the use of getCurrentValues
 Refactor getAttackableEntityIds into getAttackableEntities
 Auto-resolve targetMode.multiple when there's only one valid combination
 Move abilities/ out of cardinfo/ to untangle some imports

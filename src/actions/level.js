@@ -12,11 +12,10 @@ export function checkLevelAction(state, action) {
   if (typeof hero != "object") {
     throw new Error("Invalid entity ID.");
   }
-  const heroVals = getCurrentValues(state, hero.id);
-  if (heroVals.type != types.hero) {
+  if (hero.current.type != types.hero) {
     throw new Error("Chosen entity isn't a hero.");
   }
-  if (heroVals.controller != ap.id) {
+  if (hero.current.controller != ap.id) {
     throw new Error("You don't control that hero.");
   }
   if (!Number.isInteger(action.amount) || action.amount < 1) {
@@ -27,7 +26,7 @@ export function checkLevelAction(state, action) {
   }
   if (
     state.entities[action.hero].level + action.amount >
-    heroVals.maxbandLevel
+    hero.current.maxbandLevel
   ) {
     throw new Error("Hero would exceed max level.");
   }
@@ -37,7 +36,6 @@ export function checkLevelAction(state, action) {
 export function doLevelAction(state, action) {
   const ap = getAP(state);
   const hero = state.entities[action.hero];
-  const heroVals = getCurrentValues(state, hero.id);
   const oldLevel = hero.level;
   ap.gold -= action.amount;
   hero.level += action.amount;
@@ -46,16 +44,19 @@ export function doLevelAction(state, action) {
     log.fmt`${ap} raises ${hero.current.name} to level ${hero.level}.`
   );
   if (
-    ((oldLevel < heroVals.midbandLevel &&
-      hero.level >= heroVals.midbandLevel) ||
-      (oldLevel < heroVals.maxbandLevel &&
-        hero.level == heroVals.maxbandLevel)) &&
+    ((oldLevel < hero.current.midbandLevel &&
+      hero.level >= hero.current.midbandLevel) ||
+      (oldLevel < hero.current.maxbandLevel &&
+        hero.level == hero.current.maxbandLevel)) &&
     hero.damage > 0
   ) {
     hero.damage = 0;
     log.add(state, log.fmt`${hero.current.name} is fully healed.`);
   }
-  if (oldLevel < heroVals.maxbandLevel && hero.level == heroVals.maxbandLevel) {
+  if (
+    oldLevel < hero.current.maxbandLevel &&
+    hero.level == hero.current.maxbandLevel
+  ) {
     hero.maxedSince = state.turn;
   }
   applyStateBasedEffects(state);

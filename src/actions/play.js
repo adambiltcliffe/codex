@@ -2,7 +2,6 @@ import { getAP } from "../util";
 import cardInfo from "../cardinfo";
 import log from "../log";
 import {
-  getCurrentValues,
   createEntity,
   createOngoingSpell,
   getAbilityDefinition
@@ -16,15 +15,13 @@ import { techBuildingFixtures } from "../fixtures";
 
 function getPlayCost(state, cardInfo) {
   let currentCost = cardInfo.cost;
-  const vals = getCurrentValues(state, Object.keys(state.entities));
-  Object.entries(vals).forEach(([id, e]) => {
-    e.abilities.forEach(a => {
+  forEach(state.entities, e => {
+    e.current.abilities.forEach(a => {
       const ad = getAbilityDefinition(a);
       if (ad.modifyPlayCost) {
         currentCost = ad.modifyPlayCost({
           state,
-          sourceId: id,
-          sourceVals: e,
+          source: e,
           cardInfo,
           currentCost
         });

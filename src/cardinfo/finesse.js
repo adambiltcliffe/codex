@@ -23,7 +23,7 @@ import { getAP, andJoinVerb } from "../util";
 import { attachEffectThisTurn } from "../effects";
 import { sideline } from "../patrolzone";
 import { drawCards } from "../draw";
-import { putUnitIntoPlay } from "../actions/play";
+import { putEntityIntoPlay } from "../actions/play";
 
 import find from "lodash/find";
 import forEach from "lodash/forEach";
@@ -52,7 +52,7 @@ const finesseCardInfo = {
             (ap.current.tokenCounts["dancer_token"] || 0) +
             (ap.current.tokenCounts["angry_dancer_token"] || 0);
           if (total < 3) {
-            putUnitIntoPlay(state, ap.id, "dancer_token");
+            putEntityIntoPlay(state, ap.id, "dancer_token");
             log.add(state, "Harmony creates a Dancer token.");
           } else {
             log.add(state, "Harmony cannot create any more Dancer tokens.");
@@ -358,8 +358,8 @@ const finesseCardInfo = {
             }
           }
         },
-        modifyPlayCost({ state, sourceVals, cardInfo, currentCost }) {
-          if (getAP(state).id == sourceVals.controller) {
+        modifyPlayCost({ state, source, cardInfo, currentCost }) {
+          if (getAP(state).id == source.current.controller) {
             if ((cardInfo.subtypes || []).includes("Virtuoso")) {
               return 0;
             }

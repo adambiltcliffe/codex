@@ -1,15 +1,12 @@
 import {
-  getNewGame,
   playActions,
   findEntityIds,
   testp1Id,
-  getGameWithUnits,
   withInsertedEntity,
   getTestGame,
   testp2Id,
   TestGame
 } from "./testutil";
-import { getCurrentValues } from "./entities";
 import CodexGame from "./game";
 
 test("Summoning hero and levelling up", () => {
@@ -19,20 +16,20 @@ test("Summoning hero and levelling up", () => {
   const s1 = playActions(s0, [{ type: "summon", hero: "troq_bashar" }]);
   const troq = findEntityIds(s1, e => e.card == "troq_bashar")[0];
   expect(s1.players[testp1Id].gold).toEqual(7);
-  expect(getCurrentValues(s1, troq).attack).toEqual(2);
-  expect(getCurrentValues(s1, troq).hp).toEqual(3);
-  expect(getCurrentValues(s1, troq).abilities.length).toEqual(0);
+  expect(s1.entities[troq].current.attack).toEqual(2);
+  expect(s1.entities[troq].current.hp).toEqual(3);
+  expect(s1.entities[troq].current.abilities.length).toEqual(0);
   const s2 = playActions(s1, [{ type: "level", hero: troq, amount: 4 }]);
   expect(s2.players[testp1Id].gold).toEqual(3);
-  expect(getCurrentValues(s2, troq).attack).toEqual(3);
-  expect(getCurrentValues(s2, troq).hp).toEqual(4);
-  expect(getCurrentValues(s2, troq).abilities.length).toEqual(1);
+  expect(s2.entities[troq].current.attack).toEqual(3);
+  expect(s2.entities[troq].current.hp).toEqual(4);
+  expect(s2.entities[troq].current.abilities.length).toEqual(1);
   expect(s2.log).not.toContain("Troq Bashar is fully healed.");
   const s3 = playActions(s2, [{ type: "level", hero: troq, amount: 3 }]);
   expect(s3.players[testp1Id].gold).toEqual(0);
-  expect(getCurrentValues(s3, troq).attack).toEqual(4);
-  expect(getCurrentValues(s3, troq).hp).toEqual(5);
-  expect(getCurrentValues(s3, troq).abilities.length).toEqual(2);
+  expect(s3.entities[troq].current.attack).toEqual(4);
+  expect(s3.entities[troq].current.hp).toEqual(5);
+  expect(s3.entities[troq].current.abilities.length).toEqual(2);
   expect(s3.log).not.toContain("Troq Bashar is fully healed.");
 });
 

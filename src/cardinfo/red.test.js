@@ -174,12 +174,10 @@ test("Can put Bloodburn into play", () => {
   const tg = new TestGame()
     .putCardsInHand(testp1Id, ["bloodburn"])
     .playAction({ type: "play", card: "bloodburn" });
-  console.log(tg.state.log);
   const bbs = findEntityIds(tg.state, e => e.card == "bloodburn");
   expect(bbs).toHaveLength(1);
   const bb = bbs[0];
   expect(tg.state.entities[bb].current.name).toEqual("Bloodburn");
-  console.log(tg.state.entities[bb].current);
 });
 
 test("Scorch can only target buildings and patrollers and deals 2 damage to them", () => {

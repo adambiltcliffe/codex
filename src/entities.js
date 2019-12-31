@@ -214,22 +214,6 @@ export function killEntity(state, entityId, opts) {
   return true;
 }
 
-export function getCurrentValues(state, unitIds) {
-  // should be deprecated eventually
-  let shouldReturnSingleton = false;
-  if (!Array.isArray(unitIds)) {
-    unitIds = [unitIds];
-    shouldReturnSingleton = true;
-  }
-  const result = {};
-  forEach(state.entities, (u, id) => {
-    if (unitIds.includes(id)) {
-      result[id] = u.current;
-    }
-  });
-  return shouldReturnSingleton ? result[unitIds] : result;
-}
-
 function getLevelValuesForHero(u, printedValues) {
   const band =
     u.level >= printedValues.maxbandLevel
@@ -318,7 +302,7 @@ export function updateCurrentValues(state) {
         delete e.current[p];
       });
     }
-    if (e.current.type == types.unit || e.current.type == types.unit) {
+    if (e.current.type == types.unit || e.current.type == types.hero) {
       e.current.patrolSlot = null;
     }
   });
@@ -370,7 +354,7 @@ export function updateCurrentValues(state) {
         });
       }
     });
-    if (e.current.type == types.unit || e.current.type == types.unit) {
+    if (e.current.type == types.unit || e.current.type == types.hero) {
       if (e.current.patrolSlot === patrolSlots.elite) {
         e.current.attack += 1;
       }

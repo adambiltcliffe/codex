@@ -72,7 +72,7 @@ export function enterReadyPhase(state) {
   const readied = [];
   forEach(state.entities, u => {
     u.thisTurn = {};
-    if (getCurrentValues(state, u.id).controller == ap.id && !u.ready) {
+    if (u.current.controller == ap.id && !u.ready) {
       readied.push(u.current.name);
       u.ready = true;
     }
@@ -91,9 +91,8 @@ export function enterUpkeepPhase(state) {
     drawCards(state, ap.id, 1, " from surplus");
   }
   forEach(state.entities, u => {
-    const vals = getCurrentValues(state, u.id);
-    if (vals.controller == ap.id) {
-      forEach(vals.abilities, (a, index) => {
+    if (u.current.controller == ap.id) {
+      forEach(u.current.abilities, (a, index) => {
         const ad = getAbilityDefinition(a);
         if (ad.triggerOnUpkeep) {
           createTrigger(state, {

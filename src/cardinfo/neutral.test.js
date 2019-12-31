@@ -12,7 +12,6 @@ import {
   getTestGame,
   TestGame
 } from "../testutil";
-import { getCurrentValues } from "../entities";
 import CodexGame from "../game";
 import { getLegalChoicesForCurrentTrigger } from "../triggers";
 
@@ -71,14 +70,14 @@ test("Fruit Ninja's frenzy functions correctly", () => {
     .putCardsInHand(testp2Id, ["iron_man", "iron_man"])
     .insertEntities(testp1Id, ["fruit_ninja", "fruit_ninja"]);
   const [tb, fn1, fn2] = tg.insertedEntityIds;
-  expect(getCurrentValues(tg.state, fn1).attack).toEqual(3);
+  expect(tg.state.entities[fn1].current.attack).toEqual(3);
   const s2 = playActions(tg.state, [
     { type: "endTurn" },
     { type: "play", card: "iron_man" },
     { type: "play", card: "iron_man" }
   ]);
   const ims = findEntityIds(s2, u => u.card == "iron_man");
-  expect(getCurrentValues(s2, fn1).attack).toEqual(2);
+  expect(s2.entities[fn1].current.attack).toEqual(2);
   const s3 = playActions(s2, [
     { type: "endTurn" },
     { type: "attack", attacker: fn1, target: ims[0] }
@@ -225,8 +224,8 @@ test("Wither puts -1/-1 rune on a unit", () => {
     { type: "choice", target: ob }
   ]);
   expect(s1.entities[ob].runes).toEqual(-1);
-  expect(getCurrentValues(s1, ob).attack).toEqual(1);
-  expect(getCurrentValues(s1, ob).hp).toEqual(1);
+  expect(s1.entities[ob].current.attack).toEqual(1);
+  expect(s1.entities[ob].current.hp).toEqual(1);
   expect(s1.log).toContain("Wither adds a -1/-1 rune to Older Brother.");
 });
 
@@ -256,8 +255,8 @@ test("Bloom puts a +1/+1 rune on a unit, but only if it doesn't have one", () =>
   ];
   tg.playActions(acts);
   expect(tg.state.entities[ob].runes).toEqual(1);
-  expect(getCurrentValues(tg.state, ob).attack).toEqual(3);
-  expect(getCurrentValues(tg.state, ob).hp).toEqual(3);
+  expect(tg.state.entities[ob].current.attack).toEqual(3);
+  expect(tg.state.entities[ob].current.hp).toEqual(3);
   expect(() => {
     tg.playActions(acts);
   }).toThrow();

@@ -13,7 +13,6 @@ import {
 } from "./testutil";
 import CodexGame from "./game";
 import { fixtureNames } from "./fixtures";
-import { getCurrentValues } from "./entities";
 import forEach from "lodash/forEach";
 import { patrolSlots } from "./patrolzone";
 
@@ -66,13 +65,13 @@ test("Attacking various combinations of patrollers", () => {
 test("Elite patroller gets +1 ATK", () => {
   const s0 = getGameWithUnits(["older_brother"], []);
   const ob = findEntityIds(s0, e => e.card == "older_brother")[0];
-  expect(getCurrentValues(s0, ob).attack).toEqual(2);
+  expect(s0.entities[ob].current.attack).toEqual(2);
   const s1 = playActions(s0, [
     { type: "endTurn", patrollers: [null, ob, null, null, null] }
   ]);
-  expect(getCurrentValues(s1, ob).attack).toEqual(3);
+  expect(s1.entities[ob].current.attack).toEqual(3);
   const s2 = playActions(s1, [{ type: "endTurn" }]);
-  expect(getCurrentValues(s2, ob).attack).toEqual(2);
+  expect(s2.entities[ob].current.attack).toEqual(2);
 });
 
 test("Killing a patroller stops it blocking attacks", () => {
@@ -139,9 +138,8 @@ test("Patrolling doesn't grant any abilities", () => {
     [1, 2, 3, 4, 5].map(_ => "older_brother")
   );
   const s1 = playActions(s0, [{ type: "endTurn", patrollers: bros }]);
-  const broVals = getCurrentValues(s1, bros);
-  forEach(broVals, v => {
-    expect(v.abilities.length).toEqual(0);
+  forEach(bros, broId => {
+    expect(s1.entities[broId].current.abilities.length).toEqual(0);
   });
 });
 

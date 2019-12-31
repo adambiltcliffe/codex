@@ -79,10 +79,9 @@ export const healing = n => ({
   triggerOnUpkeep: true,
   action: ({ state, source }) => {
     const healed = [];
-    const allVals = getCurrentValues(state, Object.keys(state.entities));
     forEach(state.entities, u => {
       if (
-        allVals[u.id].controller == allVals[source.id].controller &&
+        u.current.controller == source.current.controller &&
         u.damage > 0 &&
         (u.current.type == types.unit || u.current.type == types.hero)
       ) {

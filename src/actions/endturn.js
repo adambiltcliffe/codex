@@ -57,7 +57,7 @@ export function doEndTurnAction(state, action) {
     .filter(({ id }) => id !== null)
     .map(
       ({ id, slotIndex }) =>
-        `${getCurrentValues(state, id).name} (${patrolSlotNames[slotIndex]})`
+        `${state.entities[id].current.name} (${patrolSlotNames[slotIndex]})`
     );
   if (patrolling.length == 0) {
     log.add(state, log.fmt`${getAP(state)} ends their main phase.`);

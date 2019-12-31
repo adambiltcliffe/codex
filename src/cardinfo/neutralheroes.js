@@ -88,8 +88,8 @@ const neutralHeroCardInfo = {
         abilities: [
           {
             text: "Your tech 0 units cost ① less to play.",
-            modifyPlayCost({ state, sourceVals, cardInfo, currentCost }) {
-              if (getAP(state).id == sourceVals.controller) {
+            modifyPlayCost({ state, source, cardInfo, currentCost }) {
+              if (getAP(state).id == source.current.controller) {
                 if (cardInfo.type == types.unit && cardInfo.tech == 0) {
                   return currentCost - 1;
                 }
