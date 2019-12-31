@@ -161,6 +161,14 @@ const redCardInfo = {
       cantPatrol
     ]
   },
+  bloodburn: {
+    color: colors.red,
+    tech: 0,
+    name: "Bloodburn",
+    type: types.upgrade,
+    cost: 3,
+    abilities: []
+  },
   scorch: {
     color: colors.red,
     name: "Scorch",

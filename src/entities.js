@@ -41,8 +41,9 @@ export function createBuildingFixture(state, owner, fixture, suppressUpdate) {
   return newBuilding;
 }
 
-export function createUnit(state, owner, card) {
-  const newUnit = {
+// Handles units and upgrades, not heroes or ongoing spells
+export function createEntity(state, owner, card) {
+  const newEntity = {
     id: `e${state.nextId}`,
     card,
     owner,
@@ -50,16 +51,19 @@ export function createUnit(state, owner, card) {
     lastControlledBy: owner,
     controlledSince: state.turn,
     ready: true,
-    damage: 0,
-    armor: 0,
-    runes: 0,
     effects: [],
     thisTurn: {}
   };
-  state.entities[newUnit.id] = newUnit;
+  const entityType = cardInfo[card].type;
+  if (entityType == types.unit) {
+    newEntity.damage = 0;
+    newEntity.armor = 0;
+    newEntity.runes = 0;
+  }
+  state.entities[newEntity.id] = newEntity;
   state.nextId++;
   applyStateBasedEffects(state);
-  return newUnit;
+  return newEntity;
 }
 
 export function createHero(state, owner, card) {
@@ -314,7 +318,9 @@ export function updateCurrentValues(state) {
         delete e.current[p];
       });
     }
-    e.current.patrolSlot = null;
+    if (e.current.type == types.unit || e.current.type == types.unit) {
+      e.current.patrolSlot = null;
+    }
   });
   // Store the current patrol slot on each entity so we don't have to keep looking it up
   forEach(state.players, p => {
@@ -364,14 +370,16 @@ export function updateCurrentValues(state) {
         });
       }
     });
-    if (e.current.patrolSlot === patrolSlots.elite) {
-      e.current.attack += 1;
+    if (e.current.type == types.unit || e.current.type == types.unit) {
+      if (e.current.patrolSlot === patrolSlots.elite) {
+        e.current.attack += 1;
+      }
+      // 6. reset negative ATK and HP to 0
+      // 6a. pestering haunt
+      // 7. conditional ability-gaining effects
+      e.current.attack = e.current.attack > 0 ? e.current.attack : 0;
+      e.current.hp = e.current.hp > 0 ? e.current.hp : 0;
     }
-    // 6. reset negative ATK and HP to 0
-    // 6a. pestering haunt
-    // 7. conditional ability-gaining effects
-    e.current.attack = e.current.attack > 0 ? e.current.attack : 0;
-    e.current.hp = e.current.hp > 0 ? e.current.hp : 0;
   });
   // Values have been computed so finalise the drafts
   forEach(state.entities, e => {

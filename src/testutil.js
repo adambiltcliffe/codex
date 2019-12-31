@@ -1,11 +1,11 @@
 import { types } from "./cardinfo/constants";
 import CodexGame from "./game";
 import {
-  createUnit,
   createHero,
   updateCurrentValues,
   createBuildingFixture,
-  createOngoingSpell
+  createOngoingSpell,
+  createEntity
 } from "./entities";
 import { fixtureNames } from "./fixtures";
 import {
@@ -82,7 +82,7 @@ export function withInsertedEntity(state, owner, card) {
   const newState = produce(state, draft => {
     switch (cardInfo[card].type) {
       case types.unit:
-        newId = createUnit(draft, owner, card).id;
+        newId = createEntity(draft, owner, card).id;
         break;
       case types.hero:
         newId = createHero(draft, owner, card).id;
@@ -225,7 +225,7 @@ export class TestGame {
       draft.updateHidden = func => func(draft);
       switch (cardInfo[card].type) {
         case types.unit:
-          newId = createUnit(draft, playerId, card).id;
+          newId = createEntity(draft, playerId, card).id;
           break;
         case types.hero:
           newId = createHero(draft, playerId, card).id;

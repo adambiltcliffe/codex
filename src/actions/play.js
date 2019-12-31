@@ -3,7 +3,7 @@ import cardInfo from "../cardinfo";
 import log from "../log";
 import {
   getCurrentValues,
-  createUnit,
+  createEntity,
   createOngoingSpell,
   getAbilityDefinition
 } from "../entities";
@@ -104,8 +104,8 @@ export function doPlayAction(state, action) {
     const ap = getAP(state);
     const card = state.playedCard;
     delete state.playedCard;
-    const newUnit = putUnitIntoPlay(state, ap.id, card);
-    log.add(state, log.fmt`${ap} plays ${newUnit.current.name}.`);
+    const newEntity = putEntityIntoPlay(state, ap.id, card);
+    log.add(state, log.fmt`${ap} plays ${newEntity.current.name}.`);
   }
 }
 
@@ -129,17 +129,17 @@ function playSpell(state) {
   }
 }
 
-export function putUnitIntoPlay(state, playerId, card) {
-  const newUnit = createUnit(state, playerId, card);
-  forEach(newUnit.current.abilities, a => {
+export function putEntityIntoPlay(state, playerId, card) {
+  const newEntity = createEntity(state, playerId, card);
+  forEach(newEntity.current.abilities, a => {
     const ad = getAbilityDefinition(a);
     if (ad.triggerOnOwnArrival) {
       createTrigger(state, {
         path: a.path,
-        sourceId: newUnit.id
+        sourceId: newEntity.id
       });
     }
   });
-  newUnit.thisTurn.arrived = true;
-  return newUnit;
+  newEntity.thisTurn.arrived = true;
+  return newEntity;
 }
