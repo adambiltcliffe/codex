@@ -1,8 +1,31 @@
 import { colors, types, specs, targetMode } from "./constants";
-import { sparkshot } from "./abilities/keywords";
+import { sparkshot, haste } from "./abilities/keywords";
 import { queueDamage } from "../damage";
 
 const fireHeroCardInfo = {
+  captain_zane: {
+    color: colors.red,
+    spec: specs.anarchy,
+    name: "Captain Zane",
+    title: "Blood Guard Anarchist",
+    type: types.hero,
+    cost: 2,
+    midbandLevel: 4,
+    maxbandLevel: 6,
+    bands: [
+      { attack: 2, hp: 2, abilities: [haste] },
+      {
+        attack: 3,
+        hp: 3,
+        abilities: []
+      },
+      {
+        attack: 4,
+        hp: 4,
+        abilities: []
+      }
+    ]
+  },
   jaina_stormborne: {
     color: colors.red,
     spec: specs.fire,

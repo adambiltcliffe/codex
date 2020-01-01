@@ -1,4 +1,28 @@
-import { TestGame, testp1Id, testp2Id } from "../testutil";
+import { TestGame, testp1Id, testp2Id, findEntityIds } from "../testutil";
+import { getAP } from "../util";
+
+test("Surprise Attack creates two Shark tokens with haste and ephemeral", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "captain_zane")
+    .putCardsInHand(testp1Id, ["surprise_attack"])
+    .setGold(testp1Id, 5);
+  const p2base = tg.findBaseId(testp2Id);
+  tg.playAction({ type: "play", card: "surprise_attack" });
+  const sharks = findEntityIds(tg.state, e => e.card == "shark_token");
+  expect(sharks).toHaveLength(2);
+  const [st1, st2] = sharks;
+  tg.playAction({ type: "attack", attacker: st1, target: p2base });
+  expect(tg.state.entities[p2base].damage).toEqual(3);
+  expect(tg.state.log).toContain("Shark deals 3 damage to base.");
+  tg.playAction({ type: "endTurn" });
+  expect(getAP(tg.state).id).toEqual(testp1Id);
+  expect(tg.state.newTriggers).toHaveLength(2);
+  tg.playAction({ type: "queue", index: 0 });
+  expect(tg.state.log).toContain("Shark dies.");
+  expect(tg.state.entities[st1]).toBeUndefined();
+  expect(tg.state.entities[st2]).toBeUndefined();
+  expect(getAP(tg.state).id).toEqual(testp2Id);
+});
 
 test("Gunpoint Taxman steals 1 gold when killing a patroller", () => {
   const tg = new TestGame()

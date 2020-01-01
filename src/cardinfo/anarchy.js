@@ -5,12 +5,34 @@ import {
   flying,
   haste,
   obliterate,
-  antiAir
+  antiAir,
+  ephemeral
 } from "./abilities/keywords";
 import { getAP } from "../util";
 import log from "../log";
+import { putEntityIntoPlay } from "../actions/play";
 
 const anarchyCardInfo = {
+  surprise_attack: {
+    color: colors.red,
+    spec: specs.anarchy,
+    name: "Surprise Attack",
+    type: types.spell,
+    subtypes: ["Summon"],
+    cost: 5,
+    abilities: [
+      {
+        text: "Summon two 3/1 blue Shark tokens with haste and ephemeral.",
+        isSpellEffect: true,
+        action: ({ state }) => {
+          const ap = getAP(state);
+          putEntityIntoPlay(state, ap.id, "shark_token");
+          putEntityIntoPlay(state, ap.id, "shark_token");
+          log.add(state, "Surprise Attack creates two Shark tokens.");
+        }
+      }
+    ]
+  },
   gunpoint_taxman: {
     color: colors.red,
     tech: 1,
@@ -46,7 +68,6 @@ const anarchyCardInfo = {
       }
     ]
   },
-
   pirate_gunship: {
     color: colors.red,
     tech: 3,
@@ -58,6 +79,16 @@ const anarchyCardInfo = {
     attack: 7,
     hp: 6,
     abilities: [flying, haste, longRange, resist(2), obliterate(2)]
+  },
+  shark_token: {
+    token: true,
+    color: colors.blue,
+    tech: 0,
+    name: "Shark",
+    type: types.unit,
+    attack: 3,
+    hp: 1,
+    abilities: [haste, ephemeral]
   }
 };
 
