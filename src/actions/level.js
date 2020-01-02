@@ -2,6 +2,7 @@ import { types } from "../cardinfo";
 import { getAP } from "../util";
 import log from "../log";
 import { getCurrentValues, applyStateBasedEffects } from "../entities";
+import { addLevelsToHero } from "../hero";
 
 export function checkLevelAction(state, action) {
   const ap = getAP(state);
@@ -36,28 +37,12 @@ export function checkLevelAction(state, action) {
 export function doLevelAction(state, action) {
   const ap = getAP(state);
   const hero = state.entities[action.hero];
-  const oldLevel = hero.level;
   ap.gold -= action.amount;
-  hero.level += action.amount;
   log.add(
     state,
-    log.fmt`${ap} raises ${hero.current.name} to level ${hero.level}.`
+    log.fmt`${ap} raises ${hero.current.name} to level ${hero.level +
+      action.amount}.`
   );
-  if (
-    ((oldLevel < hero.current.midbandLevel &&
-      hero.level >= hero.current.midbandLevel) ||
-      (oldLevel < hero.current.maxbandLevel &&
-        hero.level == hero.current.maxbandLevel)) &&
-    hero.damage > 0
-  ) {
-    hero.damage = 0;
-    log.add(state, log.fmt`${hero.current.name} is fully healed.`);
-  }
-  if (
-    oldLevel < hero.current.maxbandLevel &&
-    hero.level == hero.current.maxbandLevel
-  ) {
-    hero.maxedSince = state.turn;
-  }
+  addLevelsToHero(state, hero, action.amount);
   applyStateBasedEffects(state);
 }

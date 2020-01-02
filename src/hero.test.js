@@ -305,3 +305,20 @@ test("Can play a different hero when one is on cooldown", () => {
     tg.checkAction({ type: "summon", hero: "troq_bashar" })
   ).not.toThrow();
 });
+
+test("Hero is fully healed when gaining levels due to trigger", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "captain_zane")
+    .insertEntity(testp2Id, "jaina_stormborne");
+  const [zane, jaina] = tg.insertedEntityIds;
+  tg.modifyEntity(jaina, { level: 2 }).playAction({
+    type: "attack",
+    attacker: zane,
+    target: jaina
+  });
+  expect(tg.state.log).toContain("Captain Zane dies.");
+  expect(tg.state.entities[zane]).toBeUndefined();
+  expect(tg.state.log).toContain("Jaina Stormborne gains 2 levels.");
+  expect(tg.state.log).toContain("Jaina Stormborne is fully healed.");
+  expect(tg.state.entities[jaina].damage).toEqual(0);
+});

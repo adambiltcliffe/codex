@@ -1,5 +1,7 @@
 import { frenzy, readiness, sparkshot } from "./abilities/keywords";
 import { colors, specs, types } from "./constants";
+import { putEntityIntoPlay } from "../actions/play";
+import log from "../log";
 
 const blueHeroCardInfo = {
   general_onimaru: {

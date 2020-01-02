@@ -6,6 +6,8 @@ import resolveAttackTriggers from "./resolveattack";
 
 import sumBy from "lodash/sumBy";
 import { resetSecret, unwrapSecrets } from "./targets";
+import { addLevelsToHero } from "./hero";
+import clamp from "lodash/clamp";
 
 const triggerInfo = {
   ...resolveAttackTriggers,
@@ -45,16 +47,12 @@ const triggerInfo = {
     },
     action: ({ state, choices }) => {
       const hero = state.entities[choices.targetId];
-      const oldLevel = hero.level;
-      hero.level += 2;
-      if (hero.level > hero.current.maxbandLevel) {
-        hero.level = hero.current.maxbandLevel;
-      }
-      const gain = hero.level - oldLevel;
+      const gain = clamp(hero.current.maxbandLevel - hero.level, 0, 2);
       log.add(
         state,
         `${hero.current.name} gains ${gain} level${gain == 1 ? "" : "s"}.`
       );
+      addLevelsToHero(state, hero, 2);
     }
   },
   tech: {
