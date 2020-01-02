@@ -2,7 +2,7 @@ import { colors, types, specs, targetMode } from "./constants";
 import { sparkshot, haste } from "./abilities/keywords";
 import { queueDamage } from "../damage";
 
-const fireHeroCardInfo = {
+const redHeroCardInfo = {
   captain_zane: {
     color: colors.red,
     spec: specs.anarchy,
@@ -92,4 +92,4 @@ const fireHeroCardInfo = {
   }
 };
 
-export default fireHeroCardInfo;
+export default redHeroCardInfo;

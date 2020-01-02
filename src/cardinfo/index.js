@@ -1,6 +1,7 @@
 import redCardInfo from "./red";
 import redHeroCardInfo from "./redheroes";
 import greenCardInfo from "./green";
+import blueHeroCardInfo from "./blueheroes";
 import whiteCardInfo from "./white";
 import neutralCardInfo from "./neutral";
 import neutralHeroCardInfo from "./neutralheroes";
@@ -21,6 +22,7 @@ const cardInfo = {
   ...redCardInfo,
   ...redHeroCardInfo,
   ...greenCardInfo,
+  ...blueHeroCardInfo,
   ...whiteCardInfo,
   ...neutralCardInfo,
   ...neutralHeroCardInfo,
