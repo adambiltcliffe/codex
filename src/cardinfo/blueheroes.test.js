@@ -1,9 +1,6 @@
 import { TestGame, testp1Id, findEntityIds, testp2Id } from "../testutil";
 import { hasKeyword, readiness } from "./abilities/keywords";
 
-// Oni: max level trigger on own turn
-// Oni: max level trigger on opp turn
-
 test("Onimaru stats on own and other turns", () => {
   const tg = new TestGame().insertEntity(testp1Id, "general_onimaru");
   const [oni] = tg.insertedEntityIds;
