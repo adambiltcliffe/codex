@@ -1,6 +1,10 @@
 import { colors, types, specs, targetMode } from "./constants";
 import { sparkshot, haste } from "./abilities/keywords";
 import { queueDamage } from "../damage";
+import { patrolSlots, patrolSlotNames, changePatrolSlot } from "../patrolzone";
+import { getAP } from "../util";
+import log from "../log";
+import { drawCards } from "../draw";
 
 const redHeroCardInfo = {
   captain_zane: {
@@ -17,12 +21,97 @@ const redHeroCardInfo = {
       {
         attack: 3,
         hp: 3,
-        abilities: []
+        abilities: [
+          {
+            text: "Whenever Zane kills a scavenger, get ①.",
+            triggerOnDamageEntity: true,
+            shouldTrigger: ({ state, packet, isLethal }) => {
+              return (
+                isLethal &&
+                state.entities[packet.subjectId].current.patrolSlot ==
+                  patrolSlots.scavenger
+              );
+            },
+            action: ({ state }) => {
+              const ap = getAP(state);
+              ap.gold += 1;
+              log.add(
+                state,
+                log.fmt`${ap} gains 1 gold from killing a scavenger.`
+              );
+            }
+          },
+          {
+            text: "Whenever Zane kills a technician, draw a card.",
+            triggerOnDamageEntity: true,
+            shouldTrigger: ({ state, packet, isLethal }) => {
+              return (
+                isLethal &&
+                state.entities[packet.subjectId].current.patrolSlot ==
+                  patrolSlots.technician
+              );
+            },
+            action: ({ state }) => {
+              const ap = getAP(state);
+              drawCards(state, ap.id, 1, " from killing a technician");
+            }
+          }
+        ]
       },
       {
         attack: 4,
         hp: 4,
-        abilities: []
+        abilities: [
+          {
+            text:
+              "Max level: Shove a patroller to an empty slot in its patrol zone, then deal 1 damage to it. ◎",
+            triggerOnMaxLevel: true,
+            steps: [
+              {
+                prompt: "Choose a patroller to shove",
+                hasTargetSymbol: true,
+                targetMode: targetMode.single,
+                targetTypes: [types.unit, types.hero],
+                canTarget: ({ target }) => target.current.patrolSlot !== null,
+                action: () => {}
+              },
+              {
+                prompt: "Choose a patrol slot to shove the target to",
+                targetMode: targetMode.modal,
+                options: patrolSlotNames,
+                getLegalOptions: ({ state }) => {
+                  const dp =
+                    state.players[
+                      state.entities[
+                        state.currentTrigger.steps[0].choices.targetId
+                      ].current.controller
+                    ];
+                  return range(5).filter(
+                    index => dp.patrollerIds[index] === null
+                  );
+                },
+                action: ({ state }) =>
+                  changePatrolSlot(
+                    state,
+                    state.entities[
+                      state.currentTrigger.steps[0].choices.targetId
+                    ],
+                    state.currentTrigger.steps[1].choices.index
+                  )
+              },
+              {
+                action: ({ state, source }) => {
+                  queueDamage(state, {
+                    amount: 1,
+                    sourceId: source.id,
+                    subjectId: state.currentTrigger.steps[0].choices.targetId,
+                    isAbilityDamage: true
+                  });
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },

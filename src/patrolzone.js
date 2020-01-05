@@ -20,9 +20,13 @@ export const patrolSlotNames = [
 export const emptyPatrolZone = [null, null, null, null, null];
 
 export function sideline(state, patroller) {
+  changePatrolSlot(state, patroller, null);
+}
+
+export function changePatrolSlot(state, patroller, newIndex) {
   const slot = patroller.current.patrolSlot;
   if (slot !== null) {
-    state.players[patroller.current.controller].patrollerIds[slot] = null;
+    state.players[patroller.current.controller].patrollerIds[slot] = newIndex;
   }
   expireEffectsOnEntity(state, patroller);
 }

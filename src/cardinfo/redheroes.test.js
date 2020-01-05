@@ -1,5 +1,103 @@
 import { testp2Id, testp1Id, TestGame } from "../testutil";
 
+test("Zane at level 1 has haste", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "captain_zane")
+    .insertEntity(testp2Id, "tenderfoot");
+  const [zane, tf] = tg.insertedEntityIds;
+  const act = { type: "attack", attacker: zane, target: tf };
+  expect(() => tg.checkAction(act)).not.toThrow();
+  tg.playAction(act);
+  expect(tg.state.log).toContain("Captain Zane deals 2 damage to Tenderfoot.");
+});
+
+test("Zane gains gold (but doesn't draw cards) when killing a scavenger", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, ["older_brother"])
+    .insertEntity(testp2Id, "captain_zane");
+  const [ob, zane] = tg.insertedEntityIds;
+  tg.modifyEntity(zane, { level: 4 }).playActions([
+    { type: "endTurn", patrollers: [null, null, ob, null, null] },
+    { type: "attack", attacker: zane, target: ob }
+  ]);
+  expect(tg.state.newTriggers).toHaveLength(2);
+  tg.playAction({ type: "queue", index: 0 });
+  expect(tg.state.log).toContain(
+    `\${${testp2Id}} gains 1 gold from killing a scavenger.`
+  );
+  expect(tg.state.players[testp2Id].gold).toEqual(6);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(5);
+});
+
+test("Zane draws a card (but doesn't gain gold) when killing a technician", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, ["older_brother"])
+    .insertEntity(testp2Id, "captain_zane");
+  const [ob, zane] = tg.insertedEntityIds;
+  tg.modifyEntity(zane, { level: 4 }).playActions([
+    { type: "endTurn", patrollers: [null, null, null, ob, null] },
+    { type: "attack", attacker: zane, target: ob }
+  ]);
+  expect(tg.state.newTriggers).toHaveLength(2);
+  tg.playAction({ type: "queue", index: 0 });
+  expect(tg.state.log).toContain(
+    `\${${testp2Id}} draws 1 card from killing a technician.`
+  );
+  expect(tg.state.players[testp2Id].gold).toEqual(5);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(6);
+});
+
+test("Zane doesn't gain gold from hurting a scavenger", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "iron_man")
+    .insertEntity(testp2Id, "captain_zane");
+  const [im, zane] = tg.insertedEntityIds;
+  tg.modifyEntity(zane, { level: 4 }).playActions([
+    { type: "endTurn", patrollers: [null, null, im, null, null] },
+    { type: "attack", attacker: zane, target: im }
+  ]);
+  expect(tg.state.newTriggers).toHaveLength(0);
+  expect(tg.state.queue).toHaveLength(0);
+  expect(tg.state.players[testp2Id].gold).toEqual(5);
+});
+
+test("Zane doesn't draw from hurting a technician", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "iron_man")
+    .insertEntity(testp2Id, "captain_zane");
+  const [im, zane] = tg.insertedEntityIds;
+  tg.modifyEntity(zane, { level: 4 }).playActions([
+    { type: "endTurn", patrollers: [null, null, null, im, null] },
+    { type: "attack", attacker: zane, target: im }
+  ]);
+  expect(tg.state.newTriggers).toHaveLength(0);
+  expect(tg.state.queue).toHaveLength(0);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(5);
+});
+
+test("Zane's midband doesn't trigger unless he kills the patroller himself", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["older_brother", "older_brother"])
+    .insertEntities(testp2Id, ["captain_zane", "iron_man", "iron_man"]);
+  const [ob1, ob2, zane, im1, im2] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, null, ob1, ob2, null] },
+    { type: "attack", attacker: im1, target: ob1 },
+    { type: "attack", attacker: im2, target: ob2 }
+  ]);
+  expect(tg.state.newTriggers).toHaveLength(0);
+  expect(tg.state.queue).toHaveLength(0);
+  expect(tg.state.players[testp2Id].gold).toEqual(5);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(5);
+});
+
+// Zane max level trigger can push patroller somewhere else and damage it
+// Zane max level trigger has to push patroller if possible rather than leave it
+// Zane max level trigger still does damage if nowhere to push to
+// Zane max level trigger gets the new scavenger/technician bonus but not old
+// Zane max level trigger removes armor if pushing out of squad leader
+// Zane max level trigger grants armor if pushing into squad leader
+
 test("Jaina at level 1 has sparkshot", () => {
   const tg = new TestGame()
     .insertEntities(testp1Id, ["older_brother", "timely_messenger"])
