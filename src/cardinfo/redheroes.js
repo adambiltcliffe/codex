@@ -1,10 +1,17 @@
-import { colors, types, specs, targetMode } from "./constants";
+import {
+  colors,
+  types,
+  specs,
+  targetMode,
+  patrolSlots,
+  patrolSlotNames
+} from "./constants";
 import { sparkshot, haste } from "./abilities/keywords";
 import { queueDamage } from "../damage";
-import { patrolSlots, patrolSlotNames, changePatrolSlot } from "../patrolzone";
 import { getAP } from "../util";
 import log from "../log";
 import { drawCards } from "../draw";
+import { changePatrolSlot } from "../patrolzone";
 
 const redHeroCardInfo = {
   captain_zane: {
@@ -90,21 +97,20 @@ const redHeroCardInfo = {
                     index => dp.patrollerIds[index] === null
                   );
                 },
-                action: ({ state }) =>
+                action: ({ state }) => {
                   changePatrolSlot(
                     state,
-                    state.entities[
-                      state.currentTrigger.steps[0].choices.targetId
-                    ],
-                    state.currentTrigger.steps[1].choices.index
-                  )
+                    state.entities[state.currentTrigger.choices[0].targetId],
+                    state.currentTrigger.choices[1].index
+                  );
+                }
               },
               {
                 action: ({ state, source }) => {
                   queueDamage(state, {
                     amount: 1,
                     sourceId: source.id,
-                    subjectId: state.currentTrigger.steps[0].choices.targetId,
+                    subjectId: state.currentTrigger.choices[0].targetId,
                     isAbilityDamage: true
                   });
                 }

@@ -310,6 +310,9 @@ export function updateCurrentValues(state) {
   forEach(state.players, p => {
     forEach(p.patrollerIds, (id, slot) => {
       if (id !== null) {
+        if (state.entities[id] === undefined) {
+          console.log(p.patrollerIds);
+        }
         state.entities[id].current.patrolSlot = slot;
       }
     });

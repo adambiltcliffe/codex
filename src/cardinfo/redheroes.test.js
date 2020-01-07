@@ -1,4 +1,5 @@
 import { testp2Id, testp1Id, TestGame } from "../testutil";
+import { getLegalChoicesForCurrentTrigger } from "../triggers";
 
 test("Zane at level 1 has haste", () => {
   const tg = new TestGame()
@@ -89,6 +90,31 @@ test("Zane's midband doesn't trigger unless he kills the patroller himself", () 
   expect(tg.state.queue).toHaveLength(0);
   expect(tg.state.players[testp2Id].gold).toEqual(5);
   expect(tg.state.players[testp2Id].hand).toHaveLength(5);
+});
+
+test("Zane can use his maxband trigger to shove and damage a patroller", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["older_brother", "tenderfoot"])
+    .insertEntity(testp2Id, "captain_zane");
+  const [ob, tf, zane] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, ob, tf, null, null] },
+    { type: "level", hero: zane, amount: 5 }
+  ]);
+  expect(tg.state.currentTrigger.path).toEqual(
+    "cardInfo.captain_zane.bands[2].abilities[0]"
+  );
+  expect(getLegalChoicesForCurrentTrigger(tg.state)).toEqual([ob, tf]);
+  tg.playAction({ type: "choice", target: ob });
+  expect(getLegalChoicesForCurrentTrigger(tg.state)).toEqual([0, 3, 4]);
+  tg.playAction({ type: "choice", index: 3 });
+  expect(tg.state.entities[ob].current.patrolSlot).toEqual(3);
+  expect(tg.state.players[testp1Id].patrollerIds[1]).toBeNull();
+  expect(tg.state.players[testp1Id].patrollerIds[3]).toEqual(ob);
+  expect(tg.state.log).toContain(
+    "Captain Zane deals 1 damage to Older Brother."
+  );
+  expect(tg.state.entities[ob].damage).toEqual(1);
 });
 
 // Zane max level trigger can push patroller somewhere else and damage it

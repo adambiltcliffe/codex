@@ -38,6 +38,7 @@ Tidy up the way making choices and queuing triggers is reported
 Change signature of hasKeyword
 Refactor getAttackableEntityIds into getAttackableEntities
 Auto-resolve targetMode.multiple when there's only one valid combination
+Get rid of redundant re-export of patrolzone constants from patrolzone.js
 Move abilities/ out of cardinfo/ to untangle some imports
 Simplify attack logic now we have entity.current.patrolSlot
 Use a schema validation library to simplify action checking
