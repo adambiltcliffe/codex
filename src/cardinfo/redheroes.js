@@ -98,11 +98,13 @@ const redHeroCardInfo = {
                   );
                 },
                 action: ({ state }) => {
-                  changePatrolSlot(
-                    state,
-                    state.entities[state.currentTrigger.choices[0].targetId],
-                    state.currentTrigger.choices[1].index
-                  );
+                  if (!state.currentTrigger.choices[1].skipped) {
+                    changePatrolSlot(
+                      state,
+                      state.entities[state.currentTrigger.choices[0].targetId],
+                      state.currentTrigger.choices[1].index
+                    );
+                  }
                 }
               },
               {
