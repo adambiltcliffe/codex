@@ -141,7 +141,54 @@ test("Zane's max level trigger still does damage if there's no way to push to", 
   expect(tg.state.entities[tf].damage).toEqual(1);
 });
 
-// Zane max level trigger gets the new scavenger/technician bonus but not old
+test("Pushing a unit into Scavenger with Zane gets the Scavenger bonus", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "mad_man")
+    .insertEntity(testp2Id, "captain_zane");
+  const [mm, zane] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, null, null, mm, null] },
+    { type: "level", hero: zane, amount: 5 },
+    { type: "choice", index: 2 }
+  ]);
+  expect(tg.state.newTriggers).toHaveLength(2);
+  tg.playAction({ type: "queue", index: 0 });
+  expect(tg.state.log).toContain(
+    `\${${testp2Id}} gains 1 gold from killing a scavenger.`
+  );
+  expect(tg.state.log).not.toContain(
+    `\${${testp2Id}} draws 1 card from killing a technician.`
+  );
+  expect(tg.state.players[testp1Id].gold).toEqual(5);
+  expect(tg.state.players[testp2Id].gold).toEqual(1);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(5);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(5);
+});
+
+test("Pushing a unit into Technician with Zane gets the Technician bonus", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "mad_man")
+    .insertEntity(testp2Id, "captain_zane");
+  const [mm, zane] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, null, mm, null, null] },
+    { type: "level", hero: zane, amount: 5 },
+    { type: "choice", index: 3 }
+  ]);
+  expect(tg.state.newTriggers).toHaveLength(2);
+  tg.playAction({ type: "queue", index: 0 });
+  expect(tg.state.log).not.toContain(
+    `\${${testp2Id}} gains 1 gold from killing a scavenger.`
+  );
+  expect(tg.state.log).toContain(
+    `\${${testp2Id}} draws 1 card from killing a technician.`
+  );
+  expect(tg.state.players[testp1Id].gold).toEqual(4);
+  expect(tg.state.players[testp2Id].gold).toEqual(0);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(6);
+  expect(tg.state.players[testp2Id].hand).toHaveLength(6);
+});
+
 // Zane max level trigger removes armor if pushing out of squad leader
 // Zane max level trigger grants armor if pushing into squad leader
 
