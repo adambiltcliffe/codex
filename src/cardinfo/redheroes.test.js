@@ -189,8 +189,35 @@ test("Pushing a unit into Technician with Zane gets the Technician bonus", () =>
   expect(tg.state.players[testp2Id].hand).toHaveLength(6);
 });
 
-// Zane max level trigger removes armor if pushing out of squad leader
-// Zane max level trigger grants armor if pushing into squad leader
+test("Zane max level trigger removes armor if pushing out of squad leader", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "tenderfoot")
+    .insertEntity(testp2Id, "captain_zane");
+  const [tf, zane] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [tf, null, null, null, null] },
+    { type: "level", hero: zane, amount: 5 },
+    { type: "choice", index: 2 }
+  ]);
+  expect(tg.state.log).toContain("Captain Zane deals 1 damage to Tenderfoot.");
+  expect(tg.state.entities[tf].armor).toEqual(0);
+  expect(tg.state.entities[tf].damage).toEqual(1);
+});
+
+test("Zane max level trigger grants armor if pushing into squad leader", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "tenderfoot")
+    .insertEntity(testp2Id, "captain_zane");
+  const [tf, zane] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [null, tf, null, null, null] },
+    { type: "level", hero: zane, amount: 5 },
+    { type: "choice", index: 0 }
+  ]);
+  expect(tg.state.log).toContain("Captain Zane deals 1 damage to Tenderfoot.");
+  expect(tg.state.entities[tf].armor).toEqual(0);
+  expect(tg.state.entities[tf].damage).toEqual(0);
+});
 
 test("Jaina at level 1 has sparkshot", () => {
   const tg = new TestGame()

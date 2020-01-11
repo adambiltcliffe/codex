@@ -14,6 +14,7 @@ export function sideline(state, patroller) {
   if (slot !== null) {
     state.players[patroller.current.controller].patrollerIds[slot] = null;
   }
+  expirePatrolzoneEffectsFromEntity(state, patroller);
   expireEffectsOnEntity(state, patroller);
 }
 
@@ -24,7 +25,25 @@ export function changePatrolSlot(state, patroller, newIndex) {
     state.players[patroller.current.controller].patrollerIds[newIndex] =
       patroller.id;
   }
-  expireEffectsOnEntity(state, patroller);
+  // Moved into Squad Leader
+  if (slot !== patrolSlots.squadLeader && newIndex == patrolSlots.squadLeader) {
+    attachEffectThisTurn(state, patroller, {
+      path: "effectInfo.squadLeader",
+      isPatrolZoneEffect: true
+    });
+  }
+  // Moved out of Squad Leader
+  else if (
+    slot == patrolSlots.squadLeader &&
+    newIndex !== patrolSlots.squadLeader
+  ) {
+    forEach(patroller.effects, fx => {
+      if (fx.path == "effectInfo.squadLeader") {
+        fx.shouldExpire = true;
+      }
+    });
+    expireEffectsOnEntity(state, patroller);
+  }
 }
 
 export function applyPatrolzoneEffects(state) {
@@ -38,6 +57,18 @@ export function applyPatrolzoneEffects(state) {
           isPatrolZoneEffect: true
         });
       }
+    }
+  });
+}
+
+function expirePatrolzoneEffectsFromEntity(state, entity) {
+  forEach(entity.effects, fx => {
+    // Note: we cannot use entity.current.patrolSlot as it may be out-of-date
+    if (
+      fx.isPatrolZoneEffect &&
+      !state.players[entity.current.controller].patrollerIds.includes(entity.id)
+    ) {
+      fx.shouldExpire = true;
     }
   });
 }

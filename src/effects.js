@@ -26,11 +26,7 @@ export function expireEffectsOnEntity(state, entity) {
     entity.effects,
     fx =>
       (fx.finalActiveTurn !== undefined && state.turn > fx.finalActiveTurn) ||
-      // Note: we cannot use entity.current.patrolSlot as it may be out-of-date
-      (fx.isPatrolZoneEffect &&
-        !state.players[entity.current.controller].patrollerIds.includes(
-          entity.id
-        ))
+      fx.shouldExpire
   );
   forEach(expired, fx => {
     const fxDef = getEffectDefinition(fx);
