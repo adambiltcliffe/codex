@@ -11,6 +11,7 @@ import {
 import { getAP } from "../util";
 import log from "../log";
 import { putEntityIntoPlay } from "../actions/play";
+import { killEntity } from "../entities";
 
 const anarchyCardInfo = {
   surprise_attack: {
@@ -29,6 +30,28 @@ const anarchyCardInfo = {
           putEntityIntoPlay(state, ap.id, "shark_token");
           putEntityIntoPlay(state, ap.id, "shark_token");
           log.add(state, "Surprise Attack creates two Shark tokens.");
+        }
+      }
+    ]
+  },
+  maximum_anarchy: {
+    color: colors.red,
+    spec: specs.anarchy,
+    name: "Maximum Anarchy",
+    type: types.spell,
+    ultimate: true,
+    cost: 3,
+    abilities: [
+      {
+        text: "Destroy all units and heroes.",
+        isSpellEffect: true,
+        action: ({ state }) => {
+          const ids = Object.values(state.entities)
+            .filter(
+              e => e.current.type == types.unit || e.current.type == types.hero
+            )
+            .map(e => e.id);
+          ids.forEach(id => killEntity(state, id));
         }
       }
     ]

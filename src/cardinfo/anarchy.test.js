@@ -24,6 +24,27 @@ test("Surprise Attack creates two Shark tokens with haste and ephemeral", () => 
   expect(getAP(tg.state).id).toEqual(testp2Id);
 });
 
+test("Maximum Anarchy destroys everything", () => {
+  expect.assertions(10);
+  const tg = new TestGame()
+    .insertEntities(testp1Id, ["captain_zane", "jaina_stormborne", "mad_man"])
+    .insertEntities(testp2Id, ["troq_bashar", "iron_man"]);
+  const [zane, jaina, mm, troq, im] = tg.insertedEntityIds;
+  tg.modifyEntity(zane, { level: 6, controlledSince: -1, maxedSince: -1 })
+    .putCardsInHand(testp1Id, ["maximum_anarchy"])
+    .playAction({ type: "play", card: "maximum_anarchy" });
+  tg.insertedEntityIds.forEach(id =>
+    expect(tg.state.entities[id]).toBeUndefined()
+  );
+  [
+    "Captain Zane",
+    "Jaina Stormborne",
+    "Mad Man",
+    "Troq Bashar",
+    "Iron Man"
+  ].forEach(n => expect(tg.state.log).toContain(`${n} dies.`));
+});
+
 test("Gunpoint Taxman steals 1 gold when killing a patroller", () => {
   const tg = new TestGame()
     .insertEntity(testp1Id, "older_brother")
