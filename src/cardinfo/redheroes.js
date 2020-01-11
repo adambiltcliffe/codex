@@ -12,6 +12,7 @@ import { getAP } from "../util";
 import log from "../log";
 import { drawCards } from "../draw";
 import { changePatrolSlot } from "../patrolzone";
+import range from "lodash/range";
 
 const redHeroCardInfo = {
   captain_zane: {
@@ -89,9 +90,8 @@ const redHeroCardInfo = {
                 getLegalOptions: ({ state }) => {
                   const dp =
                     state.players[
-                      state.entities[
-                        state.currentTrigger.steps[0].choices.targetId
-                      ].current.controller
+                      state.entities[state.currentTrigger.choices[0].targetId]
+                        .current.controller
                     ];
                   return range(5).filter(
                     index => dp.patrollerIds[index] === null

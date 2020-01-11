@@ -106,6 +106,7 @@ test("Zane can use his maxband trigger to shove and damage a patroller", () => {
   );
   expect(getLegalChoicesForCurrentTrigger(tg.state)).toEqual([ob, tf]);
   tg.playAction({ type: "choice", target: ob });
+  // Note that the current location should not be a valid choice
   expect(getLegalChoicesForCurrentTrigger(tg.state)).toEqual([0, 3, 4]);
   tg.playAction({ type: "choice", index: 3 });
   expect(tg.state.entities[ob].current.patrolSlot).toEqual(3);
@@ -117,9 +118,29 @@ test("Zane can use his maxband trigger to shove and damage a patroller", () => {
   expect(tg.state.entities[ob].damage).toEqual(1);
 });
 
-// Zane max level trigger can push patroller somewhere else and damage it
-// Zane max level trigger has to push patroller if possible rather than leave it
-// Zane max level trigger still does damage if nowhere to push to
+test("Zane's max level trigger still does damage if there's no way to push to", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "iron_man",
+      "iron_man",
+      "iron_man",
+      "iron_man",
+      "tenderfoot"
+    ])
+    .insertEntity(testp2Id, "captain_zane");
+  const [im1, im2, im3, im4, tf, zane] = tg.insertedEntityIds;
+  tg.playActions([
+    { type: "endTurn", patrollers: [im1, im2, tf, im3, im4] },
+    { type: "level", hero: zane, amount: 5 },
+    { type: "choice", target: tf }
+  ]);
+  expect(tg.state.log).toContain(
+    "Choose a patrol slot to shove the target to: No legal choices."
+  );
+  expect(tg.state.log).toContain("Captain Zane deals 1 damage to Tenderfoot.");
+  expect(tg.state.entities[tf].damage).toEqual(1);
+});
+
 // Zane max level trigger gets the new scavenger/technician bonus but not old
 // Zane max level trigger removes armor if pushing out of squad leader
 // Zane max level trigger grants armor if pushing into squad leader

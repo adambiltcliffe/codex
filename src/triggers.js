@@ -96,8 +96,10 @@ export function canResolveCurrentTrigger(state) {
     return true;
   }
   switch (stepDef.targetMode) {
-    case targetMode.single: {
-      if (choices.targetId !== undefined) {
+    case targetMode.single:
+    case targetMode.modal: {
+      const key = stepDef.targetMode == targetMode.modal ? "index" : "targetId";
+      if (choices[key] !== undefined) {
         return true;
       }
       const possibleChoices = getLegalChoicesForStep(state, stepDef);
@@ -108,8 +110,8 @@ export function canResolveCurrentTrigger(state) {
           return true;
         case 1:
           log.add(state, `${stepDef.prompt}: Only one legal choice.`);
-          choices.targetId = possibleChoices[0];
-          if (stepDef.hasTargetSymbol) {
+          choices[key] = possibleChoices[0];
+          if (key == "targetId" && stepDef.hasTargetSymbol) {
             doTargetSymbolEffects(state, state.entities[choices.targetId]);
           }
           return true;
@@ -143,8 +145,6 @@ export function canResolveCurrentTrigger(state) {
         stepDef.targetCount
       );
       return maybe.length == 0;
-    case targetMode.modal:
-      return choices.index !== undefined;
     case targetMode.codex:
       return choices.indices !== undefined;
   }

@@ -132,6 +132,9 @@ export function getLegalChoicesForStep(state, stepDef) {
       );
       return maybe.map(e => e.id);
     case targetMode.modal:
+      if (stepDef.getLegalOptions) {
+        return stepDef.getLegalOptions({ state });
+      }
       return range(stepDef.options.length);
     case targetMode.codex:
       const ap = getAP(state);
