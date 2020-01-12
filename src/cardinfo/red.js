@@ -167,7 +167,37 @@ const redCardInfo = {
     name: "Bloodburn",
     type: types.upgrade,
     cost: 3,
-    abilities: []
+    abilities: [
+      {
+        text: "Whenever a unit dies, put a blood rune on this (limit: 4).",
+        triggerOnEntityDies: true,
+        shouldTrigger: ({ state, victim }) => victim.current.type == types.unit,
+        action: ({ state, source }) => {
+          if (!source.namedRunes.blood || source.namedRunes.blood < 4) {
+            source.namedRunes.blood = (source.namedRunes.blood || 0) + 1;
+            log.add(state, `${source.current.name} gains a blood rune.`);
+          }
+        }
+      },
+      {
+        text:
+          "⤵, remove two blood runes → Deal 1 damage to a unit or building.",
+        prompt: "Choose a unit or building to damage",
+        isActivatedAbility: true,
+        costsExhaustSelf: true,
+        costsNamedRunes: { blood: 2 },
+        hasTargetSymbol: true,
+        targetMode: targetMode.single,
+        targetTypes: [types.unit, types.building],
+        action: ({ state, source, choices }) => {
+          queueDamage(state, {
+            amount: 1,
+            subjectId: choices.targetId,
+            isAbilityDamage: true
+          });
+        }
+      }
+    ]
   },
   scorch: {
     color: colors.red,

@@ -225,6 +225,7 @@ export class TestGame {
       draft.updateHidden = func => func(draft);
       switch (cardInfo[card].type) {
         case types.unit:
+        case types.upgrade:
           newId = createEntity(draft, playerId, card).id;
           break;
         case types.hero:

@@ -36,6 +36,16 @@ export function checkActivateAction(state, action) {
       throw new Error("Source entity is exhausted.");
     }
   }
+  if (abilityDef.costsNamedRunes) {
+    Object.entries(abilityDef.costsNamedRunes).forEach(([rune, count]) => {
+      if (
+        source.namedRunes[rune] === undefined ||
+        source.namedRunes[rune] < count
+      ) {
+        throw new Error(`Not enough ${rune} runes.`);
+      }
+    });
+  }
   return true;
 }
 
@@ -50,6 +60,11 @@ export function doActivateAction(state, action) {
   const ad = getAbilityDefinition(ability);
   if (ad.costsExhaustSelf) {
     exhaustEntity(state, source.id);
+  }
+  if (ad.costsNamedRunes) {
+    Object.entries(ad.costsNamedRunes).forEach(([rune, count]) => {
+      source.namedRunes[rune] -= count;
+    });
   }
   log.add(
     state,

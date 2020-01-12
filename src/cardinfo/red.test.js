@@ -314,3 +314,41 @@ test("Pillaging yourself doesn't steal any gold", () => {
   expect(tg.state.entities[p1base].damage).toEqual(1);
   expect(tg.state.players[testp1Id].gold).toEqual(3);
 });
+
+test("Bloodburn gets runes when units die, up to 4", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "bloodburn",
+      "captain_zane",
+      "iron_man",
+      "mad_man"
+    ])
+    .insertEntities(testp2Id, [
+      "older_brother",
+      "older_brother",
+      "gunpoint_taxman"
+    ]);
+  const [bb, zane, im, mm, ob1, ob2, gt] = tg.insertedEntityIds;
+  expect(tg.state.entities[bb].namedRunes.blood).toBeUndefined();
+  tg.playAction({ type: "attack", attacker: mm, target: gt });
+  expect(tg.state.log).toContain("Bloodburn gains a blood rune.");
+  expect(tg.state.entities[bb].namedRunes.blood).toEqual(1);
+  // Note we have to queue the hero death trigger
+  tg.playActions([
+    { type: "attack", attacker: zane, target: gt },
+    { type: "queue", index: 0 }
+  ]);
+  expect(tg.state.log).toContain("Bloodburn gains a blood rune.");
+  expect(tg.state.entities[bb].namedRunes.blood).toEqual(2);
+  tg.playActions([
+    { type: "endTurn" },
+    { type: "attack", attacker: ob1, target: im }
+  ]);
+  expect(tg.state.log).toContain("Bloodburn gains a blood rune.");
+  expect(tg.state.entities[bb].namedRunes.blood).toEqual(3);
+  tg.playAction({ type: "attack", attacker: ob2, target: im });
+  expect(tg.state.newTriggers).toHaveLength(2);
+  tg.playAction({ type: "queue", index: 0 });
+  expect(tg.state.log).toContain("Bloodburn gains a blood rune.");
+  expect(tg.state.entities[bb].namedRunes.blood).toEqual(4);
+});

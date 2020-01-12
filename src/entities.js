@@ -52,7 +52,8 @@ export function createEntity(state, owner, card) {
     controlledSince: state.turn,
     ready: true,
     effects: [],
-    thisTurn: {}
+    thisTurn: {},
+    namedRunes: {}
   };
   const entityType = cardInfo[card].type;
   if (entityType == types.unit) {
@@ -80,7 +81,8 @@ export function createHero(state, owner, card) {
     runes: 0,
     level: 1,
     effects: [],
-    thisTurn: {}
+    thisTurn: {},
+    namedRunes: {}
   };
   state.entities[newHero.id] = newHero;
   state.nextId++;
@@ -199,6 +201,20 @@ export function killEntity(state, entityId, opts) {
       playerId: e.current.controller
     });
   }
+  forEach(state.entities, source => {
+    forEach(source.current.abilities, a => {
+      const ad = getAbilityDefinition(a);
+      if (
+        ad.triggerOnEntityDies &&
+        (!ad.shouldTrigger || ad.shouldTrigger({ state, source, victim: e }))
+      ) {
+        createTrigger(state, {
+          path: a.path,
+          sourceId: source.id
+        });
+      }
+    });
+  });
   // Now put the card in the appropriate place
   if (e.fixture === undefined) {
     if (cardInfo[e.card].type == types.hero) {
