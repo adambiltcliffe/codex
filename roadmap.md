@@ -8,22 +8,11 @@ to modify existing cards.
 
 ## Engine features to support missing cards
 
-Various ways that things can trigger when they damage/kill things:
-. Gunpoint Taxman (Red/Anarchy)
-. . triggerOnDamageEntity with isLethal==true (now done)
-. Captain Zane (Red/Anarchy)
-. . triggerOnDamageEntity with isLethal==true
+Use the new triggerOnDamageEntity for the following:
 . Firehouse (Red/Fire)
 . . triggerOnDamageEntity with isLethal==true
-. Shadow Blade (Black/Demonology)
-. . Check in a second step of the ability resolution if the target died, to account for illusions etc. as well
 . Cursed Crow (Black/Disease)
-. . triggerOnDamageEntity
 . Molting Firebird (Red/Fire)
-. . triggerOnDamageEntity
-. Might of Leaf and Claw
-. . some different thing that also triggers when something else dealt damage
-
 Now we have a single place where damage is dealt, prevention effects can modify it:
 . Focus Master (White/Discipline)
 . Morningstar Pass (White/Strength)
@@ -40,10 +29,13 @@ Add a list for pending destruction of entities so that that can be replaced as
 well:
 . Soul Stone (Black/Demonology)
 . Brave Knight (Blue/Peace)
+. Captured Bugblatter (Red/Blood)
+. . Relevant here because Bugblatter needs units to die "at the same time" to trigger properly
 Note - fast triggers when units die are a different thing:
 . Reteller of Truths (Blue/Truth)
 . Graveyard (Black/starter)
-. Second Chances (Purple/Past) (note - this needs to also replace bounce/trash)
+. Second Chances (Purple/Past)
+. . This needs to also replace bounce/trash
 Rewrite the "apply continuous effects" logic to allow modifying printed values
 or copying those of other entities before applying everything else:
 . Polymorph: Squirrel (Green/Growth)

@@ -46,12 +46,17 @@ Work out when it's possible to auto-queue stuff (e.g. ephemeral units dying simu
 
 # Cards that will need special attention (not in the roadmap)
 
+Effect if it kills something:
+. Shadow Blade (Black/Demonology)
+. . Check in a second step of the ability resolution if the target died, to account for illusions etc. as well
 Delayed Trigger:
 . Desperation (Red/Blood)
 . Bloodlust (Red/Blood)
 . Vandy Anadrose (Black/Demonology)
 . Death Rites (Black/Necromancy)
 . Promise of Payment (Purple/Future)
+Trigger when other stuff deals damage:
+. Might of Leaf and Claw (Green/Growth)
 Conditional stealth:
 . Stalking Tiger (Green/Feral)
 Heroes can't level up:
