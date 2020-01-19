@@ -352,3 +352,26 @@ test("Bloodburn gets runes when units die, up to 4", () => {
   expect(tg.state.log).toContain("Bloodburn gains a blood rune.");
   expect(tg.state.entities[bb].namedRunes.blood).toEqual(4);
 });
+
+test("Bloodburn activated ability", () => {
+  const tg = new TestGame()
+    .insertEntity(testp1Id, "bloodburn")
+    .insertEntities(testp2Id, ["river_montoya", "tenderfoot", "nimble_fencer"]);
+  const [bb, river, tf, nf] = tg.insertedEntityIds;
+  const p1base = tg.findBaseId(testp1Id);
+  const p2base = tg.findBaseId(testp2Id);
+  const act = { type: "activate", source: bb, index: 1 };
+  expect(() => tg.checkAction(act)).toThrow("arrival fatigue");
+  tg.playActions([{ type: "endTurn" }, { type: "endTurn" }]);
+  expect(() => tg.checkAction(act)).toThrow("Not enough blood runes");
+  tg.modifyEntity(bb, { namedRunes: { blood: 1 } });
+  expect(() => tg.checkAction(act)).toThrow("Not enough blood runes");
+  tg.modifyEntity(bb, { namedRunes: { blood: 2 } });
+  expect(() => tg.checkAction(act)).not.toThrow();
+  tg.playAction(act);
+  expect(tg.getLegalChoices().sort()).toEqual([tf, nf, p1base, p2base].sort());
+  tg.playAction({ type: "choice", target: tf });
+  expect(tg.state.entities[bb].namedRunes.blood).toEqual(0);
+  expect(tg.state.log).toContain("Bloodburn deals 1 damage to Tenderfoot.");
+  expect(tg.state.entities[tf].damage).toEqual(1);
+});

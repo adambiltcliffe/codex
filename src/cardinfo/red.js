@@ -192,6 +192,7 @@ const redCardInfo = {
         action: ({ state, source, choices }) => {
           queueDamage(state, {
             amount: 1,
+            sourceId: source.id,
             subjectId: choices.targetId,
             isAbilityDamage: true
           });

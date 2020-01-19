@@ -138,7 +138,9 @@ export function exhaustEntity(state, entityId) {
   const e = state.entities[entityId];
   const ci = cardInfo[e];
   e.ready = false;
-  sideline(state, e);
+  if (e.current.type == types.unit || e.current.type == types.hero) {
+    sideline(state, e);
+  }
 
   //currently there are no cards that care about other cards exhausting, so we only need to check the current card's abilities
   forEach(e.current.abilities, a => {
