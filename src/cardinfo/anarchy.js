@@ -91,6 +91,56 @@ const anarchyCardInfo = {
       }
     ]
   },
+  disguised_monkey: {
+    color: colors.red,
+    tech: 2,
+    spec: specs.anarchy,
+    name: "Disguised Monkey",
+    type: types.unit,
+    subtypes: ["Monkey"],
+    cost: 2,
+    attack: 3,
+    hp: 3,
+    abilities: [
+      haste,
+      {
+        text: "Arrives: Gets stealth this turn.",
+        triggerOnOwnArrival: true,
+        action: ({ state, source }) => {
+          attachEffectThisTurn(state, source, {
+            path: "cardInfo.disguised_monkey.abilities[1].createdEffect"
+          });
+          log.add(state, `${source.current.name} gains stealth this turn.`);
+        },
+        createdEffect: {
+          modifySubjectValues: ({ subject }) => {
+            conferKeyword(subject, stealth);
+          }
+        }
+      }
+    ]
+  },
+  chameleon_lizzo: {
+    color: colors.red,
+    tech: 2,
+    name: "Chameleon Lizzo",
+    type: types.unit,
+    subtypes: ["Lizardman"],
+    cost: 4,
+    attack: 4,
+    hp: 3,
+    abilities: [
+      haste,
+      stealth,
+      {
+        text: "At the end of turn, return Chameleon Lizzo to his owner's hand.",
+        triggerAtEndOfTurn: true,
+        action: ({ state, source }) => {
+          bounceEntity(state, source.id);
+        }
+      }
+    ]
+  },
   pirate_gunship: {
     color: colors.red,
     tech: 3,
