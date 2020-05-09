@@ -5,6 +5,7 @@ import {
   flying,
   haste,
   obliterate,
+  stealth,
   antiAir,
   ephemeral
 } from "./abilities/keywords";
