@@ -105,7 +105,7 @@ test("Nimble Fencer and Grounded Guide don't buff opposing units", () => {
     ["tenderfoot"]
   );
   const tf = findEntityIds(s0, e => e.card == "tenderfoot")[0];
-  const tfv = s0.entities[tf].current
+  const tfv = s0.entities[tf].current;
   expect(tfv.attack).toEqual(1);
   expect(tfv.hp).toEqual(2);
   expect(hasKeyword(tfv, haste)).toBeFalsy();
@@ -652,4 +652,21 @@ test("If your flagbearer is already partnered, you can partner two other units",
   expect(() =>
     tg.checkAction({ type: "choice", targets: [ob, fn] })
   ).not.toThrow();
+});
+
+test("Can cast and resolve two step when you control exactly two units", () => {
+  const tg = new TestGame()
+    .insertEntities(testp1Id, [
+      "river_montoya",
+      "helpful_turtle",
+      "timely_messenger"
+    ])
+    .putCardsInHand(testp1Id, ["two_step"]);
+  const [river, ht, tm] = tg.insertedEntityIds;
+  tg.playAction({ type: "play", card: "two_step" });
+  expect(tg.getLegalChoices().sort()).toEqual([ht, tm].sort());
+  tg.playAction({ type: "choice", targets: [ht, tm] });
+  expect(tg.state.log).toContain(
+    `\${${testp1Id}} chooses Helpful Turtle and Timely Messenger.`
+  );
 });
