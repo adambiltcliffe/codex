@@ -123,7 +123,7 @@ export function getLegalChoicesForStep(state, stepDef) {
         .filter(e => stepCanTargetEntity(state, stepDef, e))
         .map(e => e.id);
     }
-    case targetMode.obliterate:
+    case targetMode.obliterate: {
       const dpId = state.currentAttack.defendingPlayer;
       const [definitely, maybe] = getObliterateTargets(
         state,
@@ -131,14 +131,17 @@ export function getLegalChoicesForStep(state, stepDef) {
         stepDef.targetCount
       );
       return maybe.map(e => e.id);
-    case targetMode.modal:
+    }
+    case targetMode.modal: {
       if (stepDef.getLegalOptions) {
         return stepDef.getLegalOptions({ state });
       }
       return range(stepDef.options.length);
-    case targetMode.codex:
+    }
+    case targetMode.codex: {
       const ap = getAP(state);
       return range(ap.codex.length).filter(k => ap.codex[k].n > 0);
+    }
   }
 }
 

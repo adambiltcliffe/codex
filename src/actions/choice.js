@@ -27,7 +27,7 @@ export function checkChoiceAction(state, action) {
     stepDef = stepDef.steps[state.currentTrigger.stepIndex];
   }
   switch (stepDef.targetMode) {
-    case targetMode.single:
+    case targetMode.single: {
       let legalChoices = getLegalChoicesForStep(state, stepDef);
       if (!legalChoices.includes(action.target)) {
         throw new Error(
@@ -35,7 +35,8 @@ export function checkChoiceAction(state, action) {
         );
       }
       return true;
-    case targetMode.multiple:
+    }
+    case targetMode.multiple: {
       if (!Array.isArray(action.targets)) {
         throw new Error("action.targets must be an array");
       }
@@ -51,7 +52,7 @@ export function checkChoiceAction(state, action) {
       ) {
         throw new Error("Too few targets");
       }
-      legalChoices = getLegalChoicesForStep(state, stepDef);
+      let legalChoices = getLegalChoicesForStep(state, stepDef);
       action.targets.forEach(t => {
         if (!legalChoices.includes(t)) {
           throw new Error(
@@ -63,7 +64,8 @@ export function checkChoiceAction(state, action) {
       });
       validateTargetCombination(state, legalChoices, action.targets);
       return true;
-    case targetMode.obliterate:
+    }
+    case targetMode.obliterate: {
       if (!Array.isArray(action.targets)) {
         throw new Error("action.targets must be an array");
       }
@@ -88,7 +90,8 @@ export function checkChoiceAction(state, action) {
         }
       });
       return true;
-    case targetMode.modal:
+    }
+    case targetMode.modal: {
       if (!Number.isInteger(action.index)) {
         throw new Error("action.index must be a number");
       }
@@ -96,7 +99,8 @@ export function checkChoiceAction(state, action) {
         throw new Error("Index is out of range");
       }
       return true;
-    case targetMode.codex:
+    }
+    case targetMode.codex: {
       if (!Array.isArray(action.indices)) {
         throw new Error("action.indices must be an array");
       }
@@ -131,6 +135,7 @@ export function checkChoiceAction(state, action) {
         throw new Error("Not enough cards");
       }
       return true;
+    }
   }
 }
 
@@ -144,7 +149,7 @@ export function doChoiceAction(state, action) {
     stepDef = def.steps[state.currentTrigger.stepIndex];
   }
   switch (stepDef.targetMode) {
-    case targetMode.single:
+    case targetMode.single: {
       choices.targetId = action.target;
       const target = state.entities[action.target];
       if (
@@ -155,7 +160,8 @@ export function doChoiceAction(state, action) {
       }
       log.add(state, log.fmt`${getAP(state)} chooses ${target.current.name}.`);
       break;
-    case targetMode.multiple:
+    }
+    case targetMode.multiple: {
       choices.targetIds = action.targets;
       const names = [];
       choices.targetIds.forEach(id => {
@@ -174,6 +180,7 @@ export function doChoiceAction(state, action) {
         log.add(state, log.fmt`${getAP(state)} chooses nothing.`);
       }
       break;
+    }
     case targetMode.obliterate:
       choices.targetIds = action.targets;
       break;

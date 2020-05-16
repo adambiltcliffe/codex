@@ -134,7 +134,7 @@ export function canResolveCurrentTrigger(state) {
       }
       return false;
     }
-    case targetMode.obliterate:
+    case targetMode.obliterate: {
       if (choices.targetIds !== undefined) {
         return true;
       }
@@ -145,6 +145,7 @@ export function canResolveCurrentTrigger(state) {
         stepDef.targetCount
       );
       return maybe.length == 0;
+    }
     case targetMode.codex:
       return choices.indices !== undefined;
   }

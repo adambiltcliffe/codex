@@ -665,6 +665,9 @@ test("Can cast and resolve two step when you control exactly two units", () => {
   const [river, ht, tm] = tg.insertedEntityIds;
   tg.playAction({ type: "play", card: "two_step" });
   expect(tg.getLegalChoices().sort()).toEqual([ht, tm].sort());
+  expect(() =>
+    tg.checkAction({ type: "choice", targets: [ht, tm] })
+  ).not.toThrow();
   tg.playAction({ type: "choice", targets: [ht, tm] });
   expect(tg.state.log).toContain(
     `\${${testp1Id}} chooses Helpful Turtle and Timely Messenger.`
